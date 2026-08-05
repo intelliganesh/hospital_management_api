@@ -1,0 +1,3415 @@
+<!DOCTYPE html>
+{{-- PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd" --}}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {{-- <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="generator" content="PhpSpreadsheet, https://github.com/PHPOffice/PhpSpreadsheet">
+    <meta name="company" content="Microsoft Corporation" /> --}}
+    {{-- <style type="text/css"> --}}
+    <style>
+        /* html {
+            font-family: Calibri, Arial, Helvetica, sans-serif;
+            font-size: 11pt;
+            background-color: white
+        } */
+        .main-container-for-anaestesia {
+            width: 100px;
+            margin: auto 0px;
+        }
+
+        a.comment-indicator:hover+div.comment {
+            background: #ffd;
+            position: absolute;
+            display: block;
+            border: 1px solid black;
+            padding: 0.5em
+        }
+
+        a.comment-indicator {
+            background: red;
+            display: inline-block;
+            border: 1px solid black;
+            width: 0.5em;
+            height: 0.5em
+        }
+
+        div.comment {
+            display: none
+        }
+
+        /* table {
+            border-collapse: collapse;
+            page-break-after: always
+        } */
+
+        .gridlines td {
+            border: 1px dotted black
+        }
+
+        .gridlines th {
+            border: 1px dotted black
+        }
+
+        .b {
+            text-align: center
+        }
+
+        .e {
+            text-align: center
+        }
+
+        .f {
+            text-align: right
+        }
+
+        .inlineStr {
+            text-align: left
+        }
+
+        .n {
+            text-align: right
+        }
+
+        .s {
+            text-align: left
+        }
+
+        td.style0 {
+            vertical-align: bottom;
+            border-bottom: none #000000;
+            border-top: none #000000;
+            border-left: none #000000;
+            border-right: none #000000;
+            color: #000000;
+            font-family: 'Arial';
+            font-size: 10pt;
+            background-color: white
+        }
+
+        th.style0 {
+            vertical-align: bottom;
+            border-bottom: none #000000;
+            border-top: none #000000;
+            border-left: none #000000;
+            border-right: none #000000;
+            color: #000000;
+            font-family: 'Arial';
+            font-size: 10pt;
+            background-color: white
+        }
+
+        td.style1 {
+            vertical-align: bottom;
+            border-bottom: none #000000;
+            border-top: none #000000;
+            border-left: none #000000;
+            border-right: none #000000;
+            color: #000000;
+            font-family: 'Arial';
+            font-size: 10pt;
+            background-color: white
+        }
+
+        th.style1 {
+            vertical-align: bottom;
+            border-bottom: none #000000;
+            border-top: none #000000;
+            border-left: none #000000;
+            border-right: none #000000;
+            color: #000000;
+            font-family: 'Arial';
+            font-size: 10pt;
+            background-color: white
+        }
+
+        td.style2 {
+            vertical-align: bottom;
+            text-align: center;
+            border-bottom: 1px solid #000000 !important;
+            border-top: 1px solid #000000 !important;
+            border-left: 1px solid #000000 !important;
+            border-right: 1px solid #000000 !important;
+            font-weight: bold;
+            color: #000000;
+            font-family: 'Arial';
+            font-size: 8pt;
+            background-color: white
+        }
+
+        th.style2 {
+            vertical-align: bottom;
+            text-align: center;
+            border-bottom: 1px solid #000000 !important;
+            border-top: 1px solid #000000 !important;
+            border-left: 1px solid #000000 !important;
+            border-right: 1px solid #000000 !important;
+            font-weight: bold;
+            color: #000000;
+            font-family: 'Arial';
+            font-size: 8pt;
+            background-color: white
+        }
+
+        td.style3 {
+            vertical-align: top;
+            text-align: center;
+            border-bottom: 1px solid #000000 !important;
+            border-top: 1px solid #000000 !important;
+            border-left: 1px solid #000000 !important;
+            border-right: 1px solid #000000 !important;
+            font-weight: bold;
+            color: #000000;
+            font-family: 'Arial';
+            font-size: 8pt;
+            background-color: white
+        }
+
+        th.style3 {
+            vertical-align: top;
+            text-align: center;
+            border-bottom: 1px solid #000000 !important;
+            border-top: 1px solid #000000 !important;
+            border-left: 1px solid #000000 !important;
+            border-right: 1px solid #000000 !important;
+            font-weight: bold;
+            color: #000000;
+            font-family: 'Arial';
+            font-size: 8pt;
+            background-color: white
+        }
+
+        td.style4 {
+            vertical-align: middle;
+            text-align: center;
+            border-bottom: 1px solid #000000 !important;
+            border-top: 1px solid #000000 !important;
+            border-left: 1px solid #000000 !important;
+            border-right: 1px solid #000000 !important;
+            font-weight: bold;
+            color: #000000;
+            font-family: 'Arial';
+            font-size: 8pt;
+            background-color: white
+        }
+
+        th.style4 {
+            vertical-align: middle;
+            text-align: center;
+            border-bottom: 1px solid #000000 !important;
+            border-top: 1px solid #000000 !important;
+            border-left: 1px solid #000000 !important;
+            border-right: 1px solid #000000 !important;
+            font-weight: bold;
+            color: #000000;
+            font-family: 'Arial';
+            font-size: 8pt;
+            background-color: white
+        }
+
+        td.style5 {
+            vertical-align: bottom;
+            text-align: left;
+            padding-left: 0px;
+            border-bottom: 1px solid #000000 !important;
+            border-top: 1px solid #000000 !important;
+            border-left: 1px solid #000000 !important;
+            border-right: 1px solid #000000 !important;
+            font-weight: bold;
+            color: #000000;
+            font-family: 'Arial';
+            font-size: 8pt;
+            background-color: white
+        }
+
+        th.style5 {
+            vertical-align: bottom;
+            text-align: left;
+            padding-left: 0px;
+            border-bottom: 1px solid #000000 !important;
+            border-top: 1px solid #000000 !important;
+            border-left: 1px solid #000000 !important;
+            border-right: 1px solid #000000 !important;
+            font-weight: bold;
+            color: #000000;
+            font-family: 'Arial';
+            font-size: 8pt;
+            background-color: white
+        }
+
+        td.style6 {
+            vertical-align: top;
+            text-align: left;
+            padding-left: 0px;
+            border-bottom: 1px solid #000000 !important;
+            border-top: 1px solid #000000 !important;
+            border-left: 1px solid #000000 !important;
+            border-right: 1px solid #000000 !important;
+            font-weight: bold;
+            color: #000000;
+            font-family: 'Arial';
+            font-size: 8pt;
+            background-color: white
+        }
+
+        th.style6 {
+            vertical-align: top;
+            text-align: left;
+            padding-left: 0px;
+            border-bottom: 1px solid #000000 !important;
+            border-top: 1px solid #000000 !important;
+            border-left: 1px solid #000000 !important;
+            border-right: 1px solid #000000 !important;
+            font-weight: bold;
+            color: #000000;
+            font-family: 'Arial';
+            font-size: 8pt;
+            background-color: white
+        }
+
+        td.style7 {
+            vertical-align: bottom;
+            border-bottom: 1px solid #000000 !important;
+            border-top: 1px solid #000000 !important;
+            border-left: 1px solid #000000 !important;
+            border-right: 1px solid #000000 !important;
+            font-weight: bold;
+            color: #000000;
+            font-family: 'Arial';
+            font-size: 8pt;
+            background-color: white
+        }
+
+        th.style7 {
+            vertical-align: bottom;
+            border-bottom: 1px solid #000000 !important;
+            border-top: 1px solid #000000 !important;
+            border-left: 1px solid #000000 !important;
+            border-right: 1px solid #000000 !important;
+            font-weight: bold;
+            color: #000000;
+            font-family: 'Arial';
+            font-size: 8pt;
+            background-color: white;
+            width: 40px;
+        }
+
+        td.style8 {
+            vertical-align: bottom;
+            border-bottom: 1px solid #000000 !important;
+            border-top: 1px solid #000000 !important;
+            border-left: 1px solid #000000 !important;
+            border-right: 1px solid #000000 !important;
+            font-weight: bold;
+            color: #000000;
+            font-family: 'Arial';
+            font-size: 8pt;
+            background-color: white;
+            width: 40px;
+        }
+
+        th.style8 {
+            vertical-align: bottom;
+            border-bottom: 1px solid #000000 !important;
+            border-top: 1px solid #000000 !important;
+            border-left: 1px solid #000000 !important;
+            border-right: 1px solid #000000 !important;
+            font-weight: bold;
+            color: #000000;
+            font-family: 'Arial';
+            font-size: 8pt;
+            background-color: white;
+            width: 40px;
+        }
+
+        td.style9 {
+            vertical-align: middle;
+            text-align: center;
+            border-bottom: 1px solid #000000 !important;
+            border-top: 1px solid #000000 !important;
+            border-left: 1px solid #000000 !important;
+            border-right: 1px solid #000000 !important;
+            font-weight: bold;
+            color: #FFFFFF;
+            font-family: 'Arial';
+            font-size: 8pt;
+            background-color: #000000
+        }
+
+        th.style9 {
+            vertical-align: middle;
+            text-align: center;
+            border-bottom: 1px solid #000000 !important;
+            border-top: 1px solid #000000 !important;
+            border-left: 1px solid #000000 !important;
+            border-right: 1px solid #000000 !important;
+            font-weight: bold;
+            color: #FFFFFF;
+            font-family: 'Arial';
+            font-size: 8pt;
+            background-color: #000000
+        }
+
+        td.style10 {
+            vertical-align: bottom;
+            text-align: center;
+            border-bottom: 1px solid #000000 !important;
+            border-top: 1px solid #000000 !important;
+            border-left: 1px solid #000000 !important;
+            border-right: none #000000;
+            font-weight: bold;
+            color: #000000;
+            font-family: 'Arial';
+            font-size: 8pt;
+            background-color: white
+        }
+
+        th.style10 {
+            vertical-align: bottom;
+            text-align: center;
+            border-bottom: 1px solid #000000 !important;
+            border-top: 1px solid #000000 !important;
+            border-left: 1px solid #000000 !important;
+            border-right: none #000000;
+            font-weight: bold;
+            color: #000000;
+            font-family: 'Arial';
+            font-size: 8pt;
+            background-color: white
+        }
+
+        td.style11 {
+            vertical-align: bottom;
+            text-align: center;
+            border-bottom: 1px solid #000000 !important;
+            border-top: 1px solid #000000 !important;
+            border-left: none #000000;
+            border-right: none #000000;
+            font-weight: bold;
+            color: #000000;
+            font-family: 'Arial';
+            font-size: 8pt;
+            background-color: white
+        }
+
+        th.style11 {
+            vertical-align: bottom;
+            text-align: center;
+            border-bottom: 1px solid #000000 !important;
+            border-top: 1px solid #000000 !important;
+            border-left: none #000000;
+            border-right: none #000000;
+            font-weight: bold;
+            color: #000000;
+            font-family: 'Arial';
+            font-size: 8pt;
+            background-color: white
+        }
+
+        td.style12 {
+            vertical-align: bottom;
+            text-align: center;
+            border-bottom: 1px solid #000000 !important;
+            border-top: 1px solid #000000 !important;
+            border-left: none #000000;
+            border-right: 1px solid #000000 !important;
+            font-weight: bold;
+            color: #000000;
+            font-family: 'Arial';
+            font-size: 8pt;
+            background-color: white
+        }
+
+        th.style12 {
+            vertical-align: bottom;
+            text-align: center;
+            border-bottom: 1px solid #000000 !important;
+            border-top: 1px solid #000000 !important;
+            border-left: none #000000;
+            border-right: 1px solid #000000 !important;
+            font-weight: bold;
+            color: #000000;
+            font-family: 'Arial';
+            font-size: 8pt;
+            background-color: white
+        }
+
+        td.style13 {
+            vertical-align: top;
+            border-bottom: 1px solid #000000 !important;
+            border-top: 1px solid #000000 !important;
+            border-left: 1px solid #000000 !important;
+            border-right: 1px solid #000000 !important;
+            font-weight: bold;
+            color: #000000;
+            font-family: 'Arial';
+            font-size: 8pt;
+            background-color: white
+        }
+
+        th.style13 {
+            vertical-align: top;
+            border-bottom: 1px solid #000000 !important;
+            border-top: 1px solid #000000 !important;
+            border-left: 1px solid #000000 !important;
+            border-right: 1px solid #000000 !important;
+            font-weight: bold;
+            color: #000000;
+            font-family: 'Arial';
+            font-size: 8pt;
+            background-color: white
+        }
+
+        table.sheet0 col.col0 {
+            width: 8.13333324pt
+        }
+
+        table.sheet0 col.col1 {
+            width: 41.34444397pt
+        }
+
+        table.sheet0 col.col2 {
+            width: 13.5555554pt
+        }
+
+        table.sheet0 col.col3 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col4 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col5 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col6 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col7 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col8 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col9 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col10 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col11 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col12 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col13 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col14 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col15 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col16 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col17 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col18 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col19 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col20 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col21 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col22 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col23 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col24 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col25 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col26 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col27 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col28 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col29 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col30 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col31 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col32 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col33 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col34 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col35 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col36 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col37 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col38 {
+            width: 8.81111101pt
+        }
+
+        table.sheet0 col.col39 {
+            width: 19.65555533pt
+        }
+
+        table.sheet0 col.col40 {
+            width: 28.46666634pt
+        }
+
+        table.sheet0 col.col41 {
+            width: 27.78888857pt
+        }
+
+        table.sheet0 col.col42 {
+            width: 42pt
+        }
+
+        table.sheet0 col.col43 {
+            width: 42pt
+        }
+
+        table.sheet0 col.col44 {
+            width: 42pt
+        }
+
+        table.sheet0 col.col45 {
+            width: 42pt
+        }
+
+        table.sheet0 col.col46 {
+            width: 42pt
+        }
+
+        table.sheet0 col.col47 {
+            width: 42pt
+        }
+
+        table.sheet0 col.col48 {
+            width: 42pt
+        }
+
+        table.sheet0 col.col49 {
+            width: 42pt
+        }
+
+        table.sheet0 col.col50 {
+            width: 42pt
+        }
+
+        table.sheet0 col.col51 {
+            width: 42pt
+        }
+
+        table.sheet0 col.col52 {
+            width: 42pt
+        }
+
+        table.sheet0 col.col53 {
+            width: 42pt
+        }
+
+        table.sheet0 col.col54 {
+            width: 42pt
+        }
+
+        table.sheet0 col.col55 {
+            width: 42pt
+        }
+
+        table.sheet0 col.col56 {
+            width: 42pt
+        }
+
+        table.sheet0 col.col57 {
+            width: 42pt
+        }
+
+        table.sheet0 tr {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row0 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row1 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row2 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row3 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row4 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row5 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row6 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row7 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row8 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row9 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row10 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row11 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row12 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row13 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row14 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row15 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row16 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row17 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row18 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row19 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row20 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row21 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row22 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row23 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row24 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row25 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row26 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row27 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row28 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row29 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row30 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row31 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row32 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row33 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row34 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row35 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row36 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row37 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row38 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row39 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row40 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row41 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row42 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row43 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row44 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row45 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row46 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row47 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row48 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row49 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row50 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row51 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row52 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row53 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row54 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row55 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row56 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row57 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row58 {
+            height: 23pt
+        }
+
+        table.sheet0 tr.row59 {
+            height: 24pt
+        }
+
+        table.sheet0 tr.row60 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row61 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row62 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row63 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row64 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row65 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row66 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row67 {
+            height: 10pt
+        }
+
+        table.sheet0 tr.row68 {
+            height: 10pt
+        }
+
+        .column3 {
+            width: 10px !important;
+        }
+    </style>
+</head>
+
+<body>
+    {{-- <style>
+        @page {
+            margin-left: 0.1in;
+            margin-right: 0.1in;
+            margin-top: 0.75in;
+            margin-bottom: 0.75in;
+        }
+
+        body {
+            margin-left: 0.1in;
+            margin-right: 0.1in;
+            margin-top: 0.75in;
+            margin-bottom: 0.75in;
+        }
+    </style> --}}
+    @include('templates.downloads.letter_header', [
+        'generic_letter_header' => true,
+        'letter_header_address' => $patient->letter_header_address,
+    ])
+    <div class="main-container-for-anaestesia">
+        <table border="0" cellpadding="0" cellspacing="0" id="sheet0" class="sheet0 gridlines">
+            <col class="col0">
+            <col class="col1">
+            <col class="col2">
+            <col class="col3">
+            <col class="col4">
+            <col class="col5">
+            <col class="col6">
+            <col class="col7">
+            <col class="col8">
+            <col class="col9">
+            <col class="col10">
+            <col class="col11">
+            <col class="col12">
+            <col class="col13">
+            <col class="col14">
+            <col class="col15">
+            <col class="col16">
+            <col class="col17">
+            <col class="col18">
+            <col class="col19">
+            <col class="col20">
+            <col class="col21">
+            <col class="col22">
+            <col class="col23">
+            <col class="col24">
+            <col class="col25">
+            <col class="col26">
+            <col class="col27">
+            <col class="col28">
+            <col class="col29">
+            <col class="col30">
+            <col class="col31">
+            <col class="col32">
+            <col class="col33">
+            <col class="col34">
+            <col class="col35">
+            <col class="col36">
+            <col class="col37">
+            <col class="col38">
+            <col class="col39">
+            <col class="col40">
+            <col class="col41">
+            <col class="col42">
+            <col class="col43">
+            <col class="col44">
+            <col class="col45">
+            <col class="col46">
+            <col class="col47">
+            <col class="col48">
+            <col class="col49">
+            <col class="col50">
+            <col class="col51">
+            <col class="col52">
+            <col class="col53">
+            <col class="col54">
+            <col class="col55">
+            <col class="col56">
+            <col class="col57">
+            <tbody>
+                <tr class="row0">
+                    <td class="column0 style5 s style5" colspan="26">Name:
+                        {{ $patient->first_name . ' ' . $patient->last_name }}</td>
+                    <td class="column26 style5 s style5" colspan="6">Age: {{ $patient->age ?? 'NA' }}</td>
+                    <td class="column32 style2 s style2" colspan="6">Sex: M/F {{ $patient->gender }}</td>
+                    <td class="column38 style5 s style5" colspan="4">Hosp No.:</td>
+                </tr>
+                <tr class="row1">
+                    <td class="column0 style5 s style5" colspan="30">Surgical procedure:</td>
+                    <td class="column30 style6 s style6" colspan="12">Position:</td>
+                </tr>
+                <tr class="row2">
+                    <td class="column0 style5 s style5" colspan="23">Anaestetists:</td>
+                    <td class="column23 style5 s style5" colspan="19">Surgeons:</td>
+                </tr>
+                <tr class="row3">
+                    <td class="column0 style5 s style5" colspan="23">Assistants:</td>
+                    <td class="column23 style5 s style5" colspan="19">Assistants:</td>
+                </tr>
+                <tr class="row4">
+                    <td class="column0 style7 null"></td>
+                    <td class="column1 style10 s style12" colspan="2">Time</td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column39 style2 s style2" colspan="3">Total</td>
+                </tr>
+                <tr class="row5">
+                    <td class="column0 style9 s style9" rowspan="22">Anaestetic Drugs</td>
+                    <td class="column1 style2 s style2" colspan="2">Oxygen (L/Min)</td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column39 style10 s style12" colspan="3"></td>
+                </tr>
+                <tr class="row6">
+                    <td class="column1 style2 s style2" colspan="2">N<span
+                            style="font-weight:bold; color:#000000; font-family:'Arial (Body)'; font-size:8pt">2</span><span
+                            style="font-weight:bold; color:#000000; font-family:'Arial'; font-size:8pt">O
+                            (L/Min)</span>
+                    </td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column39 style10 s style12" colspan="3"></td>
+                </tr>
+                <tr class="row7">
+                    <td class="column1 style2 s style2" colspan="2">Air (L/Min)</td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column39 style10 s style12" colspan="3"></td>
+                    <td class="column54 style1 null"></td>
+                    <td class="column55 style1 null"></td>
+                    <td class="column56 style1 null"></td>
+                    <td class="column57 style1 null"></td>
+                </tr>
+                {{-- need to check --}}
+                @foreach (range(1, 17) as $item)
+                    <tr class="row8" style="height: 10pt">
+                        <td class="column1 style2 null style2" style="height: 10pt" colspan="2"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column3 style8 s"></td>
+                        <td class="column39 style10 s style12" colspan="3"></td>
+                        <td class="column54 style1 null"></td>
+                        <td class="column55 style1 null"></td>
+                    </tr>
+                @endforeach
+                {{-- <tr class="row9">
+                    <td class="column1 style2 null style2" colspan="2"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column39 style10 s style12" colspan="3"></td>
+                    <td class="column54 style1 null"></td>
+                    <td class="column55 style1 null"></td>
+                </tr>
+                <tr class="row10">
+                    <td class="column1 style2 null style2" colspan="2"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column39 style10 s style12" colspan="3"></td>
+                    <td class="column54 style1 null"></td>
+                    <td class="column55 style1 null"></td>
+                </tr>
+                <tr class="row11">
+                    <td class="column1 style2 null style2" colspan="2"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column39 style10 s style12" colspan="3"></td>
+                </tr>
+                <tr class="row12">
+                    <td class="column1 style2 null style2" colspan="2"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column39 style10 s style12" colspan="3"></td>
+                </tr>
+                <tr class="row13">
+                    <td class="column1 style2 null style2" colspan="2"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column39 style10 s style12" colspan="3"></td>
+                </tr>
+                <tr class="row14">
+                    <td class="column1 style2 null style2" colspan="2"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column39 style10 s style12" colspan="3"></td>
+                </tr>
+                <tr class="row15">
+                    <td class="column1 style2 null style2" colspan="2"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column39 style10 s style12" colspan="3"></td>
+                </tr>
+                <tr class="row16">
+                    <td class="column1 style2 null style2" colspan="2"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column39 style10 s style12" colspan="3"></td>
+                </tr>
+                <tr class="row17">
+                    <td class="column1 style2 null style2" colspan="2"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column39 style10 s style12" colspan="3"></td>
+                </tr>
+                <tr class="row18">
+                    <td class="column1 style2 null style2" colspan="2"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column39 style10 s style12" colspan="3"></td>
+                </tr>
+                <tr class="row19">
+                    <td class="column1 style2 null style2" colspan="2"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column39 style10 s style12" colspan="3"></td>
+                </tr>
+                <tr class="row20">
+                    <td class="column1 style2 null style2" colspan="2"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column39 style10 s style12" colspan="3"></td>
+                </tr>
+                <tr class="row21">
+                    <td class="column1 style2 null style2" colspan="2"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column39 style10 s style12" colspan="3"></td>
+                </tr>
+                <tr class="row22">
+                    <td class="column1 style2 null style2" colspan="2"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column39 style10 s style12" colspan="3"></td>
+                </tr>
+                <tr class="row23">
+                    <td class="column1 style2 null style2" colspan="2"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column39 style10 s style12" colspan="3"></td>
+                </tr>
+                <tr class="row24">
+                    <td class="column1 style2 null style2" colspan="2"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column39 style10 s style12" colspan="3"></td>
+                </tr> --}}
+                {{-- need to check --}}
+                <tr class="row25">
+                    <td class="column1 style2 s style2" colspan="2">Urine Output</td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column39 style10 s style12" colspan="3"></td>
+                </tr>
+                <tr class="row26">
+                    <td class="column1 style2 s style2" colspan="2">Blood Lose</td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column39 style10 s style12" colspan="3"></td>
+                </tr>
+                <tr class="row27">
+                    <td class="column0 style9 s style9" rowspan="26">Fluids</td>
+                    <td class="column1 style2 s style2" rowspan="2">BaseLine Values</td>
+                    <td class="column2 style4 n style4" rowspan="2">240</td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column39 style4 s style4" colspan="3" rowspan="22">SYMBOLS<br />
+                        <br />
+                        <br />
+                        V Systolic BP<br />
+                        Λ Diastolic BP<br />
+                        O Heart Rate<br />
+                        + Oxygen Sat<br />
+                        ⊗ ETCO2<br />
+                        °C Temp<br />
+                        ⊕ Anaesthesia<br />
+                        △ Surgery<br />
+                        T Spont Resp<br />
+                        ⊥ Cont Resp
+                    </td>
+                </tr>
+                <tr class="row28">
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row29">
+                    <td class="column1 style3 s style3" rowspan="5">Blood pressure</td>
+                    <td class="column2 style4 n style4" rowspan="2">220</td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row30">
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row31">
+                    <td class="column2 style4 n style4" rowspan="2">200</td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row32">
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row33">
+                    <td class="column2 style4 n style4" rowspan="2">180</td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row34">
+                    <td class="column1 style3 s style3" rowspan="6">Pulse</td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row35">
+                    <td class="column2 style4 n style4" rowspan="2">160</td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row36">
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row37">
+                    <td class="column2 style4 n style4" rowspan="2">140</td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row38">
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row39">
+                    <td class="column2 style4 n style4" rowspan="2">120</td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row40">
+                    <td class="column1 style3 s style3" rowspan="6">Respiratory rate</td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row41">
+                    <td class="column2 style4 n style4" rowspan="2">100</td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row42">
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row43">
+                    <td class="column2 style4 n style4" rowspan="2">80</td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row44">
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row45">
+                    <td class="column2 style4 n style4" rowspan="2">60</td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row46">
+                    <td class="column1 style3 s style3" rowspan="7">Temp</td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row47">
+                    <td class="column2 style4 n style4" rowspan="2">40</td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row48">
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row49">
+                    <td class="column2 style4 n style4" rowspan="2">20</td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column39 style3 s style3" colspan="3" rowspan="10">Tourniquet Time</td>
+                </tr>
+                <tr class="row50">
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row51">
+                    <td class="column2 style4 n style4" rowspan="2">0</td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row52">
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row53">
+                    <td class="column0 style9 s style9" rowspan="16">Vents</td>
+                    <td class="column1 style2 s style2" colspan="2">O2 Saturation</td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row54">
+                    <td class="column1 style2 s style2" colspan="2">E2CO2</td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row55">
+                    <td class="column1 style2 s style2" colspan="2">Tidal Volume</td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row56">
+                    <td class="column1 style2 s style2" colspan="2">Respiratory rate</td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row57">
+                    <td class="column1 style2 s style2" colspan="2">Peak Pressure</td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row58">
+                    <td class="column1 style2 s style2" colspan="2">Symbols for remarks</td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                    <td class="column3 style8 s"></td>
+                </tr>
+                <tr class="row59">
+                    <td class="column1 style6 s style6" colspan="38" rowspan="10">Remarks</td>
+                    <td class="column39 style13 null"></td>
+                    <td class="column40 style8 s">Anaestesia</td>
+                    <td class="column41 style8 s">Surgery</td>
+                </tr>
+                <tr class="row60">
+                    <td class="column39 style3 s style3" rowspan="3">Start<br />
+                    </td>
+                    <td class="column40 style2 s style2" rowspan="3"></td>
+                    <td class="column41 style2 s style2" rowspan="3"></td>
+                </tr>
+                <tr class="row61">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                </tr>
+                <tr class="row62">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                </tr>
+                <tr class="row63">
+                    <td class="column39 style3 s style3" rowspan="3">End</td>
+                    <td class="column40 style2 s style2" rowspan="3"></td>
+                    <td class="column41 style2 s style2" rowspan="3"></td>
+                </tr>
+                <tr class="row64">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                </tr>
+                <tr class="row65">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                </tr>
+                <tr class="row66">
+                    <td class="column39 style3 s style3" rowspan="3">Duration</td>
+                    <td class="column40 style2 s style2" rowspan="3"></td>
+                    <td class="column41 style2 null style2" rowspan="3"></td>
+                </tr>
+                <tr class="row67">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                </tr>
+                <tr class="row68">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

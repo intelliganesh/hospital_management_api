@@ -1,0 +1,110 @@
+/**
+     * @OA\Put(
+     *      path="/api/edit_system_settings",
+     *      summary="To update system settings",
+     *      tags={"System settings"},
+     *      description="To update system settings data",
+     *      security={{"bearerAuth":{}}},
+     *      @OA\RequestBody(
+     *          required=true,
+     *          description="To update system settings data",
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *              @OA\Schema(
+     *                  type="object",
+     *                  required={"hospital_name", "hospital_prefix", "opd_prefix", "ipd_prefix", "patient_prefix", "primary_color", "text_primary_color", "bg_primary_color", "secondary_color", "text_secondary_color", "bg_secondary_color", "tertiary_color", "text_tertiary_color", "bg_tertiary_color", "currency_symbol", "currency", "theme"},
+     *                  @OA\Property(property="hospital_name", type="string", example="Riverside Hospital"),
+     *                  @OA\Property(property="hospital_prefix", type="string", example="HOS"),
+     *                  @OA\Property(property="opd_prefix", type="string", example="OPD"),
+     *                  @OA\Property(property="ipd_prefix", type="string", example="IPD"),
+     *                  @OA\Property(property="patient_prefix", type="string", example="PAT"),
+     *                  @OA\Property(property="appointment_prefix", type="string", example="APT"),
+     *                  @OA\Property(property="payment_prefix", type="string", example="PAY"),
+     *                  @OA\Property(property="test_prefix", type="string", example="TST"),
+     *                  @OA\Property(property="primary_color", type="string", example="#000"),
+     *                  @OA\Property(property="text_primary_color", type="string", example="#000"),
+     *                  @OA\Property(property="bg_primary_color", type="string", example="#000"),
+     *                  @OA\Property(property="secondary_color", type="string", example="#000"),
+     *                  @OA\Property(property="text_secondary_color", type="string", example="#000"),
+     *                  @OA\Property(property="bg_secondary_color", type="string", example="#000"),
+     *                  @OA\Property(property="tertiary_color", type="string", example="#000"),
+     *                  @OA\Property(property="text_tertiary_color", type="string", example="#000"),
+     *                  @OA\Property(property="bg_tertiary_color", type="string", example="#000"),
+     *                  @OA\Property(property="currency_symbol", type="string", example="$ etc..."),
+     *                  @OA\Property(property="currency", type="string", example="USD etc..."),
+     *                  @OA\Property(property="theme", type="string", example="dark,light,system")
+     *              )
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="status", type="string", example="success"),
+     *              @OA\Property(property="message", type="string", example="Request processed successfully")
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Validation error",
+     *          @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(property="hospital_name", type="array", @OA\Items(type="string"), example={"The hospital_name field is required."}),
+     *              @OA\Property(property="hospital_prefix", type="array", @OA\Items(type="string"), example={"The hospital_prefix field is required."}),
+     *              @OA\Property(property="opd_prefix", type="array", @OA\Items(type="string"), example={"The opd_prefix field is required."}),
+     *              @OA\Property(property="ipd_prefix", type="array", @OA\Items(type="string"), example={"The ipd_prefix field is required."}),
+     *              @OA\Property(property="patient_prefix", type="array", @OA\Items(type="string"), example={"The patient_prefix field is required."}),
+     *              @OA\Property(property="appointment_prefix", type="array", @OA\Items(type="string"), example={"The appointment_prefix field is required."}),
+     *              @OA\Property(property="test_prefix", type="array", @OA\Items(type="string"), example={"The test_prefix field is required."}),
+     *              @OA\Property(property="payment_prefix", type="array", @OA\Items(type="string"), example={"The payment_prefix field is required."}),
+     *              @OA\Property(property="primary_color", type="array", @OA\Items(type="string"), example={"The primary_color field is required."}),
+     *              @OA\Property(property="text_primary_color", type="array", @OA\Items(type="string"), example={"The text_primary_color field is required."}),
+     *              @OA\Property(property="bg_primary_color", type="array", @OA\Items(type="string"), example={"The bg_primary_color field is required."}),
+     *              @OA\Property(property="secondary_color", type="array", @OA\Items(type="string"), example={"The secondary_color field is required."}),
+     *              @OA\Property(property="text_secondary_color", type="array", @OA\Items(type="string"), example={"The text_secondary_color field is required."}),
+     *              @OA\Property(property="bg_secondary_color", type="array", @OA\Items(type="string"), example={"The bg_secondary_color field is required."}),
+     *              @OA\Property(property="tertiary_color", type="array", @OA\Items(type="string"), example={"The tertiary_color field is required."}),
+     *              @OA\Property(property="text_tertiary_color", type="array", @OA\Items(type="string"), example={"The text_tertiary_color field is required."}),
+     *              @OA\Property(property="bg_tertiary_color", type="array", @OA\Items(type="string"), example={"The bg_tertiary_color field is required."}),
+     *              @OA\Property(property="currency_symbol", type="array", @OA\Items(type="string"), example={"The currency_symbol field is required."}),
+     *              @OA\Property(property="currency", type="array", @OA\Items(type="string"), example={"The currency field is required."}),
+     *              @OA\Property(property="theme", type="array", @OA\Items(type="string"), example={"The theme field is required."})
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthorized",
+     *          ref="#/components/responses/UnauthorizedResponse"
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Not Found",
+     *          ref="#/components/responses/NotFound"
+     *      ),
+     *      @OA\Response(
+     *          response=500,
+     *          description="Server error",
+     *          ref="#/components/responses/ServerErrorResponse"
+     *      )
+     * )
+     */
+    public function update(Request $request)
+    {
+        try {
+            return $this->successResponse(['id' => $this->systemSettingsService->updateSystemSettings($request, null)]);
+        } catch (NotFoundHttpException $notFound) {
+            return $this->errorResponse(
+                [],
+                $notFound->getMessage(),
+                $notFound->getStatusCode()
+            );
+        } catch (ValidationException $ve) {
+            return $this->errorResponse(
+                $ve->validator->errors()->toArray(),
+                'Validation error',
+                400
+            );
+        } catch (Exception $e) {
+            return $this->exceptionResponse($e);
+        }
+    }

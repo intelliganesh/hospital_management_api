@@ -1,0 +1,525 @@
+<?php
+namespace App\Services;
+
+use App\Models\IPD;
+use App\Models\Invoice;
+use App\Models\IPDInvoiceItem;
+use App\Models\IpdDocument;
+use App\Models\Patient;
+use App\Models\Receipt;
+use App\Models\SystemSettings;
+use Exception;
+use Illuminate\Support\Facades\Storage;
+use Spatie\Browsershot\Browsershot;
+
+class IPDDownloadService
+{
+    /**
+     * Generate PDF for various IPD documents
+     */
+    public function generatePdf(string $ipdId, string $type, string $ipd_surgery_id = null)
+    {
+        try {
+            $ipd = IPD::with('patient', 'consultation', 'staffs', 'preliminaryNotes')->findOrFail($ipdId);
+
+            $htmlContent = '';
+            $fileName    = '';
+
+            $system = SystemSettings::first();
+
+            $footer_content        = '';
+            $letter_header_address = '';
+            if (! empty($system)) {
+                $letter_header_address = $system->billing_letter_header;
+                $footer_content        = $system->footer_content ?? '';
+            }
+
+            // Decode HTML entities so they render correctly
+            $footerHtml = html_entity_decode($footer_content);
+            $headerHtml = view('templates.downloads.IPD.header', compact('letter_header_address'))->render();
+
+            switch ($type) {
+                case 'preliminary_notes':
+                    $fileName    = 'preliminary_notes_' . $ipd->ipd_number . '.pdf';
+                    $htmlContent = view('templates.downloads.IPD.preliminary_notes', compact('ipd'))->render();
+                    break;
+
+                case 'doctor_notes':
+                    $fileName          = 'doctor_notes_' . $ipd->ipd_number . '.pdf';
+                    $doctor_notes      = $ipd->doctorNotes()->orderBy('datetime', 'asc')->get();
+                    $ipd->doctor_notes = $doctor_notes;
+                    $htmlContent       = view('templates.downloads.IPD.doctor_notes', compact('ipd'))->render();
+                    break;
+
+                case 'nurse_notes':
+                    $fileName         = 'nurse_notes_' . $ipd->ipd_number . '.pdf';
+                    $nurse_notes      = $ipd->nurseNotes()->orderBy('datetime', 'asc')->get();
+                    $ipd->nurse_notes = $nurse_notes;
+                    $htmlContent      = view('templates.downloads.IPD.nurse_notes', compact('ipd'))->render();
+                    break;
+
+                case 'anaesthesia_consent_form':
+                    $surgery_report      = $ipd->surgery?->where('id', $ipd_surgery_id)->first();
+                    $anaesthesia_report  = $ipd->anaesthesia?->where('ipd_surgery_id', $ipd_surgery_id)->first();
+                    $ipd->surgery_report = $surgery_report;
+                    $ipd->anaesthesia    = $anaesthesia_report;
+                    $fileName            = 'anaesthesia_consent_form_' . $ipd->ipd_number . '_' . str_replace(["-", " ", ","], "_", $surgery_report->surgery_name) . '.pdf';
+                    $htmlContent         = view('templates.downloads.IPD.anaesthesia_consent_form', compact('ipd'))->render();
+                    break;
+
+                case 'pre_anaesthesia_assessment':
+                    $surgery_report                                  = $ipd->surgery?->where('id', $ipd_surgery_id)->first();
+                    $anaesthesia_report                              = $ipd->anaesthesia?->where('ipd_surgery_id', $ipd_surgery_id)->first();
+                    $ipd->surgery_report                             = $surgery_report;
+                    $ipd->anaesthesia                                = $anaesthesia_report;
+                    $ipd->anaesthesia_pre_operative_evaluation_chart = $ipd->preOperativeAnaesthesiaEvaluation?->where('ipd_surgery_id', $ipd_surgery_id)->first();
+                    $fileName                                        = 'pre_anaesthesia_assessment_' . $ipd->ipd_number . '_' . str_replace(["-", " ", ","], "_", $surgery_report->surgery_name) . '.pdf';
+                    $htmlContent                                     = view('templates.downloads.IPD.pre_operative_anaesthesia_evaluation_chart', compact('ipd'))->render();
+                    break;
+
+                case 'department_of_anaesthesia':
+                    $surgery_report                                  = $ipd->surgery?->where('id', $ipd_surgery_id)->first();
+                    $anaesthesia_report                              = $ipd->anaesthesia?->where('ipd_surgery_id', $ipd_surgery_id)->first();
+                    $ipd->surgery_report                             = $surgery_report;
+                    $ipd->anaesthesia                                = $anaesthesia_report;
+                    $ipd->anaesthesiaDepartment                      = $ipd->anaesthesiaDepartment?->where('ipd_surgery_id', $ipd_surgery_id)->first();
+                    $fileName                                        = 'department_of_anaesthesia_' . $ipd->ipd_number . '_' . str_replace(["-", " ", ","], "_", $surgery_report->surgery_name) . '.pdf';
+                    $htmlContent                                     = view('templates.downloads.IPD.department_of_anaesthesia', compact('ipd'))->render();
+                    break;
+
+                case 'anaesthesia_recovery_room_observation':
+                    $surgery_report           = $ipd->surgery?->where('id', $ipd_surgery_id)->first();
+                    $anaesthesia_report       = $ipd->anaesthesia?->where('ipd_surgery_id', $ipd_surgery_id)->first();
+                    $ipd->surgery_report      = $surgery_report;
+                    $ipd->anaesthesia         = $anaesthesia_report;
+                    $ipd->recoveryObservation = $ipd->recoveryObservation?->where('ipd_surgery_id', $ipd_surgery_id)->first();
+                    $fileName                 = 'anaesthesia_recovery_room_observation_' . $ipd->ipd_number . '_' . str_replace(["-", " ", ","], "_", $surgery_report->surgery_name) . '.pdf';
+                    $htmlContent              = view('templates.downloads.IPD.anaesthesia_recovery_room_observation', compact('ipd'))->render();
+                    break;
+
+                case 'anaesthesia_record':
+                    $surgery_report      = $ipd->surgery?->where('id', $ipd_surgery_id)->first();
+                    $anaesthesia_report  = $ipd->anaesthesia?->where('ipd_surgery_id', $ipd_surgery_id)->first();
+                    $ipd->surgery_report = $surgery_report;
+                    $ipd->anaesthesia    = $anaesthesia_report;
+                    $fileName            = 'anaesthesia_record_' . $ipd->ipd_number . '_' . str_replace(["-", " ", ","], "_", $surgery_report->surgery_name) . '.pdf';
+                    $htmlContent         = view('templates.downloads.IPD.anaesthesia_record', compact('ipd'))->render();
+                    break;
+
+                case 'surgery_consent_form':
+                    $surgery_report      = $ipd->surgery?->where('id', $ipd_surgery_id)->first();
+                    $ipd->surgery_report = $surgery_report;
+                    $fileName            = 'surgery_consent_form_' . $ipd->ipd_number . '_' . str_replace(["-", " ", ","], "_", $surgery_report->surgery_name) . '.pdf';
+                    $htmlContent         = view('templates.downloads.IPD.surgery_consent_form', compact('ipd'))->render();
+                    break;
+
+                case 'surgery_report':
+                    $surgery_report      = $ipd->surgery?->where('id', $ipd_surgery_id)->first();
+                    $ipd->surgery_report = $surgery_report;
+                    $fileName            = 'surgery_report_' . $ipd->ipd_number . '_' . str_replace(["-", " ", ","], "_", $surgery_report->surgery_name) . '.pdf';
+                    $htmlContent         = view('templates.downloads.IPD.surgery_report', compact('ipd'))->render();
+                    break;
+
+                case 'pre_operative_checklist':
+                    $surgery_report             = $ipd->surgery?->where('id', $ipd_surgery_id)->first();
+                    $preOperativeChecklist      = $ipd->preOperativeChecklist?->where('ipd_surgery_id', $ipd_surgery_id)->first();
+                    $ipd->preOperativeChecklist = $preOperativeChecklist;
+                    $fileName                   = 'pre_operative_checklist_' . $ipd->ipd_number . '_' . str_replace(["-", " ", ","], "_", $surgery_report->surgery_name) . '.pdf';
+                    $htmlContent                = view('templates.downloads.IPD.pre_operative_checklist', compact('ipd'))->render();
+                    break;
+
+                case 'discharge_summary':
+                    $ipd->discharge_summary = $ipd->dischargeSummaryReport;
+                    $fileName            = 'discharge_summary_' . $ipd->ipd_number  . '.pdf';
+                    $htmlContent         = view('templates.downloads.IPD.discharge_summary', compact('ipd'))->render();
+                    break;
+
+                case 'billing_invoice':
+                    $ipd->discharge_summary = $ipd->dischargeSummaryReport;
+                    $bill                = $this->billingInvoiceData($ipd->id);
+                    $fileName            = 'billing_invoice_' . $ipd->ipd_number  . '.pdf';
+                    $htmlContent         = view('templates.downloads.IPD.billing_invoice', compact('ipd', 'bill'))->render();
+                    break;
+
+                default:
+                    throw new Exception('Invalid document type: ' . $type);
+            }
+
+            $filePath = storage_path("app/public/pdfs/ipd/{$ipd->ipd_number}/{$fileName}");
+
+            // Ensure the directory exists
+            if (! Storage::disk('public')->exists("pdfs/ipd/{$ipd->ipd_number}")) {
+                Storage::disk('public')->makeDirectory("pdfs/ipd/{$ipd->ipd_number}");
+            }
+
+            $footerHtml = '
+                <div style="
+                    width:100%;
+                    font-size:10px;
+                    text-align:center;
+                    padding-top:5px;
+                ">
+                    Page <span class="pageNumber"></span> of <span class="totalPages"></span>
+                </div>
+                ';
+
+            // Generate and save the PDF using Browsershot
+            Browsershot::html($htmlContent)
+                ->format('A4')
+                ->margins(35, 10, 10, 10)
+                ->noSandbox()
+                ->waitUntilNetworkIdle()
+                ->showBrowserHeaderAndFooter()
+                ->headerHtml($headerHtml)
+                ->footerHtml($footerHtml)
+            // ->setOption('margin-left', '10')
+            // ->setOption('margin-right', '10')
+            // ->setOption('margin-top', '10')
+            // ->setOption('margin-bottom', '30')  // 🔥 remove wkhtml default bottom margin
+            // ->setOption('footer-spacing', '0') // 🔥 remove spacing between body & footer
+            // ->setOption('printBackground', true)
+                ->savePdf($filePath);
+
+            // Store only the relative path
+            $relativePath = "pdfs/ipd/{$ipd->ipd_number}/{$fileName}";
+
+            IpdDocument::updateOrCreate([
+                'ipd_id'         => $ipd->id,
+                'ipd_surgery_id' => $ipd_surgery_id,
+                'document_type'  => $type,
+                'document_path'  => $relativePath,
+            ]);
+
+            // Return the public URL
+            return asset("storage/{$relativePath}");
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function downloadPdf(string $ipdId, string $type, string $ipd_surgery_id = null)
+    {
+        if ($ipd_surgery_id) {
+            $ipdDocument = IpdDocument::where('ipd_id', $ipdId)
+                ->where('ipd_surgery_id', $ipd_surgery_id)
+                ->where('document_type', $type)
+                ->get();
+        } else {
+            $ipdDocument = IpdDocument::where('ipd_id', $ipdId)->where('document_type', $type)->get();
+        }
+        if (count($ipdDocument) > 0) {
+            if (count($ipdDocument) == 1) {
+                return asset("storage/{$ipdDocument[0]->document_path}");
+            } else {
+                $path = [];
+                foreach ($ipdDocument as $document) {
+                    $path[] = asset("storage/{$document->document_path}");
+                }
+                return $path;
+            }
+        }
+        return null;
+    }
+
+     public function downloademptyPdf(string $ipdId, string $type, string $ipd_surgery_id = null)
+    {
+        try {
+            $ipd = IPD::findOrFail($ipdId);
+
+            $htmlContent = '';
+            $fileName    = '';
+
+            $system = SystemSettings::first();
+
+            $footer_content        = '';
+            $letter_header_address = '';
+            if (! empty($system)) {
+                $letter_header_address = $system->billing_letter_header;
+                $footer_content        = $system->footer_content ?? '';
+            }
+
+            // Decode HTML entities so they render correctly
+            $footerHtml = html_entity_decode($footer_content);
+            $headerHtml = view('templates.downloads.IPD.header', compact('letter_header_address'))->render();
+
+            switch ($type) {
+                case 'preliminary_notes':
+                    $fileName    = 'preliminary_notes_' . $ipd->ipd_number . '.pdf';
+                    $htmlContent = view('templates.downloads.IPD.preliminary_notes', compact('ipd'))->render();
+                    break;
+
+                case 'doctor_notes':
+                    $fileName          = 'doctor_notes_' . $ipd->ipd_number . '.pdf';
+                    $doctor_notes      = $ipd->doctorNotes()->orderBy('datetime', 'asc')->get();
+                    $ipd->doctor_notes = $doctor_notes;
+                    $htmlContent       = view('templates.downloads.IPD.doctor_notes', compact('ipd'))->render();
+                    break;
+
+                case 'nurse_notes':
+                    $fileName         = 'nurse_notes_' . $ipd->ipd_number . '.pdf';
+                    $nurse_notes      = $ipd->nurseNotes()->orderBy('datetime', 'asc')->get();
+                    $ipd->nurse_notes = $nurse_notes;
+                    $htmlContent      = view('templates.downloads.IPD.nurse_notes', compact('ipd'))->render();
+                    break;
+
+                case 'anaesthesia_consent_form':
+                    $surgery_report      = $ipd->surgery?->where('id', $ipd_surgery_id)->first();
+                    $anaesthesia_report  = $ipd->anaesthesia?->where('ipd_surgery_id', $ipd_surgery_id)->first();
+                    $ipd->surgery_report = $surgery_report;
+                    $ipd->anaesthesia    = $anaesthesia_report;
+                    $fileName            = 'anaesthesia_consent_form_' . $ipd->ipd_number . '_' . str_replace(["-", " ", ","], "_", $surgery_report->surgery_name) . '.pdf';
+                    $htmlContent         = view('templates.downloads.IPD.anaesthesia_consent_form', compact('ipd'))->render();
+                    break;
+
+                case 'pre_anaesthesia_assessment':
+                    $surgery_report                                  = $ipd->surgery?->where('id', $ipd_surgery_id)->first();
+                    $anaesthesia_report                              = $ipd->anaesthesia?->where('ipd_surgery_id', $ipd_surgery_id)->first();
+                    $ipd->surgery_report                             = $surgery_report;
+                    $ipd->anaesthesia                                = $anaesthesia_report;
+                    $ipd->anaesthesia_pre_operative_evaluation_chart = $ipd->preOperativeAnaesthesiaEvaluation?->where('ipd_surgery_id', $ipd_surgery_id)->first();
+                    $fileName                                        = 'pre_anaesthesia_assessment_' . $ipd->ipd_number . '_' . str_replace(["-", " ", ","], "_", $surgery_report->surgery_name) . '.pdf';
+                    $htmlContent                                     = view('templates.downloads.IPD.pre_operative_anaesthesia_evaluation_chart', compact('ipd'))->render();
+                    break;
+
+                case 'department_of_anaesthesia':
+                    $surgery_report                                  = $ipd->surgery?->where('id', $ipd_surgery_id)->first();
+                    $anaesthesia_report                              = $ipd->anaesthesia?->where('ipd_surgery_id', $ipd_surgery_id)->first();
+                    $ipd->surgery_report                             = $surgery_report;
+                    $ipd->anaesthesia                                = $anaesthesia_report;
+                    $ipd->anaesthesiaDepartment                      = $ipd->anaesthesiaDepartment?->where('ipd_surgery_id', $ipd_surgery_id)->first();
+                    $fileName                                        = 'department_of_anaesthesia_' . $ipd->ipd_number . '_' . str_replace(["-", " ", ","], "_", $surgery_report->surgery_name) . '.pdf';
+                    $htmlContent                                     = view('templates.downloads.IPD.department_of_anaesthesia', compact('ipd'))->render();
+                    break;
+
+                case 'anaesthesia_recovery_room_observation':
+                    $surgery_report           = $ipd->surgery?->where('id', $ipd_surgery_id)->first();
+                    $anaesthesia_report       = $ipd->anaesthesia?->where('ipd_surgery_id', $ipd_surgery_id)->first();
+                    $ipd->surgery_report      = $surgery_report;
+                    $ipd->anaesthesia         = $anaesthesia_report;
+                    $ipd->recoveryObservation = $ipd->recoveryObservation?->where('ipd_surgery_id', $ipd_surgery_id)->first();
+                    $fileName                 = 'anaesthesia_recovery_room_observation_' . $ipd->ipd_number . '_' . str_replace(["-", " ", ","], "_", $surgery_report->surgery_name) . '.pdf';
+                    $htmlContent              = view('templates.downloads.IPD.anaesthesia_recovery_room_observation', compact('ipd'))->render();
+                    break;
+
+                case 'anaesthesia_record':
+                    $surgery_report      = $ipd->surgery?->where('id', $ipd_surgery_id)->first();
+                    $anaesthesia_report  = $ipd->anaesthesia?->where('ipd_surgery_id', $ipd_surgery_id)->first();
+                    $ipd->surgery_report = $surgery_report;
+                    $ipd->anaesthesia    = $anaesthesia_report;
+                    $fileName            = 'anaesthesia_record_' . $ipd->ipd_number . '_' . str_replace(["-", " ", ","], "_", $surgery_report->surgery_name) . '.pdf';
+                    $htmlContent         = view('templates.downloads.IPD.anaesthesia_record', compact('ipd'))->render();
+                    break;
+
+                case 'surgery_consent_form':
+                    $surgery_report      = $ipd->surgery?->where('id', $ipd_surgery_id)->first();
+                    $ipd->surgery_report = $surgery_report;
+                    $fileName            = 'surgery_consent_form_' . $ipd->ipd_number . '_' . str_replace(["-", " ", ","], "_", $surgery_report->surgery_name) . '.pdf';
+                    $htmlContent         = view('templates.downloads.IPD.surgery_consent_form', compact('ipd'))->render();
+                    break;
+
+                case 'surgery_report':
+                    $surgery_report      = $ipd->surgery?->where('id', $ipd_surgery_id)->first();
+                    $ipd->surgery_report = $surgery_report;
+                    $fileName            = 'surgery_report_' . $ipd->ipd_number . '_' . str_replace(["-", " ", ","], "_", $surgery_report->surgery_name) . '.pdf';
+                    $htmlContent         = view('templates.downloads.IPD.surgery_report', compact('ipd'))->render();
+                    break;
+
+                case 'pre_operative_checklist':
+                    $surgery_report             = $ipd->surgery?->where('id', $ipd_surgery_id)->first();
+                    $preOperativeChecklist      = $ipd->preOperativeChecklist?->where('ipd_surgery_id', $ipd_surgery_id)->first();
+                    $ipd->preOperativeChecklist = $preOperativeChecklist;
+                    $fileName                   = 'pre_operative_checklist_' . $ipd->ipd_number . '_' . str_replace(["-", " ", ","], "_", $surgery_report->surgery_name) . '.pdf';
+                    $htmlContent                = view('templates.downloads.IPD.pre_operative_checklist', compact('ipd'))->render();
+                    break;
+
+                case 'discharge_summary':
+                    $ipd->discharge_summary = $ipd->dischargeSummaryReport;
+                    $fileName            = 'discharge_summary_' . $ipd->ipd_number  . '.pdf';
+                    $htmlContent         = view('templates.downloads.IPD.discharge_summary', compact('ipd'))->render();
+                    break;
+
+                case 'billing_invoice':
+                    $ipd->discharge_summary = $ipd->dischargeSummaryReport;
+                    $bill                = $this->billingInvoiceData($ipd->id);
+                    $fileName            = 'billing_invoice_' . $ipd->ipd_number  . '.pdf';
+                    $htmlContent         = view('templates.downloads.IPD.billing_invoice', compact('ipd', 'bill'))->render();
+                    break;
+
+                default:
+                    throw new Exception('Invalid document type: ' . $type);
+            }
+
+            $filePath = storage_path("app/public/pdfs/ipd/{$ipd->ipd_number}/{$fileName}");
+
+            // Ensure the directory exists
+            if (! Storage::disk('public')->exists("pdfs/ipd/{$ipd->ipd_number}")) {
+                Storage::disk('public')->makeDirectory("pdfs/ipd/{$ipd->ipd_number}");
+            }
+
+            $footerHtml = '
+                <div style="
+                    width:100%;
+                    font-size:10px;
+                    text-align:center;
+                    padding-top:5px;
+                ">
+                    Page <span class="pageNumber"></span> of <span class="totalPages"></span>
+                </div>
+                ';
+
+            // Generate and save the PDF using Browsershot
+            Browsershot::html($htmlContent)
+                ->format('A4')
+                ->margins(35, 10, 10, 10)
+                ->noSandbox()
+                ->waitUntilNetworkIdle()
+                ->showBrowserHeaderAndFooter()
+                ->headerHtml($headerHtml)
+                ->footerHtml($footerHtml)
+            // ->setOption('margin-left', '10')
+            // ->setOption('margin-right', '10')
+            // ->setOption('margin-top', '10')
+            // ->setOption('margin-bottom', '30')  // 🔥 remove wkhtml default bottom margin
+            // ->setOption('footer-spacing', '0') // 🔥 remove spacing between body & footer
+            // ->setOption('printBackground', true)
+                ->savePdf($filePath);
+
+            // Store only the relative path
+            $relativePath = "pdfs/ipd/{$ipd->ipd_number}/{$fileName}";
+
+            IpdDocument::updateOrCreate([
+                'ipd_id'         => $ipd->id,
+                'ipd_surgery_id' => $ipd_surgery_id,
+                'document_type'  => $type,
+                'document_path'  => $relativePath,
+            ]);
+
+            // Return the public URL
+            return asset("storage/{$relativePath}");
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    private function billingInvoiceData(string $ipdId): object
+    {
+        $invoice = Invoice::where('ipd_id', $ipdId)->first();
+        $items   = IPDInvoiceItem::where('ipd_id', $ipdId)
+            ->orderBy('service_category')
+            ->orderBy('service_date')
+            ->get();
+
+        $groupedItems = $items
+            ->groupBy(fn ($item) => $item->service_category ?: 'Other Charges')
+            ->map(function ($categoryItems, $category) {
+                $rate = $categoryItems->pluck('amount')->unique()->count() === 1
+                    ? (float) $categoryItems->first()->amount
+                    : '';
+                $taxPercent = $categoryItems->pluck('tax_percent')->unique()->count() === 1
+                    ? $categoryItems->first()->tax_percent
+                    : '';
+
+                return (object) [
+                    'category'   => $category,
+                    'rate'       => $rate,
+                    'tax_percent'=> $taxPercent,
+                    'days_count' => $categoryItems->count(),
+                    'amount'     => (float) $categoryItems->sum('amount'),
+                    'tax_amount' => (float) $categoryItems->sum('tax_amount'),
+                ];
+            })
+            ->values();
+
+        $professionalItems = $groupedItems
+            ->filter(fn ($item) => stripos($item->category, 'professional') !== false)
+            ->values();
+        $invoiceItems = $groupedItems
+            ->reject(fn ($item) => stripos($item->category, 'professional') !== false)
+            ->values();
+
+        $receipts       = $invoice ? Receipt::where('invoice_id', $invoice->id)->get() : collect();
+        $totalAmount    = (float) $items->sum('amount');
+        $receivedAmount = (float) $receipts->sum('amount');
+        $balanceAmount  = max($totalAmount - $receivedAmount, 0);
+
+        return (object) [
+            'bill_no'              => $invoice?->invoice_number,
+            'bill_date'            => $invoice?->created_at,
+            'invoice_items'        => $invoiceItems,
+            'professional_charges'  => $professionalItems,
+            'total_amount'         => $totalAmount,
+            'net_amount'           => round($totalAmount),
+            'advance_amount'       => 0,
+            'received_amount'      => $receivedAmount,
+            'balance_amount'       => $balanceAmount,
+            'amount_in_words'      => '',
+            'receipts'             => $receipts,
+        ];
+    }
+
+    public function preOperative_checklist(string $patient_id)
+    {
+        try {
+
+            $system = SystemSettings::first();
+
+            $footer_content        = '';
+            $letter_header_address = '';
+            if (! empty($system)) {
+                $letter_header_address = $system->billing_letter_header;
+                $footer_content        = $system->footer_content ?? '';
+            }
+
+            // Decode HTML entities so they render correctly
+            $headerHtml = view('templates.downloads.IPD.header', compact('letter_header_address'))->render();
+            $footerHtml = html_entity_decode($footer_content);
+
+            $patient     = Patient::where('id', $patient_id)->first();
+            $fileName    = 'pre_operative_checklist_' . str_replace([".", " "], "_", $patient->name) . '.pdf';
+            $htmlContent = view('templates.downloads.IPD.patient_pre_operative_checklist', compact('patient'))->render();
+            $filePath    = storage_path("app/public/pdfs/ipd/pre_operative_checklist/{$fileName}");
+
+            // Ensure the directory exists
+            if (! Storage::disk('public')->exists("pdfs/ipd/pre_operative_checklist")) {
+                Storage::disk('public')->makeDirectory("pdfs/ipd/pre_operative_checklist");
+            }
+
+            $footerHtml = '
+                <div style="
+                    width:100%;
+                    font-size:10px;
+                    text-align:center;
+                    padding-top:5px;
+                ">
+                    Page <span class="pageNumber"></span> of <span class="totalPages"></span>
+                </div>
+                ';
+
+            // Generate and save the PDF using Browsershot
+            Browsershot::html($htmlContent)
+                ->format('A4')
+                ->margins(35, 10, 10, 10)
+                ->noSandbox()
+                ->waitUntilNetworkIdle()
+                ->showBrowserHeaderAndFooter()
+                ->headerHtml($headerHtml)
+                ->footerHtml($footerHtml)
+            // ->setOption('margin-left', '10')
+            // ->setOption('margin-right', '10')
+            // ->setOption('margin-top', '10')
+            // ->setOption('margin-bottom', '30')  // 🔥 remove wkhtml default bottom margin
+            // ->setOption('footer-spacing', '0') // 🔥 remove spacing between body & footer
+            // ->setOption('printBackground', true)
+                ->savePdf($filePath);
+
+            // Store only the relative path
+            $relativePath = "pdfs/ipd/pre_operative_checklist/{$fileName}";
+
+            // Return the public URL
+            return asset("storage/{$relativePath}");
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+
+    }
+}

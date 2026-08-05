@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient/Day Care Record</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.5;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #000;
+            background-color: white;
+        }
+        .form-container {
+            /* background-color: #f5f5f5; */
+            padding: 20px;
+            position: relative;
+            min-height: 1000px;
+        }
+        .header {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .address {
+            font-size: 12px;
+            margin-bottom: 20px;
+        }
+        .title {
+            text-align: center;
+            font-weight: bold;
+            margin: 15px 0;
+            border-top: 1px solid #000;
+            border-bottom: 1px solid #000;
+            padding: 5px 0;
+        }
+        .row {
+            display: flex;
+            margin-bottom: 0;
+        }
+        .col-left {
+            width: 50%;
+        }
+        .col-right {
+            width: 50%;
+        }
+        .field {
+            margin-bottom: 15px; /* Consistent spacing between fields */
+        }
+        .field-label {
+            font-weight: bold;
+            font-size: 12px;
+        }
+        .field-value {
+            min-height: 18px;
+        }
+        .consultants {
+            margin: 5px 0 0 0;
+        }
+        .consultants-field {
+            margin-bottom: 8px; /* Spacing between consultant lines */
+        }
+        .section {
+            margin-bottom: 5px; /* Reduced spacing between sections */
+        }
+        .divider {
+            border-top: 1px solid #000;
+            margin: 5px 0; /* Reduced spacing around divider */
+        }
+        .examination-row {
+            display: flex;
+            margin-bottom: 8px; /* Spacing between examination rows */
+        }
+        .examination-label {
+            width: 120px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        .examination-field {
+            width: 120px;
+        }
+        #complaints-section {
+            margin-top: 10px; /* Space after divider */
+        }
+        /* Specific spacing for examination section */
+        #examination-section {
+            margin-top: 15px;
+        }
+        .page-number {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="header">ACHARYA SUSHRUTHA HEALTHCARE PVT LTD</div>
+        <div class="address">NO 53, 1<sup>ST</sup> CROSS,80 FEET ROAD, ITI LAYOUT, NAGARABHAVI 2<sup>ND</sup> STAGE, MALLATHAHALLI-BENGALURU 560056</div>
+        
+        <div class="title">IN PATIENT/DAY CARE RECORD</div>
+        
+        <div class="row">
+            <div class="col-left">
+                <div class="field">
+                    <span class="field-label">NAME</span>
+                    <div class="field-value"></div>
+                </div>
+                <div class="field">
+                    <span class="field-label">ADDRESS</span>
+                    <div class="field-value"></div>
+                </div>
+            </div>
+            <div class="col-right">
+                <div class="field">
+                    <span class="field-label">AGE/SEX</span>
+                    <div class="field-value"></div>
+                </div>
+                <div class="field">
+                    <span class="field-label">IP NUMBER:</span>
+                    <div class="field-value"></div>
+                </div>
+                <div class="field">
+                    <span class="field-label">DOA&TIME:</span>
+                    <div class="field-value"></div>
+                </div>
+                <div class="field">
+                    <span class="field-label">DOD&TIME:</span>
+                    <div class="field-value"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="field">
+                <span class="field-label">PROFESSION:</span>
+                <div class="field-value"></div>
+            </div>
+            <div class="field">
+                <span class="field-label">PHONE NUMBER:</span>
+                <div class="field-value"></div>
+            </div>
+            <div class="field">
+                <span class="field-label">EMAIL ID:</span>
+                <div class="field-value"></div>
+            </div>
+            <div class="field">
+                <span class="field-label">PASSPORT/ ADHAR NUMBER:</span>
+                <div class="field-value"></div>
+            </div>
+            <div class="field">
+                <span class="field-label">NEAREST RELATIVE/ ATTENDANT NAME:</span>
+                <div class="field-value"></div>
+            </div>
+            <div class="field">
+                <span class="field-label">PHONE NUMBER:</span>
+                <div class="field-value"></div>
+            </div>
+            
+            <div class="field">
+                <span class="field-label">CONSULTANTS NAME AND SIGNATURE</span>
+                <div class="consultants">
+                    <div class="consultants-field">1.</div>
+                    <div class="consultants-field">2.</div>
+                    <div class="consultants-field">3.</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div id="complaints-section" class="section">
+            <div class="field">
+                <span class="field-label">CHIEF COMPLAINTS WITH DURATION:</span>
+                <div class="field-value"></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="field">
+                <span class="field-label">ASSOCIATED COMPLAINTS:</span>
+                <div class="field-value"></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="field">
+                <span class="field-label">PREVIOUS TREATMENT HISTORY:</span>
+                <div class="field-value"></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="field">
+                <span class="field-label">ASSOCIATED MEDICAL ILLNESS AND CURRENT TREATMENT/ MEDICINES:</span>
+                <div class="field-value"></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="field">
+                <span class="field-label">FAMILY HISTORY:</span>
+                <div class="field-value"></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="field">
+                <span class="field-label">PERSONAL HISTORY:</span>
+                <div class="field-value"></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="field">
+                <span class="field-label">ALLERGY IF ANY:</span>
+                <div class="field-value"></div>
+            </div>
+        </div>
+        
+        <div id="examination-section" class="section">
+            <div class="field-label">EXAMINATION</div>
+            <div style="margin-left: 20px; margin-top: 5px;">
+                <div class="examination-row">
+                    <div class="examination-label">A. GENERAL</div>
+                    <div class="examination-field">BP:</div>
+                    <div class="examination-field">PULSE:</div>
+                    <div class="examination-field">TEMP:</div>
+                </div>
+                <div class="examination-row">
+                    <div class="examination-label">CVS:</div>
+                    <div class="examination-field">RS:</div>
+                </div>
+                <div class="examination-row">
+                    <div class="examination-label">PER ABDOMEN:</div>
+                </div>
+                <div class="examination-row">
+                    <div class="examination-label">LOCAL EXAMINATION:</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- <div class="page-number">1</div> -->
+    </div>
+</body>
+</html>

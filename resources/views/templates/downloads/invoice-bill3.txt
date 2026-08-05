@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Invoice</title>
+    <style>
+        body {
+            font-family: "Arial", sans-serif;
+            margin: 20px;
+            color: black;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            margin: 2px 0;
+            font-size: 12px;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .flex-row {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+
+        .flex-row p {
+            margin: 4px 0;
+        }
+
+        .bill-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .bill-table th,
+        .bill-table td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+            color: black;
+        }
+
+        .bill-table th {
+            background-color: #333;
+        }
+
+        .totals {
+            margin-top: 10px;
+            text-align: right;
+        }
+
+        .totals p {
+            margin: 4px 0;
+        }
+
+        .payment-info {
+            font-size: 14px;
+        }
+
+        .label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    @include('templates.downloads.letter_header', [
+        'letter_header_address' => $letter_header_address,
+    ])
+
+    <div class="flex-row">
+        <div>
+            <p><strong>Bill no:</strong> {{ $invoice_number }}</p>
+            <p>{{ $patient_name }},</p>
+            <p>{{ $gender }}, {{ $age }} yrs</p>
+        </div>
+        <div style="text-align: right">
+            {{-- <p><strong>Date:</strong> {{ $date }}</p> --}}
+            <p>{{ $doctor_name }}</p>
+            <p>{{ $qualification }}</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <p class="label">Bill details</p>
+        <table class="bill-table">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Rate (Rs)</th>
+                    <th>Total Amount (Rs)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if ($type == 'First Visit')
+                    <tr>
+                        <td>Enrolment Fee</td>
+                        <td>{{ $enroll_fees }}</td>
+                        <td>{{ $enroll_fees }}</td>
+                    </tr>
+                @endif
+                <tr>
+                    <td>Consultation Fee</td>
+                    <td>{{ $fees }}</td>
+                    <td>{{ $fees }}</td>
+                </tr>
+                @foreach ($test as $item)
+                    <tr>
+                        <td>{{ $item->test_name }} ({{ $item->test_number }})</td>
+                        <td>{{ $item->test_price }}</td>
+                        <td>{{ $item->test_price + $item->tax_price }}</td>
+                    </tr>
+                    @endforeach @foreach ($paymentArray as $item)
+                        <tr>
+                            <td>{{ $item['amount_for'] }}</td>
+                            <td>{{ $item['amount'] }}</td>
+                            <td>{{ $item['amount'] }}</td>
+                        </tr>
+                    @endforeach
+            </tbody>
+        </table>
+    </div>
+
+    <div class="flex-row">
+        <div class="payment-info">
+            <p><strong>Payment mode:</strong> {{ $payment_type }}</p>
+            <p><strong>Transaction id:</strong> {{ $transaction_id ?? 'N/A' }}</p>
+        </div>
+        <div class="totals">
+            {{-- <p><strong>Subtotal:</strong> Rs. {{ $subtotal }}</p> --}}
+            {{-- <p><strong>Tax:</strong> Rs. {{ $tax }}</p> --}}
+            <p><strong>Total:</strong> Rs. {{ $total_amount }}</p>
+        </div>
+    </div>
+</body>
+
+</html>

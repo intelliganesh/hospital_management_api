@@ -1,0 +1,7 @@
+@include('templates.downloads.ipd_form_part1', ['patient' => $patient])
+@include('templates.downloads.ipd_form_part2', ['patient' => $patient])
+@include('templates.downloads.black_page', ['patient' => $patient])
+@include('templates.downloads.consent_form', ['patient' => $patient])
+@include('templates.downloads.consent_form2', ['patient' => $patient])
+@include('templates.downloads.nurses_notes', ['patient' => $patient])
+@include('templates.downloads.pre_operative_check_list', ['patient' => $patient])

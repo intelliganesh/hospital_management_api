@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class AppointmentFees extends Model
+{
+
+    protected $fillable = [
+        "appointment_number",
+        "amount",
+    ];
+    protected $hidden = [
+        "created_at",
+        "updated_at",
+    ];
+
+}

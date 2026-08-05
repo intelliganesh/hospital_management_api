@@ -1,0 +1,66 @@
+<?php
+
+namespace App\Services;
+
+use Illuminate\Http\Request;
+use App\Services\ImageService;
+class GetImageService
+{
+
+    private $imageService;
+
+    /**
+     * Summary of __construct
+     * @param \App\Services\ImageService $imageService
+     */
+    public function __construct(ImageService $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+
+    /**
+     * Summary of convertImage
+     * @param mixed $methodType
+     * @param \Illuminate\Http\Request $request
+     * @param mixed $fileName
+     * @param mixed $pathName
+     * @return null|string
+     */
+    protected function convertImage($methodType = 'add', Request $request, $fileName, $pathName = 'images'): null|string
+    {
+        $image = null;
+        if ($methodType === 'add') {
+            if ($request->hasFile($fileName)) {
+                $image = $this->sendImage($request, $fileName, $pathName);
+            } else {
+                $image = $request->input($fileName);
+            }
+        } else {
+            if ($request->hasFile($fileName)) {
+                $image = $this->sendImage($request, $fileName, $pathName);
+            } else {
+                $image = $request->input($fileName);
+            }
+        }
+
+        return $image;
+    }
+
+    /**
+     * Summary of sendImage
+     * @param mixed $request
+     * @param mixed $fileName
+     * @param mixed $pathName
+     * @return string
+     */
+    private function sendImage($request, $fileName, $pathName): string
+    {
+        if (is_array($request->$fileName)) {
+            $image = $this->imageService->multipleImageUpload($request, $fileName, $pathName);
+            $image = implode(',', $image);
+        } else {
+            $image = $this->imageService->imageUpload($request, $fileName, $pathName);
+        }
+        return $image;
+    }
+}
