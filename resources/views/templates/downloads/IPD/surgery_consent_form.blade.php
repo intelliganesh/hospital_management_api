@@ -59,14 +59,14 @@
             I, <span class="dotted-line" style="min-width:450px;">&nbsp;&nbsp;{{ $ipd->patient_name ?? '' }}</span>
             do hereby consent to my treating doctor, the attending doctors and the staff at
             Acharya Sushrutha Healthcare Pvt Ltd to perform
-            <span class="dotted-line" style="min-width:300px;">{{ $ipd->surgery_report?->surgery_name ?? '' }}</span>
+            <span class="dotted-line" style="min-width:450px;">{{ $ipd->surgery_report?->surgery_name ?? '' }}</span>
             for
-            <span class="dotted-line" style="min-width:150px;"></span>
-            <span class="dotted-line"></span>
+            <span class="dotted-line" >{{ $ipd->final_diagnosis ?? '' }}</span>{{--
+            <span class="dotted-line"></span> --}}
         </p>
         <p>
             I further Authorize
-            <span class="dotted-line" style="min-width:200px;"></span>
+            <span class="dotted-line" style="min-width:200px;">Dr. {{ $ipd->doctor_name ?? '' }}</span>
             and the staffs of Acharya Sushrutha Healthcare Pvt Ltd to perform such additional
             diagnostic or surgical procedures as maybe required or deemed advisable to
             safeguard life or health during the course of diagnostic or surgical procedure.

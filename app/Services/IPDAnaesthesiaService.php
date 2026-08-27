@@ -7,6 +7,7 @@ use App\Contracts\FilterContract;
 use App\Models\IPDAnaesthesia;
 use App\Services\CheckValidation;
 use App\Traits\IPDAnaesthesiaValidation;
+use App\Models\IPDPreliminaryNotes;
 use Illuminate\Http\Request;
 
 class IPDAnaesthesiaService implements CRUDContract, FilterContract
@@ -83,7 +84,9 @@ class IPDAnaesthesiaService implements CRUDContract, FilterContract
         $this->checkValidationService->checkValidation($this->validateIPDAnaesthesia($request));
 
         $data = $request->all();
-
+        $preliminaryNotes = IPDPreliminaryNotes::where('ipd_id', $request->ipd_id)->first();
+        $data['diagnosis'] = $preliminaryNotes?->diagnosis ?? "-";
+    
         IPDAnaesthesia::create($data);
     }
 

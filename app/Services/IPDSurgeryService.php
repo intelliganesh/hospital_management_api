@@ -5,10 +5,11 @@ use App\Attributes\Transactional;
 use App\Contracts\CRUDContract;
 use App\Contracts\FilterContract;
 use App\Models\IPDAnaesthesia;
+use App\Models\IPD;
+use App\Models\IPDPreliminaryNotes;
 use App\Models\IPDAnaesthesiaDepartment;
 use App\Models\IPDAnaesthesiaRecoverObservation;
 use App\Models\IPDDischargeSummary;
-use App\Models\IPDPreliminaryNotes;
 use App\Models\IPDPreOperativeAnaesthesiaEvaluation;
 use App\Models\IPDPreOperativeChecklist;
 use App\Models\IPDSurgery;
@@ -129,10 +130,12 @@ class IPDSurgeryService implements CRUDContract, FilterContract
         }
 
         $surgery = IPDSurgery::create($data);
+        $preliminaryNotes = IPDPreliminaryNotes::where('ipd_id', $request->ipd_id)->first();
 
         $anaesthesia = IPDAnaesthesia::create([
             'ipd_id'         => $request->ipd_id,
             'ipd_surgery_id' => $surgery->id,
+            'diagnosis'       => $preliminaryNotes?->diagnosis ?? "-",
         ]);
 
         IPDPreOperativeAnaesthesiaEvaluation::create([

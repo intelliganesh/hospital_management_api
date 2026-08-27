@@ -118,17 +118,18 @@ class IPDPreOperativeAnaesthesiaEvaluationService implements CRUDContract, Filte
         $exists = IPDPreOperativeAnaesthesiaEvaluation::where('ipd_surgery_id', $data['ipd_surgery_id'])
             ->orWhere('ipd_anaesthesia_id', $data['ipd_anaesthesia_id'])
             ->first();
+            
         if ($exists) {
             $this->update($request, $exists->id);
-        }
+        }else{
+            // Handle file upload
+            $filePath = $this->handleFileUpload($request);
+            if ($filePath) {
+                $data['upload_pdf_path'] = $filePath;
+            }
 
-        // Handle file upload
-        $filePath = $this->handleFileUpload($request);
-        if ($filePath) {
-            $data['upload_pdf_path'] = $filePath;
+            IPDPreOperativeAnaesthesiaEvaluation::create($data);
         }
-
-        IPDPreOperativeAnaesthesiaEvaluation::create($data);
     }
 
     /**

@@ -1,10 +1,10 @@
 <?php
 namespace App\Services;
 
-use App\Models\IPD;
 use App\Models\Invoice;
-use App\Models\IPDInvoiceItem;
+use App\Models\IPD;
 use App\Models\IpdDocument;
+use App\Models\IPDInvoiceItem;
 use App\Models\Patient;
 use App\Models\Receipt;
 use App\Models\SystemSettings;
@@ -78,13 +78,13 @@ class IPDDownloadService
                     break;
 
                 case 'department_of_anaesthesia':
-                    $surgery_report                                  = $ipd->surgery?->where('id', $ipd_surgery_id)->first();
-                    $anaesthesia_report                              = $ipd->anaesthesia?->where('ipd_surgery_id', $ipd_surgery_id)->first();
-                    $ipd->surgery_report                             = $surgery_report;
-                    $ipd->anaesthesia                                = $anaesthesia_report;
-                    $ipd->anaesthesiaDepartment                      = $ipd->anaesthesiaDepartment?->where('ipd_surgery_id', $ipd_surgery_id)->first();
-                    $fileName                                        = 'department_of_anaesthesia_' . $ipd->ipd_number . '_' . str_replace(["-", " ", ","], "_", $surgery_report->surgery_name) . '.pdf';
-                    $htmlContent                                     = view('templates.downloads.IPD.department_of_anaesthesia', compact('ipd'))->render();
+                    $surgery_report             = $ipd->surgery?->where('id', $ipd_surgery_id)->first();
+                    $anaesthesia_report         = $ipd->anaesthesia?->where('ipd_surgery_id', $ipd_surgery_id)->first();
+                    $ipd->surgery_report        = $surgery_report;
+                    $ipd->anaesthesia           = $anaesthesia_report;
+                    $ipd->anaesthesiaDepartment = $ipd->anaesthesiaDepartment?->where('ipd_surgery_id', $ipd_surgery_id)->first();
+                    $fileName                   = 'department_of_anaesthesia_' . $ipd->ipd_number . '_' . str_replace(["-", " ", ","], "_", $surgery_report->surgery_name) . '.pdf';
+                    $htmlContent                = view('templates.downloads.IPD.department_of_anaesthesia', compact('ipd'))->render();
                     break;
 
                 case 'anaesthesia_recovery_room_observation':
@@ -107,10 +107,11 @@ class IPDDownloadService
                     break;
 
                 case 'surgery_consent_form':
-                    $surgery_report      = $ipd->surgery?->where('id', $ipd_surgery_id)->first();
-                    $ipd->surgery_report = $surgery_report;
-                    $fileName            = 'surgery_consent_form_' . $ipd->ipd_number . '_' . str_replace(["-", " ", ","], "_", $surgery_report->surgery_name) . '.pdf';
-                    $htmlContent         = view('templates.downloads.IPD.surgery_consent_form', compact('ipd'))->render();
+                    $surgery_report       = $ipd->surgery?->where('id', $ipd_surgery_id)->first();
+                    $ipd->surgery_report  = $surgery_report;
+                    $ipd->final_diagnosis = $ipd->preliminaryNotes?->where('ipd_id', $ipdId)->first()?->final_diagnosis;
+                    $fileName             = 'surgery_consent_form_' . $ipd->ipd_number . '_' . str_replace(["-", " ", ","], "_", $surgery_report->surgery_name) . '.pdf';
+                    $htmlContent          = view('templates.downloads.IPD.surgery_consent_form', compact('ipd'))->render();
                     break;
 
                 case 'surgery_report':
@@ -130,15 +131,15 @@ class IPDDownloadService
 
                 case 'discharge_summary':
                     $ipd->discharge_summary = $ipd->dischargeSummaryReport;
-                    $fileName            = 'discharge_summary_' . $ipd->ipd_number  . '.pdf';
-                    $htmlContent         = view('templates.downloads.IPD.discharge_summary', compact('ipd'))->render();
+                    $fileName               = 'discharge_summary_' . $ipd->ipd_number . '.pdf';
+                    $htmlContent            = view('templates.downloads.IPD.discharge_summary', compact('ipd'))->render();
                     break;
 
                 case 'billing_invoice':
                     $ipd->discharge_summary = $ipd->dischargeSummaryReport;
-                    $bill                = $this->billingInvoiceData($ipd->id);
-                    $fileName            = 'billing_invoice_' . $ipd->ipd_number  . '.pdf';
-                    $htmlContent         = view('templates.downloads.IPD.billing_invoice', compact('ipd', 'bill'))->render();
+                    $bill                   = $this->billingInvoiceData($ipd->id);
+                    $fileName               = 'billing_invoice_' . $ipd->ipd_number . '.pdf';
+                    $htmlContent            = view('templates.downloads.IPD.billing_invoice', compact('ipd', 'bill'))->render();
                     break;
 
                 default:
@@ -221,7 +222,7 @@ class IPDDownloadService
         return null;
     }
 
-     public function downloademptyPdf(string $ipdId, string $type, string $ipd_surgery_id = null)
+    public function downloademptyPdf(string $ipdId, string $type, string $ipd_surgery_id = null)
     {
         try {
             $ipd = IPD::findOrFail($ipdId);
@@ -282,13 +283,13 @@ class IPDDownloadService
                     break;
 
                 case 'department_of_anaesthesia':
-                    $surgery_report                                  = $ipd->surgery?->where('id', $ipd_surgery_id)->first();
-                    $anaesthesia_report                              = $ipd->anaesthesia?->where('ipd_surgery_id', $ipd_surgery_id)->first();
-                    $ipd->surgery_report                             = $surgery_report;
-                    $ipd->anaesthesia                                = $anaesthesia_report;
-                    $ipd->anaesthesiaDepartment                      = $ipd->anaesthesiaDepartment?->where('ipd_surgery_id', $ipd_surgery_id)->first();
-                    $fileName                                        = 'department_of_anaesthesia_' . $ipd->ipd_number . '_' . str_replace(["-", " ", ","], "_", $surgery_report->surgery_name) . '.pdf';
-                    $htmlContent                                     = view('templates.downloads.IPD.department_of_anaesthesia', compact('ipd'))->render();
+                    $surgery_report             = $ipd->surgery?->where('id', $ipd_surgery_id)->first();
+                    $anaesthesia_report         = $ipd->anaesthesia?->where('ipd_surgery_id', $ipd_surgery_id)->first();
+                    $ipd->surgery_report        = $surgery_report;
+                    $ipd->anaesthesia           = $anaesthesia_report;
+                    $ipd->anaesthesiaDepartment = $ipd->anaesthesiaDepartment?->where('ipd_surgery_id', $ipd_surgery_id)->first();
+                    $fileName                   = 'department_of_anaesthesia_' . $ipd->ipd_number . '_' . str_replace(["-", " ", ","], "_", $surgery_report->surgery_name) . '.pdf';
+                    $htmlContent                = view('templates.downloads.IPD.department_of_anaesthesia', compact('ipd'))->render();
                     break;
 
                 case 'anaesthesia_recovery_room_observation':
@@ -334,15 +335,15 @@ class IPDDownloadService
 
                 case 'discharge_summary':
                     $ipd->discharge_summary = $ipd->dischargeSummaryReport;
-                    $fileName            = 'discharge_summary_' . $ipd->ipd_number  . '.pdf';
-                    $htmlContent         = view('templates.downloads.IPD.discharge_summary', compact('ipd'))->render();
+                    $fileName               = 'discharge_summary_' . $ipd->ipd_number . '.pdf';
+                    $htmlContent            = view('templates.downloads.IPD.discharge_summary', compact('ipd'))->render();
                     break;
 
                 case 'billing_invoice':
                     $ipd->discharge_summary = $ipd->dischargeSummaryReport;
-                    $bill                = $this->billingInvoiceData($ipd->id);
-                    $fileName            = 'billing_invoice_' . $ipd->ipd_number  . '.pdf';
-                    $htmlContent         = view('templates.downloads.IPD.billing_invoice', compact('ipd', 'bill'))->render();
+                    $bill                   = $this->billingInvoiceData($ipd->id);
+                    $fileName               = 'billing_invoice_' . $ipd->ipd_number . '.pdf';
+                    $htmlContent            = view('templates.downloads.IPD.billing_invoice', compact('ipd', 'bill'))->render();
                     break;
 
                 default:
@@ -410,7 +411,7 @@ class IPDDownloadService
             ->get();
 
         $groupedItems = $items
-            ->groupBy(fn ($item) => $item->service_category ?: 'Other Charges')
+            ->groupBy(fn($item) => $item->service_category ?: 'Other Charges')
             ->map(function ($categoryItems, $category) {
                 $rate = $categoryItems->pluck('amount')->unique()->count() === 1
                     ? (float) $categoryItems->first()->amount
@@ -420,21 +421,21 @@ class IPDDownloadService
                     : '';
 
                 return (object) [
-                    'category'   => $category,
-                    'rate'       => $rate,
-                    'tax_percent'=> $taxPercent,
-                    'days_count' => $categoryItems->count(),
-                    'amount'     => (float) $categoryItems->sum('amount'),
-                    'tax_amount' => (float) $categoryItems->sum('tax_amount'),
+                    'category'    => $category,
+                    'rate'        => $rate,
+                    'tax_percent' => $taxPercent,
+                    'days_count'  => $categoryItems->count(),
+                    'amount'      => (float) $categoryItems->sum('amount'),
+                    'tax_amount'  => (float) $categoryItems->sum('tax_amount'),
                 ];
             })
             ->values();
 
         $professionalItems = $groupedItems
-            ->filter(fn ($item) => stripos($item->category, 'professional') !== false)
+            ->filter(fn($item) => stripos($item->category, 'professional') !== false)
             ->values();
         $invoiceItems = $groupedItems
-            ->reject(fn ($item) => stripos($item->category, 'professional') !== false)
+            ->reject(fn($item) => stripos($item->category, 'professional') !== false)
             ->values();
 
         $receipts       = $invoice ? Receipt::where('invoice_id', $invoice->id)->get() : collect();
@@ -446,7 +447,7 @@ class IPDDownloadService
             'bill_no'              => $invoice?->invoice_number,
             'bill_date'            => $invoice?->created_at,
             'invoice_items'        => $invoiceItems,
-            'professional_charges'  => $professionalItems,
+            'professional_charges' => $professionalItems,
             'total_amount'         => $totalAmount,
             'net_amount'           => round($totalAmount),
             'advance_amount'       => 0,
