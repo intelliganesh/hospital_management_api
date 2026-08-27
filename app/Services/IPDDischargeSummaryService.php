@@ -88,12 +88,27 @@ class IPDDischargeSummaryService implements CRUDContract, FilterContract
         $this->checkValidationService->checkValidation($this->validateDischargeSummary($request));
 
         $data     = $request->all();
-        $filePath = $this->handleFileUpload($request);
-        if ($filePath) {
-            $data['upload_pdf_path'] = $filePath;
-        }
+        
 
-        IPDDischargeSummary::create($data);
+
+        $this->checkValidationService->checkValidation($this->validateIPDAnaesthesiaRecoverObservation($request));
+
+        $data = $request->all();
+
+        // Enforce uniqueness for ipd_id 
+        $exists = IPDDischargeSummary::where('ipd_id', $data['ipd_id'])
+            ->first();
+
+        if ($exists) {
+            $this->update($request, $exists->id);
+        }else{
+            $filePath = $this->handleFileUpload($request);
+            if ($filePath) {
+                $data['upload_pdf_path'] = $filePath;
+            }
+
+            IPDDischargeSummary::create($data);
+        }
     }
 
     #[Transactional(secure: true, requiredRole: null, description: 'Update IPD discharge summary within a secure transaction')]

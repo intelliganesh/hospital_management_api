@@ -113,13 +113,20 @@ class IPDPreOperativeChecklistService implements CRUDContract, FilterContract
 
         $data = $request->all();
 
-        // Handle file upload
-        $filePath = $this->handleFileUpload($request);
-        if ($filePath) {
-            $data['upload_pdf_path'] = $filePath;
-        }
+        $exists = IPDPreOperativeChecklist::where('ipd_surgery_id', $data['ipd_surgery_id'])
+            ->where('ipd_id', $data['ipd_id'])
+            ->first();
+        if ($exists) {
+            $this->update($request, $exists->id);
+        }else{
+             // Handle file upload
+            $filePath = $this->handleFileUpload($request);
+            if ($filePath) {
+                $data['upload_pdf_path'] = $filePath;
+            }
 
-        IPDPreOperativeChecklist::create($data);
+            IPDPreOperativeChecklist::create($data);
+        }
     }
 
     /**

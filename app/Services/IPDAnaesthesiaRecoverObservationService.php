@@ -91,9 +91,15 @@ class IPDAnaesthesiaRecoverObservationService implements CRUDContract, FilterCon
             ->first();
         if ($exists) {
             $this->update($request, $exists->id);
-        }
+        }else{
+                // Handle file upload
+            $filePath = $this->handleFileUpload($request);
+            if ($filePath) {
+                $data['upload_pdf_path'] = $filePath;
+            }
 
-        IPDAnaesthesiaRecoverObservation::create($data);
+            IPDAnaesthesiaRecoverObservation::create($data);
+        }
     }
 
     /**
@@ -122,6 +128,15 @@ class IPDAnaesthesiaRecoverObservationService implements CRUDContract, FilterCon
         $this->checkValidationService->checkValidation($this->validateIPDAnaesthesiaRecoverObservation($request, true, $recovery->id));
 
         $data = $request->all();
+
+        $filePath = $this->handleFileUpload($request);
+            if ($filePath) {
+                // Delete old file if exists
+                if ($recovery->upload_pdf_path && Storage::disk('public')->exists($recovery->upload_pdf_path)) {
+                    Storage::disk('public')->delete($recovery->upload_pdf_path);
+                }
+                $data['upload_pdf_path'] = $filePath;
+            }
 
         $recovery->update($data);
     }
@@ -232,5 +247,28 @@ class IPDAnaesthesiaRecoverObservationService implements CRUDContract, FilterCon
             ->orderBy('created_at', 'desc')
             ->select($this->listcolumns)
             ->get();
+    }
+
+    /**
+     * Handle file upload for PDF
+     */
+    private function handleFileUpload(Request $request): ?string
+    {
+        if (! $request->hasFile('upload_pdf_path')) {
+            return null;
+        }
+
+        $file = $request->file('upload_pdf_path');
+        if (! $file->isValid()) {
+            return null;
+        }
+
+        $ipd = IPD::find($request->ipd_id);
+        if (! $ipd) {
+            return null;
+        }
+        // Store file in public/uploads/ipd_anaesthesia_recover_room_observation directory
+        $filePath = $file->store("app/public/pdfs/ipd/{$ipd->ipd_number}/uploads/anaesthesia_recover_room_observation_{$ipd->ipd_number}_" . str_replace(['.', ' '], '_', $file->getClientOriginalName()) . ".pdf", 'storage');
+        return $filePath;
     }
 }
