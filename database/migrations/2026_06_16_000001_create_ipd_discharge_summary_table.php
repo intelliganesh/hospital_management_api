@@ -25,6 +25,10 @@ return new class extends Migration {
             $table->text('course_in_hospital')->nullable();
             $table->text('patient_health_condition_at_discharge')->nullable();
             $table->text('advice_on_discharge')->nullable();
+            $table->text('medicines')->nullable();
+            $table->text('combination_medicines')->nullable();
+            $table->text('tests')->nullable();
+            $table->text('diet_plan')->nullable();
             $table->text('special_instruction')->nullable();
             $table->string('upload_pdf_path')->nullable();
             $table->timestamps();
