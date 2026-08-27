@@ -138,6 +138,10 @@
 </head>
 
 <body>
+    @php
+        $hasValue = fn($value) => !is_null($value) && trim((string) $value) !== '';
+    @endphp
+
     <div class="container" >
        
         <div class="title">NURSES NOTES</div>
@@ -186,20 +190,54 @@
             </tr>
         @endif
         @foreach ($ipd->nurse_notes as $note)
+            @php
+                $noteDate = $note->datetime ? \Carbon\Carbon::parse($note->datetime)->format('d-m-Y') : '';
+                $noteTime = $note->datetime ? \Carbon\Carbon::parse($note->datetime)->format('h:i A') : '';
+                $nurseName = $note->nurse_name ?? $note->nurse?->name ?? '';
+                $nursePhone = $note->nurse_phone ?? $note->nurse?->phone ?? '';
+                $nurseEmail = $note->nurse_email ?? $note->nurse?->email ?? '';
+            @endphp
+
             <tr>
-                <td>{{ $note->datetime ? \Carbon\Carbon::parse($note->datetime)->format('d-m-Y') : '' }}<br>
-                    {{ $note->datetime ? \Carbon\Carbon::parse($note->datetime)->format('h:i A') : '' }}
-                </td>
-                <td><b>BP:</b> {{$note->bp}}<br>
-                    <b>PR:</b> {{$note->pr}}<br>
-                    <b>Temperature:</b> {{$note->temperature}}<br>
-                    <b>Spo2:</b> {{$note->spo2}}<br>
-                    {{ $note->remark1 }}
-                </td>
-                <td>{{ $note->remark2 }}</td>
                 <td>
-                    <b>Name:</b> {{ $note->nurse_name ?? $note->nurse?->name ?? '' }}<br>
-                    <small>( {{ $note->nurse_phone ?? $note->nurse?->phone ?? '' }}@if($note->nurse_email ?? $note->nurse?->email), {{ $note->nurse_email ?? $note->nurse?->email }}@endif )</small>
+                    @if($hasValue($noteDate))
+                        {{ $noteDate }}<br>
+                    @endif
+                    @if($hasValue($noteTime))
+                        {{ $noteTime }}
+                    @endif
+                </td>
+                <td>
+                    @if($hasValue($note->bp))
+                        <b>BP:</b> {{ $note->bp }}<br>
+                    @endif
+                    @if($hasValue($note->pr))
+                        <b>PR:</b> {{ $note->pr }}<br>
+                    @endif
+                    @if($hasValue($note->temperature))
+                        <b>Temperature:</b> {{ $note->temperature }}<br>
+                    @endif
+                    @if($hasValue($note->spo2))
+                        <b>Spo2:</b> {{ $note->spo2 }}<br>
+                    @endif
+                    @if($hasValue($note->remark1))
+                        {{ $note->remark1 }}
+                    @endif
+                </td>
+                <td>
+                    @if($hasValue($note->remark2))
+                        {{ $note->remark2 }}
+                    @endif
+                </td>
+                <td>
+                    @if($hasValue($nurseName) || $hasValue($nursePhone) || $hasValue($nurseEmail))
+                        @if($hasValue($nurseName))
+                            <b>Name:</b> {{ $nurseName }}<br>
+                        @endif
+                        @if($hasValue($nursePhone) || $hasValue($nurseEmail))
+                            <small>( {{ $nursePhone }}@if($hasValue($nurseEmail) && $hasValue($nursePhone)), @endif{{ $nurseEmail }} )</small>
+                        @endif
+                    @endif
                     <br><br>
                 </td>
             </tr>

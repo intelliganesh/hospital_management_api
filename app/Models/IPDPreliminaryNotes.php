@@ -34,6 +34,7 @@ class IPDPreliminaryNotes extends Model
         'pr',
         'dre',
         'proctoscopy',
+        'examination_comments',
         'investigation',
         'hb',
         'tc',

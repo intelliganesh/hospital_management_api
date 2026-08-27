@@ -24,6 +24,10 @@ trait IPDDischargeSummaryValidation
             'course_in_hospital' => 'nullable|string',
             'patient_health_condition_at_discharge' => 'nullable|string',
             'advice_on_discharge' => 'nullable|string',
+            'medicines' => 'nullable|string',
+            'combination_medicines' => 'nullable|string',
+            'tests' => 'nullable|string',
+            'diet_plan' => 'nullable|string',
             'special_instruction' => 'nullable|string',
             'upload_pdf_path' => 'nullable|file|mimes:pdf|max:5120',
         ];

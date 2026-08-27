@@ -26,6 +26,10 @@ class IPDDischargeSummary extends Model
         'course_in_hospital',
         'patient_health_condition_at_discharge',
         'advice_on_discharge',
+        'medicines',
+        'combination_medicines',
+        'tests',
+        'diet_plan',
         'special_instruction',
         'upload_pdf_path',
     ];
@@ -45,6 +49,10 @@ class IPDDischargeSummary extends Model
         'course_in_hospital',
         'patient_health_condition_at_discharge',
         'advice_on_discharge',
+        'medicines',
+        'combination_medicines',
+        'tests',
+        'diet_plan',
         'special_instruction',
         'upload_pdf_path',
     ];
@@ -68,6 +76,10 @@ class IPDDischargeSummary extends Model
         'course_in_hospital',
         'patient_health_condition_at_discharge',
         'advice_on_discharge',
+        'medicines',
+        'combination_medicines',
+        'tests',
+        'diet_plan',
         'special_instruction',
         'upload_pdf_path',
     ];

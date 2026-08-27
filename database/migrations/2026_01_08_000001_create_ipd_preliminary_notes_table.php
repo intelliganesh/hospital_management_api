@@ -39,6 +39,7 @@ return new class extends Migration
             $table->text('pr')->nullable();
             $table->text('dre')->nullable();
             $table->text('proctoscopy')->nullable();
+            $table->text('examination_comments')->nullable();
 
             /* Investigation */
             $table->text('investigation')->nullable();

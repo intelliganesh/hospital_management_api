@@ -53,6 +53,9 @@ td, th {
 </head>
 
 <body>
+    @php
+        $hasValue = fn($value) => !is_null($value) && trim((string) $value) !== '';
+    @endphp
 
 <div class="title">Discharge Summary</div>
 
@@ -92,61 +95,150 @@ td, th {
 <tr>
 <td>
 
-<b>Consultants:</b><br>
-{{ $ipd->discharge_summary?->consultants ?? '' }}
+@if($hasValue($ipd->discharge_summary?->consultants ?? ''))
+    <b>Consultants:</b><br>
+    {{ $ipd->discharge_summary?->consultants ?? '' }}
+    <br><br>
+@endif
 
-<br><br>
+@if($hasValue($ipd->discharge_summary?->diagnosis ?? ''))
+    <b>Diagnosis:</b><br>
+    {{ $ipd->discharge_summary?->diagnosis ?? '' }}
+    <br><br>
+@endif
 
-<b>Diagnosis:</b><br>
-{{ $ipd->discharge_summary?->diagnosis ?? '' }}
+@if($hasValue($ipd->discharge_summary?->case_history ?? ''))
+    <b>Case History & Complaints:</b><br>
+    {{ $ipd->discharge_summary?->case_history ?? '' }}
+    <br><br>
+@endif
 
-<br><br>
+@if($hasValue($ipd->discharge_summary?->general_examination ?? ''))
+    <b>General Examination:</b><br>
+    {{ $ipd->discharge_summary?->general_examination ?? '' }}
+    <br><br>
+@endif
 
-<b>Case History & Complaints:</b><br>
-{{ $ipd->discharge_summary?->case_history ?? '' }}
+@if($hasValue($ipd->discharge_summary?->systemic_examination ?? ''))
+    <b>Systemic Examination:</b><br>
+    {{ $ipd->discharge_summary?->systemic_examination ?? '' }}
+    <br><br>
+@endif
 
-<br><br>
+@if($hasValue($ipd->discharge_summary?->investigations ?? ''))
+    <b>Investigations:</b><br>
+    {{ $ipd->discharge_summary?->investigations ?? '' }}
+    <br><br>
+@endif
 
-<b>General Examination:</b><br>
-{{ $ipd->discharge_summary?->general_examination ?? '' }}
+@if($hasValue($ipd->discharge_summary?->operation_done ?? ''))
+    <b>Operation Done:</b><br>
+    {{ $ipd->discharge_summary?->operation_done ?? '' }}
+    <br><br>
+@endif
 
-<br><br>
+@if($hasValue($ipd->discharge_summary?->findings_and_procedure ?? ''))
+    <b>Findings And Procedure:</b><br>
+    {{ $ipd->discharge_summary?->findings_and_procedure ?? '' }}
+    <br><br>
+@endif
 
-<b>Systemic Examination:</b><br>
-{{ $ipd->discharge_summary?->systemic_examination ?? '' }}
+@if($hasValue($ipd->discharge_summary?->course_in_hospital ?? ''))
+    <b>Course In Hospital:</b><br>
+    {{ $ipd->discharge_summary?->course_in_hospital ?? '' }}
+    <br><br>
+@endif
 
-<br><br>
+@if($hasValue($ipd->discharge_summary?->patient_health_condition_at_discharge ?? ''))
+    <b>Patient's health condition at discharge:</b><br>
+    {{ $ipd->discharge_summary?->patient_health_condition_at_discharge ?? '' }}
+    <br><br>
+@endif
 
-<b>Investigations:</b><br>
-{{ $ipd->discharge_summary?->investigations ?? '' }}
-
-<br><br>
-
-<b>Operation Done:</b><br>
-{{ $ipd->discharge_summary?->operation_done ?? '' }}
-
-<br><br>
-
-<b>Findings And Procedure:</b><br>
-{{ $ipd->discharge_summary?->findings_and_procedure ?? '' }}
-
-<br><br>
-
-<b>Course In Hospital:</b><br>
-{{ $ipd->discharge_summary?->course_in_hospital ?? '' }}
-
-<br><br>
-
-<b>Patient's health condition at discharge:</b><br>
-{{ $ipd->discharge_summary?->patient_health_condition_at_discharge ?? '' }}
-
-<br><br>
-
-<b>Advice On Discharge:</b><br>
-{!! nl2br($ipd->discharge_summary?->advice_on_discharge ?? '') !!}
+@if($hasValue($ipd->discharge_summary?->advice_on_discharge ?? ''))
+    <b>Advice On Discharge:</b><br>
+    {!! nl2br($ipd->discharge_summary?->advice_on_discharge ?? '') !!}
+@endif
 
 </td>
+<td>
+     @php
+        $medicineStr = $ipd->discharge_summary?->medicines ?? '';
+        $rawArray = is_array($medicineStr) ? $medicineStr : explode(',', $medicineStr);
+
+        // Filter out truly valid entries that have a medicine name
+        $medicineArray = array_filter(
+            array_map(function ($item) {
+                $parts = explode('#', trim($item));
+                return !empty($parts[0]) ? $parts : null;
+            }, $rawArray),
+        );
+    @endphp
+
+    <!-- Medicines -->
+    @if (!empty($medicineArray))
+        <div class="section">
+            <p class="section-title">Medicines</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width:30%;">Medicine</th>
+                        <th>Dosage</th>
+                        <th>Timing</th>
+                        <th>With</th>
+                        <th>Days</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($medicineArray as $parts)
+                        <tr>
+                            <td style="width:30%;">{{ ucwords(strtolower($parts[0] ?? '')) }}</td>
+                            <td>{{ ucwords($parts[2] ?? '') }}</td>
+                            <td>{{ ucwords(strtolower(str_replace(['-', '_'], ' ', $parts[3] ?? '')))}}</td>
+                            <td>{{ ucwords(strtolower(str_replace(['-', '_'], ' ', $parts[4] ?? '')))}}</td>
+                            <td>{{ $parts[5] ?? '-' }}</td>
+                        </tr>
+                    @endforeach
+
+                    @if(!is_null($ipd->discharge_summary?->combination_medicines))
+                        @php
+                            $comboMedicine=json_decode($ipd->discharge_summary?->combination_medicines,true);
+                        @endphp
+                        @foreach($comboMedicine as $combo)
+                        @php $medicine = collect($combo['combination_ingredients'])->map(function ($item) {
+                                    return ucwords(strtolower($item['combination_medicine'])) .
+                                        " (" . $item['combination_quantity'] . " " . $item['combination_unit'] . ")";
+                                })->implode(' + ');
+                        @endphp
+                        <tr>
+                            <td style="width:30%;">{{$medicine}}</td>
+                            <td>{{$combo['combination_dosage'] ?? ''}}</td>
+                            <td>{{ ucwords(strtolower(str_replace(['-', '_'], ' ', $combo['combination_timing'] ?? '')))}}</td>
+                            <td>{{ ucwords(strtolower(str_replace(['-', '_'], ' ', $combo['combination_take_with'] ?? '')))}}</td>
+                            <td>{{$combo['combination_medicine_days']}}</td>
+                        </tr>
+                        @endforeach
+                    @endif
+                </tbody>
+            </table>
+        </div>
+    @endif
+
+    <!-- Tests -->
+    @if (!empty($ipd->discharge_summary?->tests) && count(json_decode($ipd->discharge_summary?->tests, true)) > 0)
+        <div class="section" style="margin-top: 10px">
+            <p class="section-title">Tests</p>
+            <ol>
+                @foreach (json_decode($ipd->discharge_summary?->tests, true) as $test)
+                    <li>{{ $test['label'] }}</li>
+                @endforeach
+            </ol>
+        </div>
+    @endif
+    </td>
 </tr>
+
+
 
 <!-- Space for Signature -->
 <tr style="height:120px">

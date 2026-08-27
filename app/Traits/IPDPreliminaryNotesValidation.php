@@ -30,6 +30,7 @@ trait IPDPreliminaryNotesValidation
             'pr'                         => 'nullable|string',
             'dre'                        => 'nullable|string',
             'proctoscopy'                => 'nullable|string',
+            'examination_comments'       => 'nullable|string',
             'investigation'              => 'nullable|string',
             'hb'                         => 'nullable|string|max:50',
             'tc'                         => 'nullable|string|max:50',

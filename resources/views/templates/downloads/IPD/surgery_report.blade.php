@@ -64,6 +64,10 @@
 </head>
 
 <body>
+    @php
+        $hasValue = fn($value) => !is_null($value) && trim((string) $value) !== '';
+    @endphp
+
 <div class="title">Surgery Report</div>
     <div class="container" style="border:1px solid">
         
@@ -74,17 +78,20 @@
                     <b>I.P. No</b> : {{ $ipd->ip_no ?? '1191' }}
                 </td>
                 <td width="50%">
-                    <b>Surgery Start Date & Time</b> :
-                    {{ optional($ipd->surgery_report)->surgery_start_datetime
-                        ? \Carbon\Carbon::parse($ipd->surgery_report->surgery_start_datetime)->format('d-m-Y | h:i A')
-                        : '' }}
-                    <br>
-
-                    <b>Surgery End Date & Time</b> :
-                    {{ optional($ipd->surgery_report)->surgery_end_datetime
-                        ? \Carbon\Carbon::parse($ipd->surgery_report->surgery_end_datetime)->format('d-m-Y | h:i A')
-                        : '' }}
-                    <br>
+                    @if($hasValue(optional($ipd->surgery_report)->surgery_start_datetime) || $hasValue(optional($ipd->surgery_report)->surgery_end_datetime))
+                        @if($hasValue(optional($ipd->surgery_report)->surgery_start_datetime))
+                            <b>Surgery Start Date & Time</b> :
+                            {{ \Carbon\Carbon::parse($ipd->surgery_report->surgery_start_datetime)->format('d-m-Y | h:i A') }}
+                        @endif
+                        @if($hasValue(optional($ipd->surgery_report)->surgery_start_datetime) && $hasValue(optional($ipd->surgery_report)->surgery_end_datetime))
+                            <br>
+                        @endif
+                        @if($hasValue(optional($ipd->surgery_report)->surgery_end_datetime))
+                            <b>Surgery End Date & Time</b> :
+                            {{ \Carbon\Carbon::parse($ipd->surgery_report->surgery_end_datetime)->format('d-m-Y | h:i A') }}
+                        @endif
+                        <br>
+                    @endif
                 </td>
             </tr>
             <tr>
@@ -100,48 +107,89 @@
         </table>
         <!-- Main Content Box -->
         <table style="border-top:1px solid">
-            <tr style="padding-bottom:20px;">
-                <td width="50%">
-                    <b>Surgeon</b> : {{ $ipd->surgery_report?->surgeon ?? '' }}
-                </td>
-                <td width="50%">
-                    <b>Anaesthetist</b> : {{ $ipd->surgery_report?->anaesthetist ?? '' }}
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <b>Department</b> : {{$ipd->surgery_report?->department ?? '' }}
-                </td>
-            </tr>
-            <tr>
-                <td width="50%">
-                    <b>Surgery Class</b> : {{$ipd->surgery_report?->surgery_type ?? '' }}
-                    <br><br>
-                </td>
-                <td width="50%">
-                    <b>Procedure</b> : {{ $ipd->surgery_report?->surgery_name ?? '' }}
-                    <br><br>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <b>Surgery Status</b> : {{$ipd->surgery_report?->status ?? '' }}<br><br>
-                    <b>Assistant Surgeon</b> :<br>
-                    {{$ipd->surgery_report?->assistant_surgeon ?? '' }}<br><br>
-                    <b>Scrub Nurse</b> :<br>
-                   {{$ipd->surgery_report?->scrub_nurse ?? '' }}<br><br>
-                    <b>Specimen For HPE:</b><br>
-                    {{$ipd->surgery_report?->specimen_for_hpe ?? '' }}<br><br>
-                    <b>Operative Notes:</b><br>
-                    {{$ipd->surgery_report?->operative_notes ?? '' }}<br><br>
-                    <b>Operative Findings:</b><br>
-                    {{$ipd->surgery_report?->operative_findings ?? '' }}<br><br>
-                    <b>Post Operative Instructions:</b><br>
-                    {{$ipd->surgery_report?->post_operative_instructions ?? '' }}
-                    <br><br>
-                    {{$ipd->surgery_report?->summary ?? '' }}
-                </td>
-            </tr>
+            @if($hasValue($ipd->surgery_report?->surgeon ?? '') || $hasValue($ipd->surgery_report?->anaesthetist ?? ''))
+                <tr style="padding-bottom:20px;">
+                    @if($hasValue($ipd->surgery_report?->surgeon ?? ''))
+                        <td width="50%">
+                            <b>Surgeon</b> : {{ $ipd->surgery_report?->surgeon ?? '' }}
+                        </td>
+                    @endif
+                    @if($hasValue($ipd->surgery_report?->anaesthetist ?? ''))
+                        <td width="50%">
+                            <b>Anaesthetist</b> : {{ $ipd->surgery_report?->anaesthetist ?? '' }}
+                        </td>
+                    @endif
+                </tr>
+            @endif
+            @if($hasValue($ipd->surgery_report?->department ?? ''))
+                <tr>
+                    <td colspan="2">
+                        <b>Department</b> : {{$ipd->surgery_report?->department ?? '' }}
+                    </td>
+                </tr>
+            @endif
+            @if($hasValue($ipd->surgery_report?->surgery_type ?? '') || $hasValue($ipd->surgery_report?->surgery_name ?? ''))
+                <tr>
+                    @if($hasValue($ipd->surgery_report?->surgery_type ?? ''))
+                        <td width="50%">
+                            <b>Surgery Class</b> : {{$ipd->surgery_report?->surgery_type ?? '' }}
+                            <br><br>
+                        </td>
+                    @endif
+                    @if($hasValue($ipd->surgery_report?->surgery_name ?? ''))
+                        <td width="50%">
+                            <b>Procedure</b> : {{ $ipd->surgery_report?->surgery_name ?? '' }}
+                            <br><br>
+                        </td>
+                    @endif
+                </tr>
+            @endif
+            @if(
+                $hasValue($ipd->surgery_report?->status ?? '') ||
+                $hasValue($ipd->surgery_report?->assistant_surgeon ?? '') ||
+                $hasValue($ipd->surgery_report?->scrub_nurse ?? '') ||
+                $hasValue($ipd->surgery_report?->specimen_for_hpe ?? '') ||
+                $hasValue($ipd->surgery_report?->operative_notes ?? '') ||
+                $hasValue($ipd->surgery_report?->operative_findings ?? '') ||
+                $hasValue($ipd->surgery_report?->post_operative_instructions ?? '') ||
+                $hasValue($ipd->surgery_report?->summary ?? '')
+            )
+                <tr>
+                    <td colspan="2">
+                        @if($hasValue($ipd->surgery_report?->status ?? ''))
+                            <b>Surgery Status</b> : {{$ipd->surgery_report?->status ?? '' }}<br><br>
+                        @endif
+                        @if($hasValue($ipd->surgery_report?->assistant_surgeon ?? ''))
+                            <b>Assistant Surgeon</b> :<br>
+                            {{$ipd->surgery_report?->assistant_surgeon ?? '' }}<br><br>
+                        @endif
+                        @if($hasValue($ipd->surgery_report?->scrub_nurse ?? ''))
+                            <b>Scrub Nurse</b> :<br>
+                           {{$ipd->surgery_report?->scrub_nurse ?? '' }}<br><br>
+                        @endif
+                        @if($hasValue($ipd->surgery_report?->specimen_for_hpe ?? ''))
+                            <b>Specimen For HPE:</b><br>
+                            {{$ipd->surgery_report?->specimen_for_hpe ?? '' }}<br><br>
+                        @endif
+                        @if($hasValue($ipd->surgery_report?->operative_notes ?? ''))
+                            <b>Operative Notes:</b><br>
+                            {{$ipd->surgery_report?->operative_notes ?? '' }}<br><br>
+                        @endif
+                        @if($hasValue($ipd->surgery_report?->operative_findings ?? ''))
+                            <b>Operative Findings:</b><br>
+                            {{$ipd->surgery_report?->operative_findings ?? '' }}<br><br>
+                        @endif
+                        @if($hasValue($ipd->surgery_report?->post_operative_instructions ?? ''))
+                            <b>Post Operative Instructions:</b><br>
+                            {{$ipd->surgery_report?->post_operative_instructions ?? '' }}
+                            <br><br>
+                        @endif
+                        @if($hasValue($ipd->surgery_report?->summary ?? ''))
+                            {{$ipd->surgery_report?->summary ?? '' }}
+                        @endif
+                    </td>
+                </tr>
+            @endif
             <!-- Empty area to match long layout -->
             <tr style="height:350px;">
                 <td colspan="2"></td>

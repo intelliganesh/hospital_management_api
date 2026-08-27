@@ -154,6 +154,10 @@ class IPDDischargeSummaryController extends Controller
      *             @OA\Property(property="course_in_hospital", type="string", example="Post-operative period uneventful."),
      *             @OA\Property(property="patient_health_condition_at_discharge", type="string", example="Stable"),
      *             @OA\Property(property="advice_on_discharge", type="string", example="Follow medication and dressing instructions."),
+     *             @OA\Property(property="medicines", type="string", example="Paracetamol, Amoxicillin"),
+     *             @OA\Property(property="combination_medicines", type="string", example="Ibuprofen + Acetaminophen"),
+     *             @OA\Property(property="tests", type="string", example="Complete Blood Count, Urinalysis"),
+     *             @OA\Property(property="diet_plan", type="string", example="High protein, low salt diet"),
      *             @OA\Property(property="special_instruction", type="string", example="Follow up after 7 days."),
      *             @OA\Property(property="upload_pdf_path", type="string", example="pdfs/ipd/IPD-001/uploads/discharge_summary_IPD-001.pdf")
      *         )
@@ -214,6 +218,10 @@ class IPDDischargeSummaryController extends Controller
      *             @OA\Property(property="course_in_hospital", type="string", example="Post-operative period uneventful."),
      *             @OA\Property(property="patient_health_condition_at_discharge", type="string", example="Stable"),
      *             @OA\Property(property="advice_on_discharge", type="string", example="Follow medication and dressing instructions."),
+     *             @OA\Property(property="medicines", type="string", example="Paracetamol, Amoxicillin"),
+     *             @OA\Property(property="combination_medicines", type="string", example="Ibuprofen + Acetaminophen"),
+     *             @OA\Property(property="tests", type="string", example="Complete Blood Count, Urinalysis"),
+     *             @OA\Property(property="diet_plan", type="string", example="High protein, low salt diet"),
      *             @OA\Property(property="special_instruction", type="string", example="Follow up after 7 days."),
      *             @OA\Property(property="upload_pdf_path", type="string", example="pdfs/ipd/IPD-001/uploads/discharge_summary_IPD-001.pdf")
      *         )

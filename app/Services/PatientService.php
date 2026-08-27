@@ -466,7 +466,7 @@ class PatientService implements CRUDContract, FilterContract
      */
     public function getPatientList()
     {
-        return Patient::select('id', 'patient_number', 'first_name', 'last_name')->get();
+        return Patient::select('id', 'patient_number', 'first_name', 'last_name','phone_no')->get();
     }
 
     /**

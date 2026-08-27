@@ -52,6 +52,7 @@ class IPDPreliminaryNotesService
             'pr'                         => $request->pr ?? null,
             'dre'                        => $request->dre ?? null,
             'proctoscopy'                => $request->proctoscopy ?? null,
+            'examination_comments'       => $request->examination_comments ?? null,
             'investigation'              => $request->investigation ?? null,
             'hb'                         => $request->hb ?? null,
             'tc'                         => $request->tc ?? null,
