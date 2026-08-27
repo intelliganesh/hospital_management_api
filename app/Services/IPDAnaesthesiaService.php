@@ -79,15 +79,22 @@ class IPDAnaesthesiaService implements CRUDContract, FilterContract
      * @return void
      */
     #[Transactional(secure: true, requiredRole: null, description: 'Create IPD anaesthesia record within a secure transaction')]
-    public function create(Request $request): void
+    public function create(Request $request)
     {
         $this->checkValidationService->checkValidation($this->validateIPDAnaesthesia($request));
 
-        $data = $request->all();
-        $preliminaryNotes = IPDPreliminaryNotes::where('ipd_id', $request->ipd_id)->first();
-        $data['diagnosis'] = $preliminaryNotes?->diagnosis ?? "-";
-    
-        IPDAnaesthesia::create($data);
+        $exists = IPDAnaesthesia::where('ipd_surgery_id', $data['ipd_surgery_id'])
+            ->where('ipd_id', $data['ipd_id'])
+            ->first();
+            
+        if (!$exists) {
+            $data = $request->all();
+            $preliminaryNotes = IPDPreliminaryNotes::where('ipd_id', $request->ipd_id)->first();
+            $data['diagnosis'] = $preliminaryNotes?->diagnosis ?? "-";
+            IPDAnaesthesia::create($data);
+        }else{
+            throw new Exception('Pre-Anaesthesia Assessments already exist for this Surgery. Only one Pre-Anaesthesia Assessments is allowed per Surgery.');
+        }
     }
 
     /**
