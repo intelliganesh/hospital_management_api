@@ -155,9 +155,9 @@ class IPDDischargeSummaryService implements CRUDContract, FilterContract
                 ->filter()
                 ->implode(', ');
             $generalExamination =
-                "RS - " . ($preliminaryNotes->rs ?? "________________________________________________") .
-                ", CVS - " . ($preliminaryNotes->cvs ?? "________________________________________________") .
-                ", Per Abdomen - " . ($preliminaryNotes->per_abdomen ?? "________________________________________________");
+                "RS - " . ($preliminaryNotes->rs ?? "__________________________________________") .
+                ", CVS - " . ($preliminaryNotes->cvs ?? "_________________________________________") .
+                ", Per Abdomen - " . ($preliminaryNotes->per_abdomen ?? "_________________________________________");
             $data = [
                 'ipd_id'                      => $id,
                 'doctor_incharge'             => $preliminaryNotes->doctor_incharge,
