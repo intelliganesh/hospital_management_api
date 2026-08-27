@@ -135,7 +135,7 @@ class IPDSurgeryService implements CRUDContract, FilterContract
         $anaesthesia = IPDAnaesthesia::create([
             'ipd_id'         => $request->ipd_id,
             'ipd_surgery_id' => $surgery->id,
-            'diagnosis'       => $preliminaryNotes?->diagnosis ?? "-",
+            'diagnosis'       => $preliminaryNotes?->final_diagnosis ?? "-",
         ]);
 
         IPDPreOperativeAnaesthesiaEvaluation::create([

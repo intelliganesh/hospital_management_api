@@ -18,6 +18,7 @@ trait IPDSurgeryValidation
             'status' => 'nullable|string|max:100',
             'surgeon' => 'nullable|string|max:255',
             'anaesthetist' => 'nullable|string|max:255',
+            'external_anaesthetist' => 'nullable|string|max:255',
             'department' => 'nullable|string|max:255',
             'surgery_start_datetime' => 'nullable|date',
             'surgery_end_datetime' => 'nullable|date',

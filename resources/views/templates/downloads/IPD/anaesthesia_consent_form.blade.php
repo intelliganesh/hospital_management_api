@@ -127,7 +127,7 @@ td, th {
             I understand that the above mentioned procedure necessitates the administration of
             Local/Sedation/Regional/General or any combination thereof to provide pain management during and/ or after surgery.
             I hereby authorize
-            <span class="dotted-line" style="min-width:200px;"> &nbsp;&nbsp;&nbsp;{{ $ipd->surgery_report?->anaesthetist ?? '' }}</span>
+            <span class="dotted-line" style="min-width:200px;"> &nbsp;&nbsp;&nbsp;{{ $ipd->surgery_report?->anaesthetist ?? '' }}{{ $ipd->surgery_report?->external_anaesthetist ? ', ' . $ipd->surgery_report?->external_anaesthetist : '' }}</span>
             (Anaesthetist) and their associates to provide the required anaesthesia service.
         </p>
 
@@ -204,6 +204,16 @@ td, th {
             <td></td>
             <td></td>
         </tr>
+
+        @if($ipd->surgery_report?->external_anaesthetist)
+        <tr>
+            <td><b>Doctor</b></td>
+            <td>{{ $ipd->surgery_report?->external_anaesthetist ?? '' }}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        @endif
 
         <tr>
             <td><b>Interpreter</b></td>

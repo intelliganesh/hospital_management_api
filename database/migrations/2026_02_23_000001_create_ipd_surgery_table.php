@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->string('status')->nullable();
             $table->string('surgeon')->nullable();
             $table->string('anaesthetist')->nullable();
+            $table->string('external_anaesthetist')->nullable();
             $table->string('department')->nullable();
             $table->dateTime('surgery_start_datetime')->nullable();
             $table->dateTime('surgery_end_datetime')->nullable();
