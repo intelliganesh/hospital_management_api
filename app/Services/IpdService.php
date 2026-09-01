@@ -250,7 +250,11 @@ class IpdService implements FilterContract
 
         if ($request->has('sort_by') && !empty($request->sort_by)) {
             $sortOrder = $request->has('sort_order') && $request->sort_order === 'asc' ? 'asc' : 'desc';
-            $query->orderBy($request->sort_by, $sortOrder);
+            if($request->sort_by === 'admission_date'){
+                $query->orderBy('admission_date_time', $sortOrder);
+            }else{
+                $query->orderBy($request->sort_by, $sortOrder);
+            }
         } else {
             // Default: Show Admitted → Under Treatment → Discharged → Expired
             $query->orderByRaw("CASE WHEN status = 'Admitted' THEN 0 WHEN status = 'Under Treatment' THEN 1 WHEN status = 'Discharged' THEN 2 WHEN status = 'Expired' THEN 3 ELSE 4 END")

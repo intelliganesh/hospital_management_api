@@ -86,10 +86,17 @@
         $nerve_stimulator= $ipd->anaesthesiaDepartment?->nerve_stimulator ? json_decode($ipd->anaesthesiaDepartment?->nerve_stimulator, true) : [];
         $regional_supplements= $ipd->anaesthesiaDepartment?->regional_supplements ? json_decode($ipd->anaesthesiaDepartment?->regional_supplements, true) : [];
         $monitoring= $ipd->anaesthesiaDepartment?->monitoring ? json_decode($ipd->anaesthesiaDepartment?->monitoring, true) : [];
-        $abp_details= $ipd->anaesthesiaDepartment?->abp_details ? json_decode($ipd->anaesthesiaDepartment?->abp_details, true) : [];
-        $cvp_details= $ipd->anaesthesiaDepartment?->cvp_details ?  json_decode($ipd->anaesthesiaDepartment?->cvp_details, true) : [];
+        $abp_details = $ipd->anaesthesiaDepartment?->abp_details ? json_decode($ipd->anaesthesiaDepartment->abp_details, true) : [];
+        $cvp_details = $ipd->anaesthesiaDepartment?->cvp_details ? json_decode($ipd->anaesthesiaDepartment->cvp_details, true) : [];
         $drugs_regional= $ipd->anaesthesiaDepartment?->drugs_regional ? json_decode($ipd->anaesthesiaDepartment?->drugs_regional, true) : [];
-    @endphp
+        if (!empty($abp_details) && isset($abp_details['site'])) {
+            $abp_details = [$abp_details];
+        }
+
+        if (!empty($cvp_details) && isset($cvp_details['site'])) {
+            $cvp_details = [$cvp_details];
+        }
+        @endphp
     <div class="container">
         <div class="title">Department of Anaesthesia</div>
         <!-- Patient Basic Details -->
@@ -577,7 +584,7 @@
                 <th class="text-center sub-title">ANAESTHESIA TECHNIQUE BRIEF</th>
             </tr>
             <tr style="height:60px;">
-                <td>{{ $ipd->anaesthesiaDepartment?->anaesthesia_technique_brief ?? '' }}</td>
+                <td>{{ $ipd->anaesthesiaDepartment?->anaesthesia_technique_brief ?? '' }} <br><br> {{ $ipd->anaesthesiaDepartment?->summary ?? '' }}</td>
             </tr>
         </table>
     </div>

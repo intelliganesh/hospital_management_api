@@ -256,6 +256,7 @@ class PatientService implements CRUDContract, FilterContract
             \App\Models\Appointments::where('patient_id', $id)->update($data);
             \App\Models\Consultations::where('patient_id', $id)->update($data);
             \App\Models\Invoice::where('patient_id', $id)->update($data);
+            \App\Models\IPD::where('patient_id', $id)->where('status', 'Admitted')->update($data);
         }
 
         return ['patient_id' => $id, 'id' => $patientAddressProof ? $patientAddressProof->id : null, 'attendant_id' => $patientAttendantAddressProof ? $patientAttendantAddressProof->id : null];

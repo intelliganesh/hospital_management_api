@@ -158,11 +158,12 @@ class IPDSurgeryService implements CRUDContract, FilterContract
             'ipd_id'             => $request->ipd_id,
             'ipd_surgery_id'     => $surgery->id,
             'ipd_anaesthesia_id' => $anaesthesia->id,
+            'surgical_procedure' => $surgery->surgery_name,
         ]);
-        IPDDischargeSummary::create([
-            'ipd_id'         => $request->ipd_id,
-            'ipd_surgery_id' => $surgery->id,
-        ]);
+        // IPDDischargeSummary::create([
+        //     'ipd_id'         => $request->ipd_id,
+        //     'ipd_surgery_id' => $surgery->id,
+        // ]);
         IPDPreliminaryNotes::create([
             'ipd_id'         => $request->ipd_id,
             'ipd_surgery_id' => $surgery->id,

@@ -480,7 +480,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::delete('/ipd_delete/{id}', [IpdController::class, 'delete']);
     Route::get('/ipd_download_pdf/{id}', [IpdController::class, 'downloadPdf']);
     Route::get('/ipd_generate_pdf/{id}', [IpdController::class, 'generatePdf']);
-
+    Route::get('/ipd_download_empty_pdf/{id}', [IpdController::class, 'downloadEmptyPdf'])->name('ipd_download_empty_pdf');
+    Route::get('/ipd_prefilled_uploaded_pdf/{id}', [IpdController::class, 'downloadPrefilledUploadPdf'])->name('ipd_prefilled_upload_pdf');
     //Preliminary Notes
     Route::post('/preliminary_notes/{ipd_id}', [IPDPreliminaryNotesController::class, 'create']);
     Route::get('/preliminary_notes', [IPDPreliminaryNotesController::class, 'all']);

@@ -9,6 +9,7 @@ use App\Models\IPDDischargeSummary;
 use App\Traits\IPDDischargeSummaryValidation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class IPDDischargeSummaryService implements CRUDContract, FilterContract
 {
@@ -127,6 +128,16 @@ class IPDDischargeSummaryService implements CRUDContract, FilterContract
         }
 
         $dischargeSummary->update($data);
+        $ipd = IPD::find($id);
+
+        if(isset($request->discharge_date) && isset($request->discharge_time)){
+            $dischargeDateTime = Carbon::parse(
+                    $request->discharge_date . ' ' . $request->discharge_time
+                );
+            $ipd->discharge_date_time = $dischargeDateTime;
+            $ipd->save();
+        }
+
     }
 
     /**
@@ -155,10 +166,38 @@ class IPDDischargeSummaryService implements CRUDContract, FilterContract
             $ipd               = IPD::with('preliminaryNotes', 'surgery')->find($id);
             $preliminaryNotes  = $ipd->preliminaryNotes->first();
             $surgery           = $ipd->surgery;
-            $consultantDoctors = $ipd->consultantDoctors
-                ->pluck('user_name')
+            $formatDoctor = fn($name, $suffix) =>
+                (preg_match('/^dr\.?\s/i', trim($name))
+                    ? trim($name)
+                    : 'Dr. ' . trim($name)
+                ) . ' ' . $suffix;
+
+            $surgeon = $formatDoctor($ipd->doctor_name, '(Surgeon)');
+
+            $consultantDoctors = $ipd->consultantDoctors?->pluck('user_name')
+                ->filter()
+                ->map(fn($name) => $formatDoctor($name, '(Consultant)'))
+                ->implode(', ') ?? '';
+
+            $AnaesthestistDoctors = $surgery?->pluck('anaesthetist')
+                ->filter()
+                ->map(fn($name) => $formatDoctor($name, '(Anaesthetist)'))
+                ->implode(', ');
+
+            $externalAnaesthestistDoctors = $surgery?->pluck('external_anaesthetist')
+                ->filter()
+                ->map(fn($name) => $formatDoctor($name, '(Anaesthetist)'))
+                ->implode(', ');
+
+            $allDoctors = collect([
+                $surgeon,
+                $consultantDoctors,
+                $AnaesthestistDoctors,
+                $externalAnaesthestistDoctors,
+            ])
                 ->filter()
                 ->implode(', ');
+
 
             $operationDone = $surgery
                 ->pluck('name')
@@ -175,8 +214,8 @@ class IPDDischargeSummaryService implements CRUDContract, FilterContract
                 ", Per Abdomen - " . ($preliminaryNotes->per_abdomen ?? "_________________________________________");
             $data = [
                 'ipd_id'                      => $id,
-                'doctor_incharge'             => $preliminaryNotes->doctor_incharge,
-                'consultants'                 => $consultantDoctors,
+                'doctor_incharge'             => 'Dr. ' . trim($ipd->doctor_name),
+                'consultants'                 => $allDoctors,
                 'diagnosis'                   => $preliminaryNotes->final_diagnosis,
                 'case_history_and_complaints' => $preliminaryNotes->chief_complaint,
                 'general_examination'         => $generalExamination,

@@ -87,11 +87,18 @@
                 </td>
                 <td width="50%">
                     <b>Admission Date & Time :</b>
-                    {{ optional($ipd->admission_date_time)->format('d-m-Y | h:i A') ?? '' }}<br>
+                    {{ $ipd->admission_date_time
+                        ? \Carbon\Carbon::parse($ipd->admission_date_time)->format('d-m-Y | h:i A')
+                        : ''
+                    }}<br>
+
                     <b>Discharge Date & Time :</b>
-                    {{ optional($ipd->discharge_date_time)->format('d-m-Y | h:i A') ?? '' }}<br><br>
+                    {{ $ipd->discharge_date_time
+                        ? \Carbon\Carbon::parse($ipd->discharge_date_time)->format('d-m-Y | h:i A')
+                        : ''
+                    }}<br><br>
                     <b>Doctor Incharge :</b><br>
-                    {{ $ipd->surgery_report?->surgeon ?? '' }}
+                    {{ $ipd->discharge_summary?->doctor_incharge ?? '' }}
                 </td>
             </tr>
         </table>

@@ -659,6 +659,150 @@ class IpdController extends Controller
 
     /**
      * @OA\Get(
+     *     path="/api/ipd_download_empty_pdf/{id}",
+     *     tags={"IPD Management"},
+     *     summary="Download EmptyIPD document as PDF",
+     *     description="Download various EmptyIPD documents as PDF (preliminary_notes,anaesthesia_consent_form, doctor_notes, nurse_notes, discharge_summary, consent_form, pre_anaesthesia_assessment,department_of_anaesthesia, pre_operative_checklist, anaesthesia_record, anaesthesia_recovery_room_observation, surgery_report, billing_invoice)",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="IPD record ID",
+     *         @OA\Schema(type="string", format="uuid")
+     *     ),
+     *     @OA\Parameter(
+     *         name="type",
+     *         in="query",
+     *         required=true,
+     *         description="Document type to download",
+     *         @OA\Schema(
+     *             type="string",
+     *             enum={"preliminary_notes", "doctor_notes", "nurse_notes", "discharge_summary", "surgery_consent_form", "anaesthesia_consent_form","pre_anaesthesia_assessment", "department_of_anaesthesia","anaesthesia_record","pre_operative_checklist", "anaesthesia_recovery_room_observation", "surgery_report","billing_invoice"},
+     *             example="preliminary_notes"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="PDF file downloaded successfully",
+     *         @OA\MediaType(
+     *             mediaType="application/pdf"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid document type"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="IPD record not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal server error"
+     *     )
+     * )
+     */
+    public function downloadEmptyPdf(Request $request, string $id)
+    {
+        try {
+            $type       = $request->query('type');
+
+            if (! $type) {
+                return $this->errorResponse(null, 'Document type is required', 400);
+            }
+
+            $validTypes = [
+                'preliminary_notes',
+                'doctor_notes',
+                'nurse_notes',
+                'discharge_summary',
+                'surgery_consent_form',
+                'anaesthesia_consent_form',
+                'pre_anaesthesia_assessment',
+                'department_of_anaesthesia',
+                'pre_operative_checklist',
+                'anaesthesia_recovery_room_observation',
+                'surgery_report',
+                'anaesthesia_record',
+                'billing_invoice',
+            ];
+
+            if (! in_array($type, $validTypes)) {
+                return $this->errorResponse(null, 'Invalid document type. Valid types: ' . implode(', ', $validTypes), 400);
+            }
+
+            return $this->successResponse(['url' => $this->ipdDownloadService->downloademptyPdf($id, $type)], 'Empty PDF file generated successfully');
+        } catch (ModelNotFoundException $e) {
+            throw new NotFoundHttpException('IPD data not found.');
+        } catch (NotFoundHttpException $notFound) {
+            return $this->notFoundResponse($notFound);
+        } catch (Exception $e) {
+            return $this->exceptionResponse($e);
+        }
+    }
+
+     /**
+     * @OA\Get(
+     *     path="/api/ipd_prefilled_uploaded_pdf/{id}",
+     *     tags={"IPD Management"},
+     *     summary="Download Prefilled Uploaded IPD document as PDF",
+     *     description="Download various Prefilled Uploaded IPD documents",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="IPD record ID",
+     *         @OA\Schema(type="string", format="uuid")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="PDF file downloaded successfully",
+     *         @OA\MediaType(
+     *             mediaType="application/pdf"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid document type"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="IPD record not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal server error"
+     *     )
+     * )
+     */
+    public function downloadPrefilledUploadPdf(Request $request, string $id)
+    {
+        try {
+            $type = $request->query('type', 'all');
+            return $this->successResponse(['url' => $this->ipdDownloadService->downloadprefilledUploadPdf($id, $type)], 'PDF file list');
+        } catch (ModelNotFoundException $e) {
+            throw new NotFoundHttpException('IPD data not found.');
+        } catch (NotFoundHttpException $notFound) {
+            return $this->notFoundResponse($notFound);
+        } catch (Exception $e) {
+            return $this->exceptionResponse($e);
+        }
+    }
+
+    
+
+    /**
+     * @OA\Get(
      *     path="/api/patient_preoperative_checklist/{id}",
      *     tags={"IPD Management"},
      *     summary="Download Pre Operative Checklist document as PDF",
