@@ -336,87 +336,63 @@ class IPDDownloadService
 
             switch ($type) {
                 case 'preliminary_notes':
-                    $ipd->setRelation('preliminaryNotes', collect());
-                    $fileName    = 'preliminary_notes_E_' . $ipd->ipd_number . '.pdf';
-                    $htmlContent = view('templates.downloads.IPD.preliminary_notes', compact('ipd'))->render();
+                    $fileName    = 'preliminary_notes_' . $ipd->ipd_number . '.pdf';
+                    $htmlContent = view('templates.downloads.IPD.empty.preliminary_notes', compact('ipd'))->render();
                     break;
 
                 case 'doctor_notes':
-                    $fileName          = 'doctor_notes_E_' . $ipd->ipd_number . '.pdf';
-                    $ipd->doctor_notes = collect();
-                    $htmlContent       = view('templates.downloads.IPD.doctor_notes', compact('ipd'))->render();
+                    $fileName          = 'doctor_notes_' . $ipd->ipd_number . '.pdf';
+                    $htmlContent       = view('templates.downloads.IPD.empty.doctor_notes', compact('ipd'))->render();
                     break;
 
                 case 'nurse_notes':
-                    $fileName         = 'nurse_notes_E_' . $ipd->ipd_number . '.pdf';
-                    $ipd->nurse_notes = collect();
-                    $htmlContent      = view('templates.downloads.IPD.nurse_notes', compact('ipd'))->render();
+                    $fileName         = 'nurse_notes_' . $ipd->ipd_number . '.pdf';
+                    $htmlContent      = view('templates.downloads.IPD.empty.nurse_notes', compact('ipd'))->render();
                     break;
 
                 case 'anaesthesia_consent_form':
-                    $ipd->setRelation('preliminaryNotes', collect());
-                    $ipd->surgery_report = $this->emptyValueObject();
-                    $ipd->setRelation('anaesthesia', $this->emptyValueObject());
-                    $fileName            = 'anaesthesia_consent_form_E_' . $ipd->ipd_number . '.pdf';
-                    $htmlContent         = view('templates.downloads.IPD.anaesthesia_consent_form', compact('ipd'))->render();
+                    $fileName            = 'anaesthesia_consent_form_' . $ipd->ipd_number . '.pdf';
+                    $htmlContent         = view('templates.downloads.IPD.empty.anaesthesia_consent_form', compact('ipd'))->render();
                     break;
 
                 case 'pre_anaesthesia_assessment':
-                    $ipd->surgery_report                             = $this->emptyValueObject();
-                    $ipd->setRelation('anaesthesia', $this->emptyValueObject());
-                    $ipd->anaesthesia_pre_operative_evaluation_chart = $this->emptyValueObject();
-                    $fileName                                        = 'pre_anaesthesia_assessment_E_' . $ipd->ipd_number . '.pdf';
-                    $htmlContent                                     = view('templates.downloads.IPD.pre_operative_anaesthesia_evaluation_chart', compact('ipd'))->render();
+                    $fileName                                        = 'pre_anaesthesia_assessment_' . $ipd->ipd_number . '.pdf';
+                    $htmlContent                                     = view('templates.downloads.IPD.empty.pre_anaesthesia_assessment', compact('ipd'))->render();
                     break;
 
                 case 'department_of_anaesthesia':
-                    $ipd->surgery_report = $this->emptyValueObject();
-                    $ipd->setRelation('anaesthesia', $this->emptyValueObject());
-                    $ipd->setRelation('anaesthesiaDepartment', $this->emptyValueObject());
-                    $fileName    = 'department_of_anaesthesia_E_' . $ipd->ipd_number . '.pdf';
-                    $htmlContent = view('templates.downloads.IPD.department_of_anaesthesia', compact('ipd'))->render();
+                    $fileName    = 'department_of_anaesthesia_' . $ipd->ipd_number . '.pdf';
+                    $htmlContent = view('templates.downloads.IPD.empty.department_of_anaesthesia', compact('ipd'))->render();
                     break;
 
                 case 'anaesthesia_recovery_room_observation':
-                    $ipd->surgery_report = $this->emptyValueObject();
-                    $ipd->setRelation('anaesthesia', $this->emptyValueObject());
-                    $ipd->setRelation('recoveryObservation', $this->emptyValueObject());
-                    $fileName    = 'anaesthesia_recovery_room_observation_E_' . $ipd->ipd_number . '.pdf';
-                    $htmlContent = view('templates.downloads.IPD.anaesthesia_recovery_room_observation', compact('ipd'))->render();
-                    $htmlContent = $this->removeEmptyDateArtifacts($htmlContent);
+                    $fileName    = 'anaesthesia_recovery_room_observation_' . $ipd->ipd_number . '.pdf';
+                    $htmlContent = view('templates.downloads.IPD.empty.anaesthesia_recovery_room_observation', compact('ipd'))->render();
                     break;
 
                 case 'anaesthesia_record':
-                    $ipd->surgery_report = $this->emptyValueObject();
-                    $ipd->setRelation('anaesthesia', $this->emptyValueObject());
-                    $fileName            = 'anaesthesia_record_E_' . $ipd->ipd_number . '.pdf';
-                    $htmlContent         = view('templates.downloads.IPD.anaesthesia_record', compact('ipd'))->render();
+                    $fileName            = 'anaesthesia_record_' . $ipd->ipd_number . '.pdf';
+                    $htmlContent         = view('templates.downloads.IPD.empty.anaesthesia_record', compact('ipd'))->render();
                     break;
 
                 case 'surgery_consent_form':
-                    $ipd->surgery_report = $this->emptyValueObject();
-                    $fileName            = 'surgery_consent_form_E_' . $ipd->ipd_number . '.pdf';
-                    $htmlContent         = view('templates.downloads.IPD.surgery_consent_form', compact('ipd'))->render();
+                    $fileName            = 'surgery_consent_form_' . $ipd->ipd_number . '.pdf';
+                    $htmlContent         = view('templates.downloads.IPD.empty.surgery_consent_form', compact('ipd'))->render();
                     break;
 
                 case 'surgery_report':
-                    $ipd->ip_no          = $ipd->ipd_number;
-                    $ipd->surgery_report = $this->emptyValueObject();
-                    $fileName            = 'surgery_report_E_' . $ipd->ipd_number . '.pdf';
-                    $htmlContent         = view('templates.downloads.IPD.surgery_report', compact('ipd'))->render();
+                    $fileName            = 'surgery_report_' . $ipd->ipd_number . '.pdf';
+                    $htmlContent         = view('templates.downloads.IPD.empty.surgery_report', compact('ipd'))->render();
                     break;
 
                 case 'pre_operative_checklist':
-                    $ipd->setRelation('preOperativeChecklist', null);
-                    $fileName    = 'pre_operative_checklist_E_' . $ipd->ipd_number . '.pdf';
-                    $htmlContent = view('templates.downloads.IPD.pre_operative_checklist', compact('ipd'))->render();
+                    $fileName    = 'pre_operative_checklist_' . $ipd->ipd_number . '.pdf';
+                    $htmlContent = view('templates.downloads.IPD.empty.pre_operative_checklist', compact('ipd'))->render();
                     break;
 
                 case 'discharge_summary':
-                    $ipd->discharge_summary = null;
-                    $ipd->surgery_report    = $this->emptyValueObject();
-                    $fileName               = 'discharge_summary_E_' . $ipd->ipd_number . '.pdf';
-                    $htmlContent            = view('templates.downloads.IPD.discharge_summary', compact('ipd'))->render();
+                    $fileName               = 'discharge_summary_' . $ipd->ipd_number . '.pdf';
+                    $htmlContent            = view('templates.downloads.IPD.empty.discharge_summary', compact('ipd'))->render();
                     break;
 
                 default:
@@ -517,10 +493,6 @@ class IPDDownloadService
         };
     }
 
-    private function removeEmptyDateArtifacts(string $htmlContent): string
-    {
-        return str_replace(['01/01/1970 05:30', '01/01/1970 00:00'], '', $htmlContent);
-    }
 
     private function billingInvoiceData(string $ipdId): object
     {

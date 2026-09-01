@@ -121,7 +121,7 @@ class ImageUploadService extends GetImageService
             }
             if ($modalType == "ipd_surgery" || $modalType == "ipd_pre_operative_checklist" || $modalType == "ipd_pre_operative_anaesthesia_evaluation" || $modalType == "ipd_department_anaesthesia" || $modalType == "ipd_anaesthesia" || $modalType == "ipd_anaesthesia_recover_observation" || $modalType == "ipd_discharge_summary" || $modalType == "ipd_preliminary_notes") {
                 $ipd        = IPD::find($model->ipd_id);
-                $folderName = "app/public/pdfs/ipd/{$ipd->ipd_number}/uploads/";
+                $folderName = "app/public/pdfs/ipd/{$ipd->ipd_number}/uploads";
             }
 
             $model->setAttribute($imageField, $this->convertImage('add', $request, $fileName, $folderName));
