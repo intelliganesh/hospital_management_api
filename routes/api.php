@@ -37,6 +37,7 @@ use App\Http\Controllers\ManagementController;
 use App\Http\Controllers\Master\AgniController;
 use App\Http\Controllers\Master\AllergyController;
 use App\Http\Controllers\Master\AvasthaController;
+use App\Http\Controllers\Master\BillingServiceCategoryController;
 use App\Http\Controllers\Master\ChiefComplaintController;
 use App\Http\Controllers\Master\ComorbiditiesController;
 use App\Http\Controllers\Master\DepartmentsController;
@@ -270,6 +271,13 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::put('/findings_update/{id}', [FindingsController::class, 'update']);
     Route::delete('/findings_delete/{id}', [FindingsController::class, 'delete']);
     Route::get('/findings_list_for_dropdown', [FindingsController::class, 'findingsList']);
+    //billing service category
+    Route::get('/billing_service_category_list', [BillingServiceCategoryController::class, 'all']);
+    Route::post('/billing_service_category_add', [BillingServiceCategoryController::class, 'create']);
+    Route::get('/billing_service_category_details/{id}', [BillingServiceCategoryController::class, 'get']);
+    Route::put('/billing_service_category_update/{id}', [BillingServiceCategoryController::class, 'update']);
+    Route::delete('/billing_service_category_delete/{id}', [BillingServiceCategoryController::class, 'delete']);
+    Route::get('/billing_service_category_dropdown_list', [BillingServiceCategoryController::class, 'billingServiceCategoryList']);
     //agni
     Route::get('/agni_list', [AgniController::class, 'all']);
     Route::post('/agni_add', [AgniController::class, 'create']);
