@@ -4089,6 +4089,240 @@
                 ]
             }
         },
+        "/api/consultation_prescription/{appointment_id}": {
+            "get": {
+                "tags": [
+                    "Consultations"
+                ],
+                "summary": "Download prescription PDF for a consultation",
+                "description": "Returns the prescription data for the specified consultation date",
+                "operationId": "eff45aabdcb59e075c609b6633f450f3",
+                "parameters": [
+                    {
+                        "name": "appointment_id",
+                        "in": "path",
+                        "description": "Appointment ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Consultation prescription data retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "html": {
+                                                    "type": "string",
+                                                    "example": "<html>...</html>"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid consultation Date format"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Consultation not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Consultation not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "An error occurred while generating the prescription"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/consultation_dates/{patient_id}": {
+            "get": {
+                "tags": [
+                    "Consultations"
+                ],
+                "summary": "Get consultation dates for a patient",
+                "description": "Returns a list of consultation dates for the specified patient",
+                "operationId": "c295ae8a6c0ea811612509340c4cfa0d",
+                "parameters": [
+                    {
+                        "name": "patient_id",
+                        "in": "path",
+                        "description": "Patient ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Consultation dates retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "html": {
+                                                    "type": "string",
+                                                    "example": "<html>...</html>"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid consultation Date format"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Consultation not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Consultation not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "An error occurred while generating the prescription"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/consultation_cost_list": {
             "get": {
                 "tags": [
@@ -11745,14 +11979,14 @@
                 ]
             }
         },
-        "/api/ipd_billing_add_or_update/{ipd_id}": {
+        "/api/ipd_billing_update/{ipd_id}": {
             "post": {
                 "tags": [
                     "IPD Billing"
                 ],
                 "summary": "Create or update IPD billing invoice",
                 "description": "Create or update an IPD billing invoice record for an IPD enrollment",
-                "operationId": "31b3140f9ee47cf82e0811f2294bd572",
+                "operationId": "a530cb189f925083c857767f13831612",
                 "parameters": [
                     {
                         "name": "ipd_id",
@@ -11773,23 +12007,9 @@
                         "application/json": {
                             "schema": {
                                 "properties": {
-                                    "currency": {
+                                    "ipd_billing_status": {
                                         "type": "string",
-                                        "example": "INR"
-                                    },
-                                    "comment": {
-                                        "type": "string",
-                                        "example": "Final bill prepared"
-                                    },
-                                    "discount_amount": {
-                                        "type": "number",
-                                        "format": "float",
-                                        "example": 500
-                                    },
-                                    "discount_percentage": {
-                                        "type": "number",
-                                        "format": "float",
-                                        "example": 10
+                                        "example": "Running/Completed"
                                     }
                                 },
                                 "type": "object"
@@ -11856,14 +12076,14 @@
                 ]
             }
         },
-        "/api/ipd_billing_payment/{ipd_id}": {
+        "/api/ipd_billing_add_payment/{ipd_id}": {
             "post": {
                 "tags": [
                     "IPD Billing"
                 ],
                 "summary": "Add IPD billing payment",
                 "description": "Record a payment receipt against an IPD billing invoice",
-                "operationId": "18cc067e130078987cb0b2b83e060344",
+                "operationId": "9c2815af80a46c5617c31efaff8372ef",
                 "parameters": [
                     {
                         "name": "ipd_id",
@@ -11982,14 +12202,14 @@
                 ]
             }
         },
-        "/api/ipd_billing_charges/{ipd_id}": {
+        "/api/ipd_billing_add_charges/{ipd_id}": {
             "post": {
                 "tags": [
                     "IPD Billing"
                 ],
                 "summary": "Add IPD billing charge",
                 "description": "Add an invoice item charge under a service category for IPD billing",
-                "operationId": "58d60a2d0da5f46ff5196767f7c3c452",
+                "operationId": "cb3cb73f8aef16b0123ac5d6317d04db",
                 "parameters": [
                     {
                         "name": "ipd_id",
@@ -12111,14 +12331,179 @@
                 ]
             }
         },
-        "/api/ipd_billing_payment_details/{ipd_id}": {
+        "/api/ipd_billing_update_charges/{id}": {
+            "put": {
+                "tags": [
+                    "IPD Billing"
+                ],
+                "summary": "Update IPD billing charges",
+                "description": "Update IPD billing charges including amount, service category, and tax details",
+                "operationId": "ef8558ffc30ff189ce56075dccadcbb6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "IPD Billing Charge record ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Payment data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "amount"
+                                ],
+                                "properties": {
+                                    "amount": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 5000
+                                    },
+                                    "currency": {
+                                        "type": "string",
+                                        "example": "INR"
+                                    },
+                                    "date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-06-22"
+                                    },
+                                    "payment_type": {
+                                        "type": "string",
+                                        "example": "Cash"
+                                    },
+                                    "transaction_id": {
+                                        "type": "string",
+                                        "example": "TXN12345"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "Completed"
+                                    },
+                                    "notes": {
+                                        "type": "string",
+                                        "example": "Advance payment"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "IPD Billing Charge record updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "IPD Billing Charge record updated successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "IPD Billing Charge record not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ipd_billing_delete_charges/{id}": {
+            "delete": {
+                "tags": [
+                    "IPD Billing"
+                ],
+                "summary": "Delete IPD Billing Charge record",
+                "description": "Delete an IPD Billing Charge record",
+                "operationId": "a9f4e21602ac22107d813ffb593daf11",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "IPD Billing Charge record ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "IPD Billing Charge record deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "IPD Billing Charge record deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "IPD Billing Charge record not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ipd_billing_get_payment_details/{ipd_id}": {
             "get": {
                 "tags": [
                     "IPD Billing"
                 ],
                 "summary": "Get IPD billing payment details",
                 "description": "Retrieve all receipt payments for an IPD billing invoice",
-                "operationId": "1efe0c636faa87cc4a380d8e29da2eda",
+                "operationId": "983f4d5e2534f97115a645b7c18c89bd",
                 "parameters": [
                     {
                         "name": "ipd_id",
@@ -12382,6 +12767,22 @@
                                         "type": "string",
                                         "example": "Follow medication and dressing instructions."
                                     },
+                                    "medicines": {
+                                        "type": "string",
+                                        "example": "Paracetamol, Amoxicillin"
+                                    },
+                                    "combination_medicines": {
+                                        "type": "string",
+                                        "example": "Ibuprofen + Acetaminophen"
+                                    },
+                                    "tests": {
+                                        "type": "string",
+                                        "example": "Complete Blood Count, Urinalysis"
+                                    },
+                                    "diet_plan": {
+                                        "type": "string",
+                                        "example": "High protein, low salt diet"
+                                    },
                                     "special_instruction": {
                                         "type": "string",
                                         "example": "Follow up after 7 days."
@@ -12514,6 +12915,22 @@
                                     "advice_on_discharge": {
                                         "type": "string",
                                         "example": "Follow medication and dressing instructions."
+                                    },
+                                    "medicines": {
+                                        "type": "string",
+                                        "example": "Paracetamol, Amoxicillin"
+                                    },
+                                    "combination_medicines": {
+                                        "type": "string",
+                                        "example": "Ibuprofen + Acetaminophen"
+                                    },
+                                    "tests": {
+                                        "type": "string",
+                                        "example": "Complete Blood Count, Urinalysis"
+                                    },
+                                    "diet_plan": {
+                                        "type": "string",
+                                        "example": "High protein, low salt diet"
                                     },
                                     "special_instruction": {
                                         "type": "string",
@@ -15824,6 +16241,11 @@
                                         "type": "string",
                                         "example": "No external abnormalities"
                                     },
+                                    "examination_comments": {
+                                        "description": "Examination comments",
+                                        "type": "string",
+                                        "example": "Patient appears uncomfortable"
+                                    },
                                     "pr": {
                                         "description": "PR examination",
                                         "type": "string",
@@ -16189,6 +16611,9 @@
                                     "proctoscopy": {
                                         "type": "string"
                                     },
+                                    "examination_comments": {
+                                        "type": "string"
+                                    },
                                     "investigation": {
                                         "type": "string"
                                     },
@@ -16450,6 +16875,10 @@
                                                                 "type": "string",
                                                                 "example": "Dr. Jones"
                                                             },
+                                                            "external_anaesthetist": {
+                                                                "type": "string",
+                                                                "example": "Dr. Brown"
+                                                            },
                                                             "department": {
                                                                 "type": "string",
                                                                 "example": "General Surgery"
@@ -16601,6 +17030,10 @@
                                                     "type": "string",
                                                     "example": "Dr. Jones"
                                                 },
+                                                "external_anaesthetist": {
+                                                    "type": "string",
+                                                    "example": "Dr. Brown"
+                                                },
                                                 "department": {
                                                     "type": "string",
                                                     "example": "General Surgery"
@@ -16719,6 +17152,10 @@
                                     "anaesthetist": {
                                         "type": "string",
                                         "example": "Dr. Jones"
+                                    },
+                                    "external_anaesthetist": {
+                                        "type": "string",
+                                        "example": "Dr. Brown"
                                     },
                                     "department": {
                                         "type": "string",
@@ -16883,6 +17320,10 @@
                                     "anaesthetist": {
                                         "type": "string",
                                         "example": "Dr. Jones"
+                                    },
+                                    "external_anaesthetist": {
+                                        "type": "string",
+                                        "example": "Dr. Brown"
                                     },
                                     "department": {
                                         "type": "string",
@@ -17200,6 +17641,10 @@
                                                     "anaesthetist": {
                                                         "type": "string",
                                                         "example": "Dr. Jones"
+                                                    },
+                                                    "external_anaesthetist": {
+                                                        "type": "string",
+                                                        "example": "Dr. Brown"
                                                     },
                                                     "department": {
                                                         "type": "string",
@@ -18539,6 +18984,32 @@
                                         "format": "float",
                                         "example": 5000
                                     },
+                                    "currency": {
+                                        "description": "Currency (optional, default: ₹)",
+                                        "type": "string",
+                                        "example": "₹"
+                                    },
+                                    "payment_type": {
+                                        "description": "Payment type (optional, default: Cash)",
+                                        "type": "string",
+                                        "example": "Cash"
+                                    },
+                                    "transaction_id": {
+                                        "description": "Transaction ID (optional)",
+                                        "type": "string",
+                                        "example": "TXN123456789"
+                                    },
+                                    "payment_date": {
+                                        "description": "Payment date (optional, format: Y-m-d H:i:s)",
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2025-12-31 14:30:00"
+                                    },
+                                    "notes": {
+                                        "description": "Additional notes (optional)",
+                                        "type": "string",
+                                        "example": "Patient requires special care"
+                                    },
                                     "status": {
                                         "description": "Status (required, values: Admitted, Discharged, Expired, Under Treatment)",
                                         "type": "string",
@@ -18993,9 +19464,43 @@
                                         "type": "number",
                                         "format": "float"
                                     },
-                                    "discharge_date_time": {
+                                    "payment_date": {
+                                        "description": "Payment date (optional, format: Y-m-d H:i:s)",
                                         "type": "string",
-                                        "format": "date-time"
+                                        "format": "date-time",
+                                        "example": "2025-12-31 14:30:00"
+                                    },
+                                    "transaction_id": {
+                                        "description": "Transaction ID (optional)",
+                                        "type": "string",
+                                        "example": "TXN123456789"
+                                    },
+                                    "notes": {
+                                        "description": "Additional notes (optional)",
+                                        "type": "string",
+                                        "example": "Patient requires special care"
+                                    },
+                                    "currency": {
+                                        "description": "Currency (optional, default: ₹)",
+                                        "type": "string",
+                                        "example": "₹"
+                                    },
+                                    "payment_type": {
+                                        "description": "Payment type (optional, default: Cash)",
+                                        "type": "string",
+                                        "example": "Cash"
+                                    },
+                                    "admission_date_time": {
+                                        "description": "Admission date and time (optional, format: Y-m-d H:i:s)",
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2025-12-31 14:30:00"
+                                    },
+                                    "discharge_date_time": {
+                                        "description": "Discharge date and time (optional, format: Y-m-d H:i:s)",
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2025-12-31 14:30:00"
                                     },
                                     "status": {
                                         "description": "Status (required, values: Admitted, Discharged, Expired, Under Treatment)",
@@ -19137,7 +19642,7 @@
                     "IPD Management"
                 ],
                 "summary": "Generate IPD document as PDF",
-                "description": "Generate various IPD documents as PDF (preliminary_notes, anaesthesia_consent_form, doctor_notes, nurse_notes, discharge_summary, surgery_consent_form, pre_anaesthesia_assessment,department_of_anaesthesia, pre_operative_checklist, anaesthesia_recovery_room_observation, surgery_report)",
+                "description": "Generate various IPD documents as PDF (preliminary_notes, anaesthesia_consent_form, doctor_notes, nurse_notes, discharge_summary, surgery_consent_form, pre_anaesthesia_assessment,department_of_anaesthesia, pre_operative_checklist, anaesthesia_recovery_room_observation, surgery_report,billing_invoice)",
                 "operationId": "c859c8d8e4e7f1c603c1b2e538af83d4",
                 "parameters": [
                     {
@@ -19153,7 +19658,7 @@
                     {
                         "name": "ipd_surgery_id",
                         "in": "query",
-                        "description": "IPD surgery ID (required for surgery_report,pre_operative_checklist,surgery_consent_form,anaesthesia_consent_form,anaesthesia_recovery_room_observation type,anaesthesia_record)",
+                        "description": "IPD surgery ID (required for surgery_report,pre_operative_checklist,surgery_consent_form,anaesthesia_consent_form,billing_invoice,anaesthesia_recovery_room_observation type,anaesthesia_record)",
                         "required": false,
                         "schema": {
                             "type": "string",
@@ -19179,7 +19684,8 @@
                                 "department_of_anaesthesia",
                                 "pre_operative_checklist",
                                 "anaesthesia_recovery_room_observation",
-                                "surgery_report"
+                                "surgery_report",
+                                "billing_invoice"
                             ],
                             "example": "preliminary_notes"
                         }
@@ -19218,7 +19724,7 @@
                     "IPD Management"
                 ],
                 "summary": "Download IPD document as PDF",
-                "description": "Download various IPD documents as PDF (preliminary_notes,anaesthesia_consent_form, doctor_notes, nurse_notes, discharge_summary, consent_form, pre_anaesthesia_assessment,department_of_anaesthesia, pre_operative_checklist, anaesthesia_record, anaesthesia_recovery_room_observation, surgery_report)",
+                "description": "Download various IPD documents as PDF (preliminary_notes,anaesthesia_consent_form, doctor_notes, nurse_notes, discharge_summary, consent_form, pre_anaesthesia_assessment,department_of_anaesthesia, pre_operative_checklist, anaesthesia_record, anaesthesia_recovery_room_observation, surgery_report, billing_invoice)",
                 "operationId": "e0b2c161828a5d6a588a3bbe8cd3f36a",
                 "parameters": [
                     {
@@ -19234,7 +19740,7 @@
                     {
                         "name": "ipd_surgery_id",
                         "in": "query",
-                        "description": "IPD surgery ID (required for surgery_report,pre_operative_checklist,surgery_consent_form,anaesthesia_consent_form,anaesthesia_recovery_room_observation type,anaesthesia_record)",
+                        "description": "IPD surgery ID (required for surgery_report,pre_operative_checklist,billing_invoice,surgery_consent_form,anaesthesia_consent_form,anaesthesia_recovery_room_observation type,anaesthesia_record)",
                         "required": false,
                         "schema": {
                             "type": "string",
@@ -19260,9 +19766,129 @@
                                 "anaesthesia_record",
                                 "pre_operative_checklist",
                                 "anaesthesia_recovery_room_observation",
-                                "surgery_report"
+                                "surgery_report",
+                                "billing_invoice"
                             ],
                             "example": "preliminary_notes"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "PDF file downloaded successfully",
+                        "content": {
+                            "application/pdf": {}
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid document type"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "IPD record not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ipd_download_empty_pdf/{id}": {
+            "get": {
+                "tags": [
+                    "IPD Management"
+                ],
+                "summary": "Download EmptyIPD document as PDF",
+                "description": "Download various EmptyIPD documents as PDF (preliminary_notes,anaesthesia_consent_form, doctor_notes, nurse_notes, discharge_summary, consent_form, pre_anaesthesia_assessment,department_of_anaesthesia, pre_operative_checklist, anaesthesia_record, anaesthesia_recovery_room_observation, surgery_report, billing_invoice)",
+                "operationId": "86de8ba942eef8d0c11282ee8edf123a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "IPD record ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Document type to download",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "preliminary_notes",
+                                "doctor_notes",
+                                "nurse_notes",
+                                "discharge_summary",
+                                "surgery_consent_form",
+                                "anaesthesia_consent_form",
+                                "pre_anaesthesia_assessment",
+                                "department_of_anaesthesia",
+                                "anaesthesia_record",
+                                "pre_operative_checklist",
+                                "anaesthesia_recovery_room_observation",
+                                "surgery_report",
+                                "billing_invoice"
+                            ],
+                            "example": "preliminary_notes"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "PDF file downloaded successfully",
+                        "content": {
+                            "application/pdf": {}
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid document type"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "IPD record not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ipd_prefilled_uploaded_pdf/{id}": {
+            "get": {
+                "tags": [
+                    "IPD Management"
+                ],
+                "summary": "Download Prefilled Uploaded IPD document as PDF",
+                "description": "Download various Prefilled Uploaded IPD documents",
+                "operationId": "9df315d12059b527e74a4c0c56c5636d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "IPD record ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
                         }
                     }
                 ],
@@ -21592,6 +22218,487 @@
                                                             "N"
                                                         ],
                                                         "example": "A"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ServerErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/billing_service_category_list": {
+            "get": {
+                "tags": [
+                    "Billing Service Category"
+                ],
+                "summary": "Get list of billing service categories",
+                "description": "Returns paginated list of billing service categories with search, sort, and filter options",
+                "operationId": "4ee9b0443f960bd6830524f473020652",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search keyword for category name or status",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Room"
+                        }
+                    },
+                    {
+                        "name": "sort_by",
+                        "in": "query",
+                        "description": "Field to sort by",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "category_name"
+                        }
+                    },
+                    {
+                        "name": "sort_order",
+                        "in": "query",
+                        "description": "Sort direction",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ],
+                            "example": "asc"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Billing service categories fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "category_name": {
+                                                                "type": "string",
+                                                                "example": "Room Charges"
+                                                            },
+                                                            "status": {
+                                                                "type": "string",
+                                                                "enum": [
+                                                                    "Active",
+                                                                    "Inactive"
+                                                                ],
+                                                                "example": "Active"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "per_page": {
+                                                    "type": "integer",
+                                                    "example": 25
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 50
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ServerErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/billing_service_category_details/{id}": {
+            "get": {
+                "tags": [
+                    "Billing Service Category"
+                ],
+                "summary": "Get billing service category details by ID",
+                "operationId": "6340a1f14d3fdecddc1ef6ccd530dc84",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Billing service category ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Billing service category details fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "category_name": {
+                                                    "type": "string",
+                                                    "example": "Room Charges"
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "Active",
+                                                        "Inactive"
+                                                    ],
+                                                    "example": "Active"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Room Charges"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ServerErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/billing_service_category_add": {
+            "post": {
+                "tags": [
+                    "Billing Service Category"
+                ],
+                "summary": "Create a billing service category",
+                "operationId": "4e546edc49b04a73167bdf7f11358b61",
+                "requestBody": {
+                    "description": "Billing service category data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "category_name",
+                                    "status"
+                                ],
+                                "properties": {
+                                    "category_name": {
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "example": "Room Charges"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Active",
+                                            "Inactive"
+                                        ],
+                                        "example": "Active"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Billing service category created successfully"
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Validation error."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "category_name": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The category name field is required."
+                                                    }
+                                                },
+                                                "status": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The selected status is invalid."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ServerErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/billing_service_category_update/{id}": {
+            "put": {
+                "tags": [
+                    "Billing Service Category"
+                ],
+                "summary": "Update a billing service category",
+                "operationId": "b37c83874719d9efba8dc4f414b054d4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Billing service category ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Billing service category data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "category_name",
+                                    "status"
+                                ],
+                                "properties": {
+                                    "category_name": {
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "example": "Room Charges"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Active",
+                                            "Inactive"
+                                        ],
+                                        "example": "Inactive"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Billing service category updated successfully"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ServerErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/billing_service_category_delete/{id}": {
+            "delete": {
+                "tags": [
+                    "Billing Service Category"
+                ],
+                "summary": "Delete a billing service category",
+                "operationId": "c62d40668502e415c954509b5c8670c5",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Billing service category ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Billing service category deleted successfully"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ServerErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/billing_service_category_dropdown_list": {
+            "get": {
+                "tags": [
+                    "Billing Service Category"
+                ],
+                "summary": "Get billing service category dropdown list",
+                "description": "Returns active billing service categories for dropdown/select options",
+                "operationId": "3a7e3aa10b25166d3c4d5d176d628fd0",
+                "responses": {
+                    "200": {
+                        "description": "Billing service category dropdown list fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success."
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "category_name": {
+                                                        "type": "string",
+                                                        "example": "Room Charges"
                                                     }
                                                 },
                                                 "type": "object"
@@ -43224,6 +44331,10 @@
         {
             "name": "Avastha",
             "description": "API endpoints for managing Avastha (state or condition) in Ayurvedic assessment"
+        },
+        {
+            "name": "Billing Service Category",
+            "description": "API endpoints for managing billing service categories"
         },
         {
             "name": "Chief Complaint",
