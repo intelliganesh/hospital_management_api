@@ -70,6 +70,8 @@
 <body>
     @php
     $hasValue = fn($value) => !is_null($value) && trim((string) $value) !== '';
+    $summaryType = $ipd->discharge_summary?->summary_type ?: 'surgical';
+    $isSurgical = $summaryType !== 'non_surgical';
     @endphp
     <div class="title">Discharge Summary</div>
     <div class="container" style="border:1px solid">
@@ -115,9 +117,9 @@
                     {{ $ipd->discharge_summary?->diagnosis ?? '' }}
                     <br><br>
                     @endif
-                    @if($hasValue($ipd->discharge_summary?->case_history ?? ''))
+                    @if($hasValue($ipd->discharge_summary?->case_history_and_complaints ?? ''))
                     <b>Case History & Complaints:</b><br>
-                    {{ $ipd->discharge_summary?->case_history ?? '' }}
+                    {{ $ipd->discharge_summary?->case_history_and_complaints ?? '' }}
                     <br><br>
                     @endif
                     @if($hasValue($ipd->discharge_summary?->general_examination ?? ''))
@@ -130,17 +132,27 @@
                     {{ $ipd->discharge_summary?->systemic_examination ?? '' }}
                     <br><br>
                     @endif
+                    @if(! $isSurgical && $hasValue($ipd->discharge_summary?->menstrual_history ?? ''))
+                    <b>Menstrual/Obstetric History:</b><br>
+                    {{ $ipd->discharge_summary?->menstrual_history ?? '' }}
+                    <br><br>
+                    @endif
+                    @if(! $isSurgical && $hasValue($ipd->discharge_summary?->summary_of_treatment ?? ''))
+                    <b>Summary of Treatment:</b><br>
+                    {!! nl2br($ipd->discharge_summary?->summary_of_treatment ?? '') !!}
+                    <br><br>
+                    @endif
                     @if($hasValue($ipd->discharge_summary?->investigations ?? ''))
                     <b>Investigations:</b><br>
                     {{ $ipd->discharge_summary?->investigations ?? '' }}
                     <br><br>
                     @endif
-                    @if($hasValue($ipd->discharge_summary?->operation_done ?? ''))
+                    @if($isSurgical && $hasValue($ipd->discharge_summary?->operation_done ?? ''))
                     <b>Operation Done:</b><br>
                     {{ $ipd->discharge_summary?->operation_done ?? '' }}
                     <br><br>
                     @endif
-                    @if($hasValue($ipd->discharge_summary?->findings_and_procedure ?? ''))
+                    @if($isSurgical && $hasValue($ipd->discharge_summary?->findings_and_procedure ?? ''))
                     <b>Findings And Procedure:</b><br>
                     {{ $ipd->discharge_summary?->findings_and_procedure ?? '' }}
                     <br><br>

@@ -316,7 +316,7 @@ class IPDDownloadService
     public function downloademptyPdf(string $ipdId, string $type)
     {
         try {
-            $ipd = IPD::with('patient')->findOrFail($ipdId);
+            $ipd = IPD::with('patient', 'surgery')->findOrFail($ipdId);
 
             $htmlContent = '';
             $fileName    = '';

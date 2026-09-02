@@ -7,6 +7,7 @@ use App\Contracts\FilterContract;
 use App\Models\IPD;
 use App\Models\IPDDischargeSummary;
 use App\Traits\IPDDischargeSummaryValidation;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
@@ -83,25 +84,32 @@ class IPDDischargeSummaryService implements CRUDContract, FilterContract
         return $file->storeAs("pdfs/ipd/{$ipd->ipd_number}/uploads", $fileName, 'public');
     }
 
+    private function getSummaryType(IPD $ipd): string
+    {
+        $surgeryCount = $ipd->relationLoaded('surgery')
+            ? $ipd->surgery->count()
+            : $ipd->surgery()->count();
+
+        return $surgeryCount > 0 ? 'surgical' : 'non_surgical';
+    }
+
     #[Transactional(secure: true, requiredRole: null, description: 'Create IPD discharge summary within a secure transaction')]
     public function create(Request $request): void
     {
         $this->checkValidationService->checkValidation($this->validateDischargeSummary($request));
 
-        $data     = $request->all();
-        
-
-
-        $this->checkValidationService->checkValidation($this->validateIPDAnaesthesiaRecoverObservation($request));
-
         $data = $request->all();
+        if (empty($data['summary_type'])) {
+            $ipd = IPD::with('surgery')->findOrFail($data['ipd_id']);
+            $data['summary_type'] = $this->getSummaryType($ipd);
+        }
 
         // Enforce uniqueness for ipd_id 
         $exists = IPDDischargeSummary::where('ipd_id', $data['ipd_id'])
             ->first();
 
         if ($exists) {
-            $this->update($request, $exists->id);
+            $this->update($request, $exists->ipd_id);
         }else{
             $filePath = $this->handleFileUpload($request);
             if ($filePath) {
@@ -118,7 +126,16 @@ class IPDDischargeSummaryService implements CRUDContract, FilterContract
         $this->checkValidationService->checkValidation($this->validateDischargeSummary($request, true, $id));
 
         $dischargeSummary = IPDDischargeSummary::where('ipd_id', $id)->first();
+        if (! $dischargeSummary) {
+            throw new ModelNotFoundException();
+        }
+
         $data             = $request->all();
+        if (empty($data['summary_type'])) {
+            $ipd = IPD::with('surgery')->findOrFail($id);
+            $data['summary_type'] = $dischargeSummary->summary_type ?: $this->getSummaryType($ipd);
+        }
+
         $filePath         = $this->handleFileUpload($request);
         if ($filePath) {
             if ($dischargeSummary->upload_pdf_path && Storage::disk('public')->exists($dischargeSummary->upload_pdf_path)) {
@@ -161,18 +178,28 @@ class IPDDischargeSummaryService implements CRUDContract, FilterContract
         // Try by ipd_id
         $record = IPDDischargeSummary::with('ipd')->where('ipd_id', $id)->first();
         if ($record) {
+            if (empty($record->summary_type)) {
+                $record->summary_type = $this->getSummaryType($record->ipd);
+            }
             return $record;
         } else {
             $ipd               = IPD::with('preliminaryNotes', 'surgery')->find($id);
+            if (! $ipd) {
+                throw new ModelNotFoundException();
+            }
+
             $preliminaryNotes  = $ipd->preliminaryNotes->first();
             $surgery           = $ipd->surgery;
+            $summaryType       = $this->getSummaryType($ipd);
             $formatDoctor = fn($name, $suffix) =>
-                (preg_match('/^dr\.?\s/i', trim($name))
-                    ? trim($name)
-                    : 'Dr. ' . trim($name)
+                (preg_match('/^dr\.?\s/i', trim((string) $name))
+                    ? trim((string) $name)
+                    : 'Dr. ' . trim((string) $name)
                 ) . ' ' . $suffix;
 
-            $surgeon = $formatDoctor($ipd->doctor_name, '(Surgeon)');
+            $surgeon = $summaryType === 'surgical'
+                ? $formatDoctor($ipd->doctor_name, '(Surgeon)')
+                : ('Dr. ' . trim((string) $ipd->doctor_name));
 
             $consultantDoctors = $ipd->consultantDoctors?->pluck('user_name')
                 ->filter()
@@ -209,20 +236,21 @@ class IPDDischargeSummaryService implements CRUDContract, FilterContract
                 ->filter()
                 ->implode(', ');
             $generalExamination =
-                "RS - " . ($preliminaryNotes->rs ?? "__________________________________________") .
-                ", CVS - " . ($preliminaryNotes->cvs ?? "_________________________________________") .
-                ", Per Abdomen - " . ($preliminaryNotes->per_abdomen ?? "_________________________________________");
+                "RS - " . ($preliminaryNotes?->rs ?? "__________________________________________") .
+                ", CVS - " . ($preliminaryNotes?->cvs ?? "_________________________________________") .
+                ", Per Abdomen - " . ($preliminaryNotes?->per_abdomen ?? "_________________________________________");
             $data = [
                 'ipd_id'                      => $id,
+                'summary_type'                => $summaryType,
                 'doctor_incharge'             => 'Dr. ' . trim($ipd->doctor_name),
                 'consultants'                 => $allDoctors,
-                'diagnosis'                   => $preliminaryNotes->final_diagnosis,
-                'case_history_and_complaints' => $preliminaryNotes->chief_complaint,
+                'diagnosis'                   => $preliminaryNotes?->final_diagnosis,
+                'case_history_and_complaints' => $preliminaryNotes?->chief_complaint,
                 'general_examination'         => $generalExamination,
-                'systemic_examination'        => $preliminaryNotes->local_examination,
-                'investigations'              => $preliminaryNotes->investigation,
-                'operation_done'              => $operationDone,
-                'findings_and_procedure'      => $findingsAndProcedure,
+                'systemic_examination'        => $preliminaryNotes?->local_examination,
+                'investigations'              => $preliminaryNotes?->investigation,
+                'operation_done'              => $summaryType === 'surgical' ? $operationDone : null,
+                'findings_and_procedure'      => $summaryType === 'surgical' ? $findingsAndProcedure : null,
             ];
 
             return IPDDischargeSummary::create($data);

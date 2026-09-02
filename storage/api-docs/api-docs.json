@@ -12719,6 +12719,14 @@
                                         "format": "uuid",
                                         "example": "a123b456-7c89-0d12-34e5-678901234567"
                                     },
+                                    "summary_type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "surgical",
+                                            "non_surgical"
+                                        ],
+                                        "example": "non_surgical"
+                                    },
                                     "doctor_incharge": {
                                         "type": "string",
                                         "example": "Dr. John Doe"
@@ -12743,6 +12751,10 @@
                                         "type": "string",
                                         "example": "RS/CVS/CNS clinically normal."
                                     },
+                                    "menstrual_history": {
+                                        "type": "string",
+                                        "example": "Normal"
+                                    },
                                     "investigations": {
                                         "type": "string",
                                         "example": "CBC, ECG, chest X-ray reviewed."
@@ -12754,6 +12766,10 @@
                                     "findings_and_procedure": {
                                         "type": "string",
                                         "example": "Findings and procedure details."
+                                    },
+                                    "summary_of_treatment": {
+                                        "type": "string",
+                                        "example": "Sarvanga abhyanga with Mahanarayana taila"
                                     },
                                     "course_in_hospital": {
                                         "type": "string",
@@ -12868,6 +12884,14 @@
                                         "format": "uuid",
                                         "example": "a123b456-7c89-0d12-34e5-678901234567"
                                     },
+                                    "summary_type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "surgical",
+                                            "non_surgical"
+                                        ],
+                                        "example": "non_surgical"
+                                    },
                                     "doctor_incharge": {
                                         "type": "string",
                                         "example": "Dr. John Doe"
@@ -12892,6 +12916,10 @@
                                         "type": "string",
                                         "example": "RS/CVS/CNS clinically normal."
                                     },
+                                    "menstrual_history": {
+                                        "type": "string",
+                                        "example": "Normal"
+                                    },
                                     "investigations": {
                                         "type": "string",
                                         "example": "CBC, ECG, chest X-ray reviewed."
@@ -12903,6 +12931,10 @@
                                     "findings_and_procedure": {
                                         "type": "string",
                                         "example": "Findings and procedure details."
+                                    },
+                                    "summary_of_treatment": {
+                                        "type": "string",
+                                        "example": "Sarvanga abhyanga with Mahanarayana taila"
                                     },
                                     "course_in_hospital": {
                                         "type": "string",

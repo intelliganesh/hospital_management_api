@@ -68,7 +68,11 @@
 </head>
 
 <body>
-    
+    @php
+    $summaryType = isset($summaryType) ? $summaryType : (($ipd->surgery?->count() ?? 0) > 0 ? 'surgical' : 'non_surgical');
+    $isSurgical = $summaryType !== 'non_surgical';
+    @endphp
+
     <div class="title">Discharge Summary</div>
     <div class="container" style="border:1px solid">
         <!-- Top Details -->
@@ -108,7 +112,7 @@
                    
                     <br><br>
                   
-                    <b>Diagnosis:</b><br>
+                    <b>Case History & Complaints:</b><br>
                     
                     <b>General Examination:</b><br>
                    
@@ -117,11 +121,22 @@
                     <b>Systemic Examination:</b><br>
                     
                     <br><br>
+
+                    @if(! $isSurgical)
+                    <b>Menstrual/Obstetric History:</b><br>
+
+                    <br><br>
+
+                    <b>Summary of Treatment:</b><br>
+
+                    <br><br>
+                    @endif
                     
                     <b>Investigations:</b><br>
                     
                     <br><br>
-                    
+
+                    @if($isSurgical)
                     <b>Operation Done:</b><br>
                     
                     <br><br>
@@ -129,6 +144,7 @@
                     <b>Findings And Procedure:</b><br>
                     
                     <br><br>
+                    @endif
                     
                     <b>Course In Hospital:</b><br>
                    
@@ -139,8 +155,6 @@
                     <br><br>
                    
                     <b>Advice On Discharge:</b><br>
-                   
-                    @endif
                 </td>
             </tr>
         </table>

@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('ipd_discharge_summary', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('ipd_id');
+            $table->enum('summary_type', ['surgical', 'non_surgical'])->default('surgical')->after('ipd_id');
             $table->text('doctor_incharge')->nullable();
             $table->text('consultants')->nullable();
             $table->text('diagnosis')->nullable();
@@ -31,6 +32,8 @@ return new class extends Migration {
             $table->text('diet_plan')->nullable();
             $table->text('special_instruction')->nullable();
             $table->string('upload_pdf_path')->nullable();
+            $table->text('menstrual_history')->nullable()->after('systemic_examination');
+            $table->text('summary_of_treatment')->nullable()->after('findings_and_procedure');
             $table->timestamps();
 
             // $table->foreign('ipd_id')->references('id')->on('ipd')->onDelete('cascade');
