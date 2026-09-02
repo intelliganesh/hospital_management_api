@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Reports;
 use App\Http\Controllers\Controller;
 use App\Services\Reports\ConsultationReportService;
 use App\Services\Reports\FistulaReportService;
+use App\Services\Reports\IPDReportService;
 use App\Traits\ResponseTrait;
 use Exception;
 use Illuminate\Http\Request;
@@ -20,13 +21,16 @@ class ReportController extends Controller
 
     private $fistulaReportService;
     private $consultationReportService;
+    private $ipdReportService;
 
     public function __construct(
         FistulaReportService $fistulaReportService,
-        ConsultationReportService $consultationReportService
+        ConsultationReportService $consultationReportService,
+        IPDReportService $ipdReportService
     ) {
         $this->fistulaReportService      = $fistulaReportService;
         $this->consultationReportService = $consultationReportService;
+        $this->ipdReportService          = $ipdReportService;
     }
 
     /**
@@ -514,6 +518,167 @@ class ReportController extends Controller
     {
         try {
             return $this->consultationReportService->downloadExcel($request);
+        } catch (Exception $e) {
+            return $this->exceptionResponse($e);
+        }
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/reports/ipd_list",
+     *     summary="Get basic IPD report",
+     *     description="Retrieve a paginated basic IPD report. All report filters can be passed inside the 'multiple_filter' array.",
+     *     tags={"Reports"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(
+     *          name="multiple_filter[doctor_id]",
+     *          in="query",
+     *          required=false,
+     *          description="Filter by doctor ID",
+     *          @OA\Schema(type="string")
+     *      ),
+     *     @OA\Parameter(
+     *          name="multiple_filter[patient_id]",
+     *          in="query",
+     *          required=false,
+     *          description="Filter by patient ID",
+     *          @OA\Schema(type="string")
+     *      ),
+     *     @OA\Parameter(
+     *          name="multiple_filter[status]",
+     *          in="query",
+     *          required=false,
+     *          description="Filter by IPD status",
+     *          @OA\Schema(type="string")
+     *      ),
+     *     @OA\Parameter(
+     *          name="multiple_filter[ward_id]",
+     *          in="query",
+     *          required=false,
+     *          description="Filter by ward ID",
+     *          @OA\Schema(type="string")
+     *      ),
+     *     @OA\Parameter(
+     *          name="multiple_filter[room_id]",
+     *          in="query",
+     *          required=false,
+     *          description="Filter by room ID",
+     *          @OA\Schema(type="string")
+     *      ),
+     *     @OA\Parameter(
+     *          name="multiple_filter[bed_id]",
+     *          in="query",
+     *          required=false,
+     *          description="Filter by bed ID",
+     *          @OA\Schema(type="string")
+     *      ),
+     *     @OA\Parameter(
+     *          name="multiple_filter[summary_type]",
+     *          in="query",
+     *          required=false,
+     *          description="Filter by discharge summary type",
+     *          @OA\Schema(type="string", enum={"surgical", "non_surgical"})
+     *      ),
+     *     @OA\Parameter(
+     *          name="from_date",
+     *          in="query",
+     *          required=false,
+     *          description="Admission start date (YYYY-MM-DD)",
+     *          @OA\Schema(type="string", format="date")
+     *      ),
+     *     @OA\Parameter(
+     *          name="to_date",
+     *          in="query",
+     *          required=false,
+     *          description="Admission end date (YYYY-MM-DD)",
+     *          @OA\Schema(type="string", format="date")
+     *      ),
+     *     @OA\Parameter(
+     *          name="search",
+     *          in="query",
+     *          required=false,
+     *          description="Search by patient, doctor, IPD number, ward, room, bed, or status",
+     *          @OA\Schema(type="string")
+     *      ),
+     *     @OA\Parameter(
+     *          name="sort_by",
+     *          in="query",
+     *          required=false,
+     *          description="Field to sort by",
+     *          @OA\Schema(type="string", enum={"admission_date_time", "discharge_date_time", "created_at", "ipd_number", "patient_name", "doctor_name", "status"}, example="admission_date_time")
+     *      ),
+     *     @OA\Parameter(
+     *          name="sort_order",
+     *          in="query",
+     *          required=false,
+     *          description="Sort order",
+     *          @OA\Schema(type="string", enum={"asc", "desc"}, example="desc")
+     *      ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Basic IPD report retrieved successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Basic IPD report retrieved successfully"),
+     *             @OA\Property(property="data", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthenticated"),
+     *     @OA\Response(response=500, ref="#/components/responses/ServerErrorResponse")
+     * )
+     */
+    public function ipdReport(Request $request)
+    {
+        try {
+            return $this->successResponse($this->ipdReportService->all($request));
+        } catch (Exception $e) {
+            return $this->exceptionResponse($e);
+        }
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/reports/ipd_download",
+     *     summary="Download basic IPD report as Excel",
+     *     description="Generate and download the basic IPD report in Excel format. All report filters can be passed inside the 'multiple_filter' object.",
+     *     tags={"Reports"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\RequestBody(
+     *         required=false,
+     *         description="Filter parameters wrapped in multiple_filter object",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="multiple_filter",
+     *                 type="object",
+     *                 @OA\Property(property="doctor_id", type="string", example="1"),
+     *                 @OA\Property(property="patient_id", type="string", example="019abfdf-2571-70ab-8833-0df9d34731f5"),
+     *                 @OA\Property(property="status", type="string", example="admitted"),
+     *                 @OA\Property(property="ward_id", type="string", example="019abfdf-2571-70ab-8833-0df9d34731f5"),
+     *                 @OA\Property(property="room_id", type="string", example="019abfdf-2571-70ab-8833-0df9d34731f5"),
+     *                 @OA\Property(property="bed_id", type="string", example="019abfdf-2571-70ab-8833-0df9d34731f5"),
+     *                 @OA\Property(property="summary_type", type="string", enum={"surgical", "non_surgical"}, example="surgical"),
+     *                 @OA\Property(property="from_date", type="string", format="date", example="2026-01-01"),
+     *                 @OA\Property(property="to_date", type="string", format="date", example="2026-12-31")
+     *             ),
+     *             @OA\Property(property="search", type="string", example="IPD-001"),
+     *             @OA\Property(property="sort_by", type="string", enum={"admission_date_time", "discharge_date_time", "created_at", "ipd_number", "patient_name", "doctor_name", "status"}, example="admission_date_time"),
+     *             @OA\Property(property="sort_order", type="string", enum={"asc", "desc"}, example="desc")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Excel file download",
+     *         @OA\MediaType(mediaType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+     *     ),
+     *     @OA\Response(response=401, description="Unauthenticated"),
+     *     @OA\Response(response=500, ref="#/components/responses/ServerErrorResponse")
+     * )
+     */
+    public function ipdReportDownload(Request $request)
+    {
+        try {
+            return $this->ipdReportService->downloadExcel($request);
         } catch (Exception $e) {
             return $this->exceptionResponse($e);
         }

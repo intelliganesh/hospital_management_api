@@ -41380,6 +41380,297 @@
                 ]
             }
         },
+        "/api/reports/ipd_list": {
+            "get": {
+                "tags": [
+                    "Reports"
+                ],
+                "summary": "Get basic IPD report",
+                "description": "Retrieve a paginated basic IPD report. All report filters can be passed inside the 'multiple_filter' array.",
+                "operationId": "fce9858fce4487957cbf306b4556d3e0",
+                "parameters": [
+                    {
+                        "name": "multiple_filter[doctor_id]",
+                        "in": "query",
+                        "description": "Filter by doctor ID",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "multiple_filter[patient_id]",
+                        "in": "query",
+                        "description": "Filter by patient ID",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "multiple_filter[status]",
+                        "in": "query",
+                        "description": "Filter by IPD status",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "multiple_filter[ward_id]",
+                        "in": "query",
+                        "description": "Filter by ward ID",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "multiple_filter[room_id]",
+                        "in": "query",
+                        "description": "Filter by room ID",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "multiple_filter[bed_id]",
+                        "in": "query",
+                        "description": "Filter by bed ID",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "multiple_filter[summary_type]",
+                        "in": "query",
+                        "description": "Filter by discharge summary type",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "surgical",
+                                "non_surgical"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "from_date",
+                        "in": "query",
+                        "description": "Admission start date (YYYY-MM-DD)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "to_date",
+                        "in": "query",
+                        "description": "Admission end date (YYYY-MM-DD)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search by patient, doctor, IPD number, ward, room, bed, or status",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sort_by",
+                        "in": "query",
+                        "description": "Field to sort by",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "admission_date_time",
+                                "discharge_date_time",
+                                "created_at",
+                                "ipd_number",
+                                "patient_name",
+                                "doctor_name",
+                                "status"
+                            ],
+                            "example": "admission_date_time"
+                        }
+                    },
+                    {
+                        "name": "sort_order",
+                        "in": "query",
+                        "description": "Sort order",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ],
+                            "example": "desc"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Basic IPD report retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Basic IPD report retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ServerErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/reports/ipd_download": {
+            "post": {
+                "tags": [
+                    "Reports"
+                ],
+                "summary": "Download basic IPD report as Excel",
+                "description": "Generate and download the basic IPD report in Excel format. All report filters can be passed inside the 'multiple_filter' object.",
+                "operationId": "b4cadc1ca9b6bb7513ee12da3b2a6d33",
+                "requestBody": {
+                    "description": "Filter parameters wrapped in multiple_filter object",
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "multiple_filter": {
+                                        "properties": {
+                                            "doctor_id": {
+                                                "type": "string",
+                                                "example": "1"
+                                            },
+                                            "patient_id": {
+                                                "type": "string",
+                                                "example": "019abfdf-2571-70ab-8833-0df9d34731f5"
+                                            },
+                                            "status": {
+                                                "type": "string",
+                                                "example": "admitted"
+                                            },
+                                            "ward_id": {
+                                                "type": "string",
+                                                "example": "019abfdf-2571-70ab-8833-0df9d34731f5"
+                                            },
+                                            "room_id": {
+                                                "type": "string",
+                                                "example": "019abfdf-2571-70ab-8833-0df9d34731f5"
+                                            },
+                                            "bed_id": {
+                                                "type": "string",
+                                                "example": "019abfdf-2571-70ab-8833-0df9d34731f5"
+                                            },
+                                            "summary_type": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "surgical",
+                                                    "non_surgical"
+                                                ],
+                                                "example": "surgical"
+                                            },
+                                            "from_date": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "2026-01-01"
+                                            },
+                                            "to_date": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "2026-12-31"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "search": {
+                                        "type": "string",
+                                        "example": "IPD-001"
+                                    },
+                                    "sort_by": {
+                                        "type": "string",
+                                        "enum": [
+                                            "admission_date_time",
+                                            "discharge_date_time",
+                                            "created_at",
+                                            "ipd_number",
+                                            "patient_name",
+                                            "doctor_name",
+                                            "status"
+                                        ],
+                                        "example": "admission_date_time"
+                                    },
+                                    "sort_order": {
+                                        "type": "string",
+                                        "enum": [
+                                            "asc",
+                                            "desc"
+                                        ],
+                                        "example": "desc"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Excel file download",
+                        "content": {
+                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ServerErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/service_cost_list": {
             "get": {
                 "tags": [

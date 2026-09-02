@@ -449,6 +449,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     //consultation report
     Route::get('/reports/consultation_list', [ReportController::class, 'consultationReport']);
     Route::post('/reports/consultation_download', [ReportController::class, 'consultationReportDownload']);
+    //ipd report
+    Route::get('/reports/ipd_list', [ReportController::class, 'ipdReport']);
+    Route::post('/reports/ipd_download', [ReportController::class, 'ipdReportDownload']);
     //management
     Route::get('/management_list', [ManagementController::class, 'all']);
     Route::post('/management_add', [ManagementController::class, 'create']);
