@@ -130,7 +130,7 @@
                                 <b>Doctor</b>
                             </td>
                             <td width="50%">
-                                <b>: {{ $ipd->doctor_name ?? '' }}</b>
+                                <b>: Dr. {{ $ipd->doctor_name ?? '' }}</b>
                             </td>
                         </tr>
                         <tr>
@@ -138,7 +138,7 @@
                                 <b>Anaesthetist</b>
                             </td>
                             <td width="50%">
-                                <b>: {{ $ipd->surgery_report?->pluck('anaesthetist')->implode(', ') ?? '' }}</b>
+                                <b>: {{ $ipd->surgery_report?->pluck('anaesthetist')->filter()->map(fn($name) => 'Dr. '.$name)->implode(', ') ?? '' }}</b>
                             </td>
                         </tr>
                     </table>

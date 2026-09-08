@@ -158,7 +158,7 @@
                         
                     </td>
                 </tr>
-            @endif
+            
             <!-- Empty area to match long layout -->
             <tr style="height:50px;">
                 <td colspan="2"></td>

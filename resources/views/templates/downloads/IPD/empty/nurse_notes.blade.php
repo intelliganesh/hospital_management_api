@@ -182,7 +182,7 @@
             <th width="25%">Name & Signature</th>
         </tr>
        
-        <tr style="height:500px;">
+        <tr style="height:800px;">
             <td></td>
             <td></td>
             <td></td>

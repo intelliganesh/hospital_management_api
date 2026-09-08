@@ -177,7 +177,7 @@
             <th width="18%">Attending Doctor</th>
         </tr>
         <tr>
-            <td style="height: 500px;"></td>
+            <td style="height: 800px;"></td>
             <td></td>
             <td></td>
         </tr>

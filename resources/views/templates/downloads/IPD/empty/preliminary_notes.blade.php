@@ -153,7 +153,7 @@
 </head>
 
 <body>
-  
+
     <div class="container">
         <div class="title">
             IN PATIENT / DAY CARE RECORD
@@ -206,7 +206,7 @@
                             DOD & TIME
                         </div>
                         <div class="value">
-                            
+
                         </div>
                     </div>
                 </div>
@@ -258,9 +258,9 @@
         <div class="section-title">
             CONSULTANTS NAME AND SIGNATURE
         </div>
-       
+
         <table>
-           
+
             <tr>
                 <td style="padding-bottom:5px;">1.</td>
             </tr>
@@ -272,385 +272,385 @@
             </tr>
 
         </table>
-        
+
         <div class="line"></div>
         <!-- Chief Complaints -->
-       
+
         <div style="min-height:40px">
             <p>
                 <span class="label">
                     CHIEF COMPLAINTS WITH DURATION:
                 </span>
-                
+
             </p>
         </div>
-       
+
         <!-- Associated Complaints -->
-       
+
         <div style="min-height:40px">
             <p>
                 <span class="label">
                     ASSOCIATED COMPLAINTS:
                 </span>
-               
+
             </p>
         </div>
-       
+
         <!-- Previous Treatment History -->
-  
+
         <div style="min-height:40px">
             <p>
                 <span class="label">
                     PREVIOUS TREATMENT HISTORY:
                 </span>
-              
+
             </p>
         </div>
-      
+
         <div style="min-height:40px">
             <p>
                 <span class="label">
                     ASSOCIATED MEDICAL ILLNESS AND CURRENT TREATMENT / MEDICINES:
                 </span>
-             
+
             </p>
         </div>
-        
+
         <div style="min-height:40px">
             <p>
                 <span class="label">
                     FAMILY HISTORY:
                 </span>
-               
+
             </p>
         </div>
-       
+
         <div style="min-height:40px">
             <p>
                 <span class="label">
                     PERSONAL HISTORY:
                 </span>
-                
+
             </p>
         </div>
-       
+
         <div style="min-height:40px">
             <p>
                 <span class="label">
                     ALLERGY IF ANY:
                 </span>
-               
+
             </p>
         </div>
-        
+
         <!-- Examination -->
         <div class="section-title">
             EXAMINATION
         </div>
         <!-- General -->
-       
+
         <div style="margin-left:20px;margin-top:10px">
             <p class="label">A. GENERAL</p>
             <div class="row" style="margin-left:20px;" >
-               
+
                 <div class="field">
                     <div class="label">
                         BP:
                     </div>
                     <div class="value">
-                       
+
                     </div>
                 </div>
-               
+
                 <div class="field">
                     <div class="label">
                         PULSE:
                     </div>
                     <div class="value">
-                       
+
                     </div>
                 </div>
-                
+
                 <div class="field">
                     <div class="label">
                         TEMP:
                     </div>
                     <div class="value">
-                       
+
                     </div>
                 </div>
-                
+
             </div>
         </div>
-        
+
         <div class="row" style="margin-left:40px;margin-top:10px;">
 
-           
+
             <div class="field">
                 <div class="label">
                     HEIGHT:
                 </div>
                 <div class="value">
-                  
+
                 </div>
             </div>
-           
+
             <div class="field">
                 <div class="label">
                     WEIGHT:
                 </div>
                 <div class="value">
-                    
+
                 </div>
             </div>
-            
+
             <div class="field">
                 <div class="label">
                     SPO2:
                 </div>
                 <div class="value">
-                    
+
                 </div>
             </div>
-           
+
         </div>
-       
+
         <!-- CVS / RS -->
-      
+
         <div class="row" style="margin-left:40px;margin-top:10px">
-           
+
             <div class="field">
                 <div class="label">
                     CVS:
                 </div>
                 <div class="value">
-                    
+
                 </div>
             </div>
-           
+
             <div class="field">
                 <div class="label">
                     RS:
                 </div>
                 <div class="value">
-                    
+
                 </div>
             </div>
-           
+
         </div>
-       
+
         <!-- Per Abdomen -->
-        
+
         <div style="margin-left:40px;">
             <p>
                 <span class="label">
                     PER ABDOMEN:
                 </span>
-                
+
             </p>
         </div>
-       
+
         <div style="margin-left:40px;min-height:50px">
             <p>
                 <span class="label">
                     LOCAL EXAMINATION:
                 </span>
-               
+
             </p>
             <div style="margin-left:20px;">
-               
+
                 <p>
                     <span class="label">
                         P/R:
                     </span>
-                    
+
                 </p>
-               
+
                 <p>
                     <span class="label">
                         DRE:
                     </span>
-                   
+
                 </p>
-                
+
                 <p>
                     <span class="label">
                         PROCTOSCOPY:
                     </span>
-                
+
                 </p>
-               
+
             </div>
         </div>
-       
+
         <div style="margin-left:40px;min-height:50px">
             <p>
                 <span class="label">
                     EXAMINATION COMMENTS:
                 </span>
-                
+
             </p>
         </div>
-       
+
         <div style="margin-left:40px;min-height:100px">
-           
+
             <p>
                 <span class="label">
                     INVESTIGATIONS:
                 </span>
-               
+
             </p>
-           
+
             <div class="row" style="margin-left:20px;margin-top:20px">
-               
+
                 <div class="field">
                     <div class="label">
                         HB%:
                     </div>
                     <div class="value">
-                      
+
                     </div>
                 </div>
-               
+
                 <div class="field">
                     <div class="label">
                         TC:
                     </div>
                     <div class="value">
-                       
+
                     </div>
                 </div>
-               
+
                 <div class="field">
                     <div class="label">
                         ESR:
                     </div>
                     <div class="value">
-                      
+
                     </div>
                 </div>
-               
+
             </div>
-           
+
             <div class="row" style="margin-left:20px;margin-top:20px">
-                
+
                 <div class="field">
                     <div class="label">
                         RBS:
                     </div>
                     <div class="value">
-                      
+
                     </div>
                 </div>
-               
+
                 <div class="field">
                     <div class="label">
                         BT:
                     </div>
                     <div class="value">
-                       
+
                     </div>
                 </div>
-                
+
                 <div class="field">
                     <div class="label">
                         CT:
                     </div>
                     <div class="value">
-                      
+
                     </div>
                 </div>
-               
+
             </div>
-           
-           
+
+
             <div class="row" style="margin-left:20px;margin-top:20px">
-               
+
                 <div class="field">
                     <div class="label">
                         Blood Urea:
                     </div>
                     <div class="value">
-                       
+
                     </div>
                 </div>
-               
+
                 <div class="field">
                     <div class="label">
                         HIV I & II:
                     </div>
                     <div class="value">
-                        
+
                     </div>
                 </div>
-               
+
                 <div class="field">
                     <div class="label">
                         HBsAG:
                     </div>
                     <div class="value">
-                       
+
                     </div>
                 </div>
-                
+
             </div>
-          
+
         </div>
-      
+
         <div style="margin-left:40px;min-height:30px">
             <p>
                 <span class="label">
                     PROVISIONAL DIAGNOSIS:
                 </span>
-               
+
             </p>
         </div>
-      
+
         <div style="margin-left:40px;min-height:30px">
             <p>
                 <span class="label">
                     FINAL DIAGNOSIS:
                 </span>
-              
+
             </p>
         </div>
-        
+
         <div style="margin-left:40px;min-height:30px">
             <p>
                 <span class="label">
                     LINE OF TREATMENT:MEDICAL/SURGICAL:
                 </span>
-                
+
             </p>
         </div>
-       
+
         <div style="margin-left:40px;min-height:40px">
             <p>
                 <span class="label">
                     TREATMENT ADVICED:
                 </span>
-                
+
             </p>
         </div>
-       
-        <div style="margin-left:40px;min-height:100px">
+
+        <div style="margin-left:40px;min-height:200px">
             <p>
                 <span class="label">
                     PREOPERATIVE INSTRUCTIONS:
                 </span>
-               
+
             </p>
         </div>
-       
+
         <div style="margin-left:40px;min-height:100px">
             <p>
                 <span class="label">
                     TREATMENT GIVEN:
                 </span>
-                
+
             </p>
         </div>
-       
+
     </div>
 </body>
 

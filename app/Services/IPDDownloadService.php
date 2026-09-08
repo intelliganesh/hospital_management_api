@@ -356,8 +356,8 @@ class IPDDownloadService
                     break;
 
                 case 'pre_anaesthesia_assessment':
-                    $fileName                                        = 'pre_anaesthesia_assessment_' . $ipd->ipd_number . '.pdf';
-                    $htmlContent                                     = view('templates.downloads.IPD.empty.pre_anaesthesia_assessment', compact('ipd'))->render();
+                    $fileName     = 'pre_anaesthesia_assessment_' . $ipd->ipd_number . '.pdf';
+                    $htmlContent  = view('templates.downloads.IPD.empty.pre_operative_anaesthesia_evaluation_chart', compact('ipd'))->render();
                     break;
 
                 case 'department_of_anaesthesia':

@@ -33,7 +33,7 @@ trait ExternalAppointmentValidationTrait
             'status'               => 'nullable|in:Pending,Confirmed,Payment Pending,Paid,Completed,Cancelled',
             'amount'               => 'nullable|numeric|min:0',
             'meeting_link'         => 'nullable|url',
-            'payment_type'         => 'nullable|in:link,Bank Transfer',
+            'payment_type'         => 'nullable|in:qr_code,link,Bank Transfer',
             'payment_info'         => 'nullable|string|max:1000',
             'visit_type'           => 'nullable|in:' . implode(',', array_column(AppointmentTypeEnum::cases(), 'value')),
             'transaction_id'       => 'nullable|string|max:255',
