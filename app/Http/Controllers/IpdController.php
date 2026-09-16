@@ -42,6 +42,7 @@ class IpdController extends Controller
      *         @OA\JsonContent(
      *             required={"patient_id","admission_date_time","patient_first_name","patient_last_name", "patient_gender","patient_attendant_name","patient_attendant_phone"},
      *             @OA\Property(property="consultation_id", type="string", format="uuid", description="Consultation ID", example="550e8400-e29b-41d4-a716-446655440000"),
+     *             @OA\Property(property="ipd_type", type="string", description="IPD Type (required)", example="Inpatient"),
      *             @OA\Property(property="consultant_doctor_id", type="string", format="uuid", description="Consultant Doctor ID", example="550e8400-e29b-41d4-a716-446655440000"),
      *             @OA\Property(property="patient_id", type="string", format="uuid", description="Patient ID (required for existion patient)", example="550e8400-e29b-41d4-a716-446655440001"),
      *             @OA\Property(property="patient_first_name", type="string", description="Patient first name (required for new patient)", example="John"),
@@ -274,6 +275,7 @@ class IpdController extends Controller
      *                 type="object",
      *                 @OA\Property(property="id", type="string", format="uuid"),
      *                 @OA\Property(property="ipd_number", type="string"),
+     *                 @OA\Property(property="ipd_type", type="string"),
      *                 @OA\Property(property="patient_id", type="string", format="uuid"),
      *                 @OA\Property(property="consultation_id", type="string", format="uuid"),
      *                 @OA\Property(property="admission_date_time", type="string", format="date-time"),

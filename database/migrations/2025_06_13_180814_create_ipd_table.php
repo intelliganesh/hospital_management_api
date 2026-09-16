@@ -23,7 +23,7 @@ return new class extends Migration {
 
             /* IPD identification */
             $table->string('ipd_number')->unique();
-
+            $table->enum('ipd_type', ['surgical', 'non_surgical'])->default('surgical')->after('ipd_id');
             /* patient information */
             $table->uuid('patient_id')->nullable();
             $table->string('patient_number',10);

@@ -253,6 +253,8 @@ class IPDDischargeSummaryService implements CRUDContract, FilterContract
                 'findings_and_procedure'      => $summaryType === 'surgical' ? $findingsAndProcedure : null,
             ];
 
+            IPD::where('id', $id)->update(['ipd_type' => $summaryType]);
+
             return IPDDischargeSummary::create($data);
 
         }

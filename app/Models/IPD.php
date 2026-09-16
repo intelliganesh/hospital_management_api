@@ -24,6 +24,7 @@ class IPD extends Model
     const CREATED_AT    = 'created_at';
     const UPDATED_AT    = 'updated_at';
     protected $fillable = [
+        'ipd_type',
         'patient_id',
         'patient_name',
         'patient_number',
@@ -61,6 +62,7 @@ class IPD extends Model
 
     public static $columns = [
         'id',
+        'ipd_type',
         'patient_number',
         'patient_id',
         'patient_name',

@@ -102,7 +102,8 @@ class IpdService implements FilterContract
             'room_type'=>$room->room_type ?? null,
             'room_number'=>$room->room_number ?? null,
             'bed_number'=>$bed->bed_number ?? null,
-            'ipd_number'=>AutoIdGenerate::generateId(ServiceType::IPD)
+            'ipd_number'=>AutoIdGenerate::generateId(ServiceType::IPD),
+            'ipd_type'=>$request->ipd_type ?? 'surgical',
         ];
 
         $ipd = IPD::create($ipdData);

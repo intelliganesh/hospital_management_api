@@ -21,6 +21,7 @@ trait IPDValidation
             'patient_id' => 'nullable|uuid|exists:patients,id',
             'consultation_id' => 'nullable|uuid|exists:consultations,id',
             'ipd_number' => 'required|string|max:50|unique:ipd,ipd_number,' . $id . ',id',
+            'ipd_type' => 'required|in:surgical,non_surgical',
             'phone_no' => 'nullable|string|max:15',
             'dob' => 'nullable|date',
             'age' => 'nullable|integer|min:0|max:150',
