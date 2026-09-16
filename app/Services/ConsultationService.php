@@ -297,6 +297,7 @@ class ConsultationService implements FilterContract
             $consultations->relinkPatient    = 0;
         } else {
             $consultations->relinkPatient = 1;
+            $consultations->patient_id = null;
         }
 
         if (! is_null($consultations->external_appointment_id)) {
