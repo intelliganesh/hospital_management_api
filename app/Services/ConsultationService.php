@@ -30,6 +30,12 @@ use App\Traits\ConsultationsValidation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use \App\Models\Invoice;
+use Illuminate\Support\Facades\DB;
+use App\Services\PaymentService;
+use App\Services\ProctologyService;
+use App\Services\AllopathyService;
+use App\Services\NonProctologyService;
+use App\Services\CheckValidation;
 
 class ConsultationService implements FilterContract
 {
@@ -120,15 +126,31 @@ class ConsultationService implements FilterContract
     {
         // Prefix all columns with the table name to avoid ambiguity
         $columns = array_map(function ($col) {
-            return "consultations.$col";
-        }, $this->column);
-        // Add appointment_reference_number from external_appointments
-        $columns[] = 'external_appointments.appointment_reference_number as external_appointment_reference_number';
-        $columns[] = 'external_appointments.appointment_type as external_appointment_type';
-        return $this->allConsultation($request, false)
-            ->leftJoin('external_appointments', 'consultations.external_appointment_id', '=', 'external_appointments.id')
-            ->select($columns)
-            ->paginate(env('PAGINATION', 25));
+                return "consultations.$col";
+            }, $this->column);
+
+            $columns[] = 'external_appointments.appointment_reference_number as external_appointment_reference_number';
+            $columns[] = 'external_appointments.appointment_type as external_appointment_type';
+
+            $columns[] = DB::raw(
+                'CASE WHEN patients.id IS NULL THEN 1 ELSE 0 END as orphan_patient'
+            );
+
+            return $this->allConsultation($request, false)
+                ->leftJoin(
+                    'external_appointments',
+                    'consultations.external_appointment_id',
+                    '=',
+                    'external_appointments.id'
+                )
+                ->leftJoin(
+                    'patients',
+                    'consultations.patient_id',
+                    '=',
+                    'patients.id'
+                )
+                ->select($columns)
+                ->paginate(env('PAGINATION', 25));
     }
 
     public function allConsultation(?Request $request, $upComing = false)
@@ -147,6 +169,13 @@ class ConsultationService implements FilterContract
         // $consultations = $consultations->orderBy('created_at', 'desc');
         if ($request->has('search')) {
             $consultations = $this->search($request->input('search'), $consultations);
+        }
+
+        if ($request->has('multiple_filter')) {
+            $consultations = $this->filterMultipleFields($request->multiple_filter, $consultations);
+        }
+        if ($request->has("from_date") && $request->has("to_date")) {
+            $consultations = $this->filterByDateRange($request->from_date . "|" . $request->to_date, $consultations);
         }
 
         if ($request->has('sort_by')) {
@@ -176,12 +205,8 @@ class ConsultationService implements FilterContract
         } else {
             $consultations = $consultations->orderBy('consultations.created_at', 'desc');
         }
-        if ($request->has('multiple_filter')) {
-            $consultations = $this->filterMultipleFields($request->multiple_filter, $consultations);
-        }
-        if ($request->has("from_date") && $request->has("to_date")) {
-            $consultations = $this->filterByDateRange($request->from_date . "|" . $request->to_date, $consultations);
-        }
+
+        
 
         return $consultations;
     }
@@ -212,6 +237,8 @@ class ConsultationService implements FilterContract
             if (! empty($request[$column])) {
                 if ($column == "patient_name") {
                     $data->where($column, 'like', '%' . $request[$column] . '%');
+                }elseif ($column == "orphan_patient") {
+                    $data->whereNotIn('patient_id', Patient::select('id'));
                 } else {
                     $data->where("consultations.$column", $request[$column]);
                 }

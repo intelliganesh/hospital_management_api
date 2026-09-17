@@ -18,8 +18,9 @@
     }
 
     .container {
-        width: 100%;
+        {{-- width: 100%; --}}
         border: 1px solid #000;
+        padding: 2px;
     }
 
     table {
@@ -145,23 +146,23 @@
                 </td>
             </tr>
         </table>
-        <table class="no-border" style="border:1px solid black !important;">
+        <table class="no-border" style="border:1px solid black !important;margin-top: 5px;">
             <thead>
-                <tr style="border:1px solid black !important; border-left:none;border-right:none;">
+                <tr style="border:1px solid black !important;">
                     <th width="48%" class="text-left">Ward Particulars<br>Service Particulars</th>
                     <th width="13%">Rate/Day</th>
                     <th width="10%">Tax %</th>
                     <th width="10%">Days<br>Count</th>
-                    <th width="19%">Amount<br>Amount</th>
+                    <th width="19%" class="text-center">Amount</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse(($bill->invoice_items ?? []) as $category)
                 <tr class="category-row" @if($loop->last) style="border-bottom: 1px solid #000;" @endif>
                     <td>{{ $category->category ?? '' }}</td>
-                    <td class="text-right">{{ !empty($category->rate) ? number_format($category->rate, 2) : '' }}</td>
-                    <td class="text-right">{{ $category->tax_percent ?? '' }}</td>
-                    <td class="text-right">{{ $category->days_count ?? '' }}</td>
+                    <td class="text-center">{{ !empty($category->rate) ? number_format($category->rate, 2) : '' }}</td>
+                    <td class="text-center">{{ $category->tax_percent ?? '' }}</td>
+                    <td class="text-center">{{ $category->days_count ?? '' }}</td>
                     <td class="text-right">{{ number_format($category->total_amount ?? 0, 2) }}</td>
                 </tr>
                 @empty
@@ -171,7 +172,7 @@
                 @endforelse
             </tbody>
         </table>
-        <table class="no-border" style="border:1px solid black !important; margin-top: 5px;border-left:none;border-right:none;  ">
+        <table class="no-border" style="border:1px solid black !important; margin-top: 5px; ">
             <thead>
                 <tr style="border:1px solid black !important;">
                     <td width="48%" class="bold">Professional Charges</td>
