@@ -6,7 +6,6 @@ use App\Contracts\FilterContract;
 use App\Enums\Appointment\StatusEnum;
 use App\Enums\Consultation\TypeEnum;
 use App\Enums\RemovedEnums;
-// use App\Models\Payment;
 use App\Interceptors\ServiceInterceptor;
 use App\Models\Allopathy;
 use App\Models\Appointments;
