@@ -61,7 +61,7 @@ class IpdService implements FilterContract
         } else {
             $patient = Patient::create([
                 'gender'                          => $request->patient_gender,
-                'phone_no'                        => $request->patient_attendant_phone,
+                'phone_no'                        => $request->patient_phone,
                 'last_name'                       => $request->patient_last_name,
                 'first_name'                      => $request->patient_first_name,
                 'attendant_with_patient_name'     => $request->patient_attendant_name,

@@ -618,7 +618,7 @@ class IPDDownloadService
     }
 
     private function amountInWords($amount): string{
-        $amount = round((float) $amount, 2);
+         $amount = round((float) $amount, 2);
 
         $number = (int) floor($amount);
         $paise = (int) round(($amount - $number) * 100);
@@ -668,11 +668,7 @@ class IPDDownloadService
             return $tens[$ten] . ($unit ? ' ' . $ones[$unit] : '');
         };
 
-        $convertNumber = function ($number) use ($ones, $convertTwoDigits) {
-            if ($number == 0) {
-                return '';
-            }
-
+        $convertNumber = function ($number) use (&$convertNumber, $ones, $convertTwoDigits) {
             $result = '';
 
             // Crore
@@ -701,9 +697,14 @@ class IPDDownloadService
                 $hundred = intdiv($number, 100);
                 $result .= $ones[$hundred] . ' Hundred ';
                 $number %= 100;
+
+                // Indian/British style: add "and" before remaining tens/units
+                if ($number > 0) {
+                    $result .= 'and ';
+                }
             }
 
-            // Remaining two digits
+            // Remaining tens/units
             if ($number > 0) {
                 $result .= $convertTwoDigits($number);
             }
@@ -717,7 +718,6 @@ class IPDDownloadService
             $result = $convertNumber($number);
         }
 
-        $result = 'Rupees ' . trim($result);
 
         if ($paise > 0) {
             $result .= ' and ' . $convertTwoDigits($paise) . ' Paise';
