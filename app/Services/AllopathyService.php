@@ -109,6 +109,7 @@ class AllopathyService implements CRUDContract, FilterContract
             'food_advice' => $request->food_advice,
             'additional_cost' => $request->Service,
             'co_morbidities' => $request->co_morbidities,
+            'co_morbidities_description' => $request->co_morbidities_description,
             'on_examination' => $request->on_examination,
             'treatment_plan' => $request->treatment_plan,
             'chief_complaints' => $request->chief_complaints,

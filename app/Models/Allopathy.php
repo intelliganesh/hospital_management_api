@@ -40,6 +40,7 @@ class Allopathy extends Model
         "chief_complaints",
         "surgical_history",
         "co_morbidities",
+        "co_morbidities_description",
         "on_examination",
         "treatment_plan",
         "tests",

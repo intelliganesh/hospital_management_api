@@ -27,11 +27,15 @@ return new class extends Migration {
             $table->string('proctoscopy_anal_polyp_at')->nullable();
             $table->string('dre_induration_at')->nullable();
             $table->text('dre')->nullable();
-
+            $table->enum('previous_scar', array_column(YesOrNoStatusEnum::cases(), 'value'))->nullable();
+            $table->enum('abscess', array_column(YesOrNoStatusEnum::cases(), 'value'))->nullable();
+            $table->string('previous_scar_position')->nullable();
+            $table->string('abscess_position')->nullable();
             $table->text("diet_plan")->nullable();
             $table->text("chief_complaints")->nullable();
             $table->text("surgical_history")->nullable();
             $table->text("co_morbidities")->nullable();
+            $table->text("co_morbidities_description")->nullable();
             $table->text("on_examination")->nullable();
             $table->text("treatment_plan")->nullable();
             $table->text("tests")->nullable();

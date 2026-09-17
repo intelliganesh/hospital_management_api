@@ -64,6 +64,10 @@ class NonProctologyService implements CRUDContract, FilterContract
             'surgical_history'           => $request->surgical_history,
             'discount_amount'            => $request->discount_amount,
             'consultation_discount'      => $request->consultation_discount,
+            'previous_scar'              => $request->previous_scar,
+            'previous_scar_position'     => $request->previous_scar_position,
+            'abscess'                    => $request->abscess,
+            'abscess_position'           => $request->abscess_position,
         ]);
     }
 

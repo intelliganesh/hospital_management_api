@@ -38,7 +38,10 @@ return new class extends Migration
             $table->enum('avastha', array_column(AvasthaEnum::cases(), 'value'))->nullable();
             $table->enum('agni', array_column(AgniEnum::cases(), 'value'))->nullable();
             $table->enum('removed', array_column(RemovedEnums::cases(), 'value'))->default(RemovedEnums::Active->value);
-
+            $table->enum('previous_scar', array_column(YesOrNoStatusEnum::cases(), 'value'))->nullable();
+            $table->enum('abscess', array_column(YesOrNoStatusEnum::cases(), 'value'))->nullable();
+            $table->string('previous_scar_position')->nullable();
+            $table->string('abscess_position')->nullable();
             $table->text("yoga_asana")->nullable();
             $table->text("diet_plan")->nullable();
             $table->text("chief_complaints")->nullable();
