@@ -242,6 +242,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/consultations_add', [ConsultationController::class, 'create']);
     Route::get('/consultations_details/{id}', [ConsultationController::class, 'get']);
     Route::put('/consultations_update/{id}', [ConsultationController::class, 'update']);
+    Route::put('/consultations_update_patient/{id}', [ConsultationController::class, 'updatePatient']);
     Route::delete('/consultations_delete/{id}', [ConsultationController::class, 'delete']);
     Route::get('/consultations_list_for_dropdown', [ConsultationController::class, 'consultationList']);
     Route::get('/patient_consultation_list', [ConsultationController::class, 'patientConsultationList']);

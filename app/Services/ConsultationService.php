@@ -12,10 +12,17 @@ use App\Models\Allopathy;
 use App\Models\Appointments;
 use App\Models\Consultations;
 use App\Models\Examination;
+use App\Models\Invoice;
+use App\Models\IPD;
 use App\Models\NonProctology;
 // use App\Models\Master\Test;
 use App\Models\Patient;
 use App\Models\PatientFistula;
+use App\Models\PatientTests;
+use App\Models\Payment;
+use App\Models\PostSurgeryDetails;
+use App\Models\PostSurgeryFollowUp;
+use App\Models\Prescriptions;
 use App\Models\Proctology;
 use App\Models\User;
 use App\Models\Vital;
@@ -29,7 +36,6 @@ use App\Services\Users\UserService;
 use App\Traits\ConsultationsValidation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use \App\Models\Invoice;
 use Illuminate\Support\Facades\DB;
 use App\Services\PaymentService;
 use App\Services\ProctologyService;
@@ -407,6 +413,57 @@ class ConsultationService implements FilterContract
     public function update(Request $request, string | null $id): void
     {
 
+    }
+
+    /**
+     * Relink a consultation and its consultation-scoped patient snapshots to another patient.
+     *
+     * @param string $consultationId
+     * @param string $patientId
+     * @return array{consultation_id: string, patient_id: string, patient_name: string}
+     */
+    #[Transactional(secure: true, requiredRole: null, description: 'Relink consultation patient information within a secure transaction')]
+    public function updateConsultationPatient(string $consultationId, string $patientId): array
+    {
+        $consultation = Consultations::findOrFail($consultationId);
+        $patient      = Patient::findOrFail($patientId);
+
+        $patientData = [
+            'patient_id'     => $patient->id,
+            'patient_name'   => trim($patient->first_name . ' ' . $patient->last_name),
+            'patient_email'  => $patient->email,
+            'patient_phone'  => $patient->phone_no,
+            'patient_number' => $patient->patient_number,
+        ];
+
+        $consultation->update($patientData);
+
+        if (! empty($consultation->appointment_id)) {
+            Appointments::where('id', $consultation->appointment_id)->update($patientData);
+        }
+
+        Examination::where('consultation_id', $consultation->id)->update($patientData);
+        Invoice::where('consultation_id', $consultation->id)->update($patientData);
+        IPD::where('consultation_id', $consultation->id)->update($patientData);
+        Payment::where('consultation_id', $consultation->id)->update($patientData);
+        Prescriptions::where('consultation_id', $consultation->id)->update($patientData);
+        PatientTests::where('consultation_id', $consultation->id)->update($patientData);
+
+        $postSurgeryDetailsIds = PostSurgeryFollowUp::where('consultation_id', $consultation->id)
+            ->whereNotNull('post_surgery_details_id')
+            ->pluck('post_surgery_details_id')
+            ->unique()
+            ->values();
+
+        if ($postSurgeryDetailsIds->isNotEmpty()) {
+            PostSurgeryDetails::whereIn('id', $postSurgeryDetailsIds)->update(['patient_id' => $patient->id]);
+        }
+
+        return [
+            'consultation_id' => $consultation->id,
+            'patient_id'      => $patient->id,
+            'patient_name'    => $patientData['patient_name'],
+        ];
     }
 
     /**

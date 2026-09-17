@@ -403,6 +403,65 @@ class ConsultationController extends Controller
     }
 
     /**
+     * @OA\Put(
+     *     path="/api/consultations_update_patient/{id}",
+     *     summary="Relink consultation patient",
+     *     tags={"Consultations"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Consultation ID",
+     *         required=true,
+     *         @OA\Schema(type="string", format="uuid")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             required={"patient_id"},
+     *             @OA\Property(property="patient_id", type="string", format="uuid", example="d290f1ee-6c54-4b01-90e6-d701748f0851")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Consultation patient updated successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="consultation_id", type="string", format="uuid"),
+     *                 @OA\Property(property="patient_id", type="string", format="uuid"),
+     *                 @OA\Property(property="patient_name", type="string")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthenticated"),
+     *     @OA\Response(response=404, ref="#/components/responses/NotFound"),
+     *     @OA\Response(response=500, ref="#/components/responses/ServerErrorResponse")
+     * )
+     */
+    public function updatePatient(Request $request, string $id)
+    {
+        try {
+            $request->validate([
+                'patient_id' => ['required', 'uuid'],
+            ]);
+
+            $proxiedService = ServiceInterceptor::intercept($this->consultantionService);
+            return $this->successResponse($proxiedService->updateConsultationPatient($id, $request->patient_id));
+        } catch (ModelNotFoundException $e) {
+            $message = $e->getModel() === \App\Models\Patient::class ? 'Patient data not found.' : 'Consultation data not found.';
+            return $this->notFoundResponse(new NotFoundHttpException($message));
+        } catch (NotFoundHttpException $notFound) {
+            return $this->notFoundResponse($notFound);
+        } catch (ValidationException $ve) {
+            return $this->validationResponse($ve);
+        } catch (Exception $e) {
+            return $this->exceptionResponse($e);
+        }
+    }
+
+    /**
      * @OA\Delete(
      *     path="/api/consultations_delete/{id}",
      *     summary="Delete a consultation",
