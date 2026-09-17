@@ -162,7 +162,7 @@
                     <td class="text-right">{{ !empty($category->rate) ? number_format($category->rate, 2) : '' }}</td>
                     <td class="text-right">{{ $category->tax_percent ?? '' }}</td>
                     <td class="text-right">{{ $category->days_count ?? '' }}</td>
-                    <td class="text-right">{{ number_format($category->amount ?? 0, 2) }}</td>
+                    <td class="text-right">{{ number_format($category->total_amount ?? 0, 2) }}</td>
                 </tr>
                 @empty
                 <tr>
@@ -189,7 +189,7 @@
                     <td class="text-right">{{ !empty($charge->rate) ? number_format($charge->rate, 2) : '' }}</td>
                     <td class="text-right">{{ $charge->tax_percent ?? '' }}</td>
                     <td class="text-right">{{ $charge->days_count ?? '' }}</td>
-                    <td class="text-right">{{ number_format($charge->amount ?? 0, 2) }}</td>
+                    <td class="text-right">{{ number_format($charge->total_amount ?? 0, 2) }}</td>
                 </tr>
                 @endforeach
             </tbody>

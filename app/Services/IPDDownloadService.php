@@ -518,6 +518,7 @@ class IPDDownloadService
                     'tax_percent' => $taxPercent,
                     'days_count'  => $categoryItems->count(),
                     'amount'      => (float) $categoryItems->sum('amount'),
+                    'total_amount' => (float) $categoryItems->sum('total_amount'),
                     'tax_amount'  => (float) $categoryItems->sum('tax_amount'),
                 ];
             })
@@ -531,7 +532,7 @@ class IPDDownloadService
             ->values();
 
         $receipts       = $invoice ? Receipt::where('invoice_id', $invoice->id)->get() : collect();
-        $totalAmount    = (float) $items->sum('amount');
+        $totalAmount    = (float) $items->sum('total_amount');
         $receivedAmount = (float) $receipts->sum('amount');
         $balanceAmount  = max($totalAmount - $receivedAmount, 0);
 
@@ -545,7 +546,7 @@ class IPDDownloadService
             'advance_amount'       => 0,
             'received_amount'      => $receivedAmount,
             'balance_amount'       => $balanceAmount,
-            'amount_in_words'      => '',
+            'amount_in_words'      => $this->amountInWords($totalAmount),
             'receipts'             => $receipts,
         ];
     }
@@ -614,5 +615,114 @@ class IPDDownloadService
             throw new Exception($e->getMessage());
         }
 
+    }
+
+    private function amountInWords($amount): string{
+        $amount = round((float) $amount, 2);
+
+        $number = (int) floor($amount);
+        $paise = (int) round(($amount - $number) * 100);
+
+        $ones = [
+            0 => '',
+            1 => 'One',
+            2 => 'Two',
+            3 => 'Three',
+            4 => 'Four',
+            5 => 'Five',
+            6 => 'Six',
+            7 => 'Seven',
+            8 => 'Eight',
+            9 => 'Nine',
+            10 => 'Ten',
+            11 => 'Eleven',
+            12 => 'Twelve',
+            13 => 'Thirteen',
+            14 => 'Fourteen',
+            15 => 'Fifteen',
+            16 => 'Sixteen',
+            17 => 'Seventeen',
+            18 => 'Eighteen',
+            19 => 'Nineteen',
+        ];
+
+        $tens = [
+            2 => 'Twenty',
+            3 => 'Thirty',
+            4 => 'Forty',
+            5 => 'Fifty',
+            6 => 'Sixty',
+            7 => 'Seventy',
+            8 => 'Eighty',
+            9 => 'Ninety',
+        ];
+
+        $convertTwoDigits = function ($number) use ($ones, $tens) {
+            if ($number < 20) {
+                return $ones[$number];
+            }
+
+            $ten = intdiv($number, 10);
+            $unit = $number % 10;
+
+            return $tens[$ten] . ($unit ? ' ' . $ones[$unit] : '');
+        };
+
+        $convertNumber = function ($number) use ($ones, $convertTwoDigits) {
+            if ($number == 0) {
+                return '';
+            }
+
+            $result = '';
+
+            // Crore
+            if ($number >= 10000000) {
+                $crore = intdiv($number, 10000000);
+                $result .= $convertNumber($crore) . ' Crore ';
+                $number %= 10000000;
+            }
+
+            // Lakh
+            if ($number >= 100000) {
+                $lakh = intdiv($number, 100000);
+                $result .= $convertTwoDigits($lakh) . ' Lakh ';
+                $number %= 100000;
+            }
+
+            // Thousand
+            if ($number >= 1000) {
+                $thousand = intdiv($number, 1000);
+                $result .= $convertTwoDigits($thousand) . ' Thousand ';
+                $number %= 1000;
+            }
+
+            // Hundred
+            if ($number >= 100) {
+                $hundred = intdiv($number, 100);
+                $result .= $ones[$hundred] . ' Hundred ';
+                $number %= 100;
+            }
+
+            // Remaining two digits
+            if ($number > 0) {
+                $result .= $convertTwoDigits($number);
+            }
+
+            return trim($result);
+        };
+
+        if ($number == 0) {
+            $result = 'Zero';
+        } else {
+            $result = $convertNumber($number);
+        }
+
+        $result = 'Rupees ' . trim($result);
+
+        if ($paise > 0) {
+            $result .= ' and ' . $convertTwoDigits($paise) . ' Paise';
+        }
+
+        return $result . ' Only';
     }
 }

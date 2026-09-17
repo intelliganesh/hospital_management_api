@@ -81,9 +81,9 @@ class IPDBillingService
         $invoice = Invoice::where('ipd_id', $ipdId)->first();
         $this->syncAndAppendBillingSummary($invoice);
 
-        $ipd->ward_name  = $ipd->ward->name;
-        $ipd->room_name  = $ipd->room->name;
-        $ipd->bed_number = $ipd->bed->bed_number;
+        $ipd->ward_name  = $ipd->ward?->name ?? '';
+        $ipd->room_name  = $ipd->room?->name ?? '';
+        $ipd->bed_number = $ipd->bed?->bed_number ?? '';
 
         $data                  = [];
         $data['summary']       = $this->billingTotals($ipdId, $invoice?->id);
@@ -147,7 +147,14 @@ class IPDBillingService
         $invoice   = Invoice::where('ipd_id', $ipdId)->first();
         $frontDesk = User::where('id', $request->front_desk_user_id)->first();
 
+        
         $this->validateCharges($request);
+
+        $amount = (float) $request->amount;
+        $taxPercent = (float) ($request->tax_percent ?? 0);
+
+        $taxAmount = round(($amount * $taxPercent) / 100, 2) ?? 0;
+        $totalAmount = round($amount + $taxAmount, 2) ?? 0;
         IPDInvoiceItem::create([
             'invoice_id'            => $invoice->id,
             'category'              => $request->category,
@@ -162,7 +169,8 @@ class IPDBillingService
             'currency'              => $request->currency ?? '₹',
             'description'           => $request->description,
             'tax_percent'           => $request->tax_percent ?? 0,
-            'tax_amount'            => round($request->amount - (($request->amount * $request->tax_percent) / (100 + $request->tax_percent)), 2) ?? 0,
+            'tax_amount'            => $taxAmount,
+            'total_amount'          => $totalAmount,
             'service_date'          => $request->service_date ?? null,
         ]);
 
@@ -251,7 +259,7 @@ class IPDBillingService
         $items         = IPDInvoiceItem::where('ipd_id', $ipdId)->get();
         $itemAmount    = (float) $items->sum('amount');
         $taxAmount     = (float) $items->sum('tax_amount');
-        $totalAmount   = $itemAmount;
+        $totalAmount   = (float) $items->sum('total_amount');
         $paidAmount    = $invoiceId ? (float) Receipt::where('invoice_id', $invoiceId)->sum('amount') : 0;
         $balanceAmount = max($totalAmount - $paidAmount, 0);
 
@@ -294,7 +302,7 @@ class IPDBillingService
                     'service_category' => $category,
                     'item_amount'      => (float) $items->sum('amount'),
                     'tax_amount'       => (float) $items->sum('tax_amount'),
-                    'total_amount'     => (float) $items->sum('amount') + (float) $items->sum('tax_amount'),
+                    'total_amount'     => (float) $items->sum('total_amount'),
                     'items'            => $items->values(),
                 ];
             })

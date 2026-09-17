@@ -163,6 +163,6 @@ class Patient extends Model
 
     public function proofData(){
         $proofData = PatientAddressProof::where('patient_id', $this->id)->first();
-        return $proofData?->id_number_masked.(strtoupper($proofData?->id_type)) ?? '';
+        return $proofData?->id_number_masked.' ('.strtoupper($proofData?->id_type).')' ?? '';
     }
 }

@@ -25,6 +25,7 @@ class IPDInvoiceItem extends Model
         'description',
         'tax_percent',
         'tax_amount',
+        'total_amount',
         'service_date',
     ];
 
@@ -41,6 +42,7 @@ class IPDInvoiceItem extends Model
         'description',
         'tax_percent',
         'tax_amount',
+        'total_amount',
         'service_date',
     ];
 

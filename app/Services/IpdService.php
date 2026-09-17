@@ -114,7 +114,7 @@ class IpdService implements FilterContract
                         'collected_amount' => $request->advance_amount ?? 0,
                         'balanced_amount'  => 0,
                         'ipd_id'           => $ipd->id,
-                        'currency'         => $request->currency ?? '₹',
+                        'currency'         => $request->currency ?? 'INR',
                     ]
                 ))
             );
