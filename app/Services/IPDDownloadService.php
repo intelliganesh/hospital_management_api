@@ -21,7 +21,7 @@ class IPDDownloadService
     {
         try {
             $ipd = IPD::with('patient', 'consultation', 'staffs', 'preliminaryNotes')->findOrFail($ipdId);
-
+            $ipd->patient->proofData = $ipd->patient->proofData();
             $htmlContent = '';
             $fileName    = '';
 

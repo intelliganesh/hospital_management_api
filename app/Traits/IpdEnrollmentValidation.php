@@ -31,7 +31,7 @@ trait IpdEnrollmentValidation
             'advance_amount' => 'nullable|numeric|min:0',
 
             // Doctors
-            'consultant_doctor' => 'nullable|array|min:1',
+            'consultant_doctor' => 'nullable|array',
             'consultant_doctor.*' => 'integer|exists:users,id',
 
             'duty_doctor' => 'nullable|array',

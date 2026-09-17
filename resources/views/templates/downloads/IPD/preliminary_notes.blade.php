@@ -219,12 +219,12 @@
             </div>
         </div>
         <!-- Profession -->
-        <div>
+        <!-- <div>
             <p>
                 <span class="label">PROFESSION: </span>
                 {{ $ipd->patient->occupation ?? '' }}
             </p>
-        </div>
+        </div> -->
         <!-- Phone Number -->
         <div>
             <p>
@@ -243,7 +243,7 @@
         <div>
             <p>
                 <span class="label">PASSPORT / AADHAR NUMBER: </span>
-                {{ $ipd->patient_ }}
+                {{ $ipd->patient->proofData ?? '' }}
             </p>
         </div>
         <!-- Attendant Name -->

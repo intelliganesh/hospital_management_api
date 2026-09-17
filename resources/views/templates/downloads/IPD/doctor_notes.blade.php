@@ -151,7 +151,7 @@
             </td>
             <td width="50%">
                 <b>Age/Gender:</b>
-                <span class="label-line">{{ $ipd->patient_age ?? '' }}/{{ $ipd->patient_gender ?? '' }}</span>
+                <span class="label-line">{{ $ipd->patient_age ?? '' }}/{{ $ipd->patient->gender ?? '' }}</span>
             </td>
         </tr>
         <tr>

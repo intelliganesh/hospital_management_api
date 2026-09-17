@@ -1,26 +1,25 @@
 <?php
-
 namespace App\Services;
 
-use App\Models\IPD;
-use App\Models\Consultations;
-use App\Models\Patient;
-use App\Models\User;
-use App\Models\IpdStaffs;
-use App\Models\Ward;
-use App\Models\Master\Rooms;
-use App\Models\Bed;
-use App\Traits\IpdEnrollmentValidation;
-use App\Services\InvoiceService;
 use App\Contracts\FilterContract;
+use App\Enums\ServiceType;
+use App\Models\Bed;
+use App\Models\Consultations;
+use App\Models\Invoice;
+use App\Models\IPD;
+use App\Models\IpdStaffs;
+use App\Models\Master\Rooms;
+use App\Models\Patient;
+use App\Models\Receipt;
+use App\Models\User;
+use App\Models\Ward;
 use App\Services\CheckValidation;
+use App\Services\InvoiceService;
+use App\Traits\IpdEnrollmentValidation;
+use AutoIdGenerate;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
-use Carbon\Carbon;
-use App\Enums\ServiceType;
-use AutoIdGenerate;
-use App\Models\Invoice;
-use App\Models\Receipt;
 
 class IpdService implements FilterContract
 {
@@ -32,12 +31,12 @@ class IpdService implements FilterContract
     private $invoiceService;
     private $invoiceColumns;
 
-    public function __construct(CheckValidation $checkValidationService,InvoiceService $invoiceService)
+    public function __construct(CheckValidation $checkValidationService, InvoiceService $invoiceService)
     {
         $this->checkValidationService = $checkValidationService;
-        $this->invoiceService = $invoiceService;
+        $this->invoiceService         = $invoiceService;
         $this->invoiceColumns         = Invoice::$columns;
-        $this->columns = IPD::$columns ?? ['id', 'ipd_number', 'patient_id', 'consultation_id', 'admission_date_time', 'ward_id', 'room_id', 'bed_id', 'advance_amount'];
+        $this->columns                = IPD::$columns ?? ['id', 'ipd_number', 'patient_id', 'consultation_id', 'admission_date_time', 'ward_id', 'room_id', 'bed_id', 'advance_amount'];
     }
 
     /**
@@ -50,98 +49,98 @@ class IpdService implements FilterContract
 
         // Verify consultation exists and has advice_admission = 1 (only if provided)
         $consultation = null;
-        if($request->has('consultation_id') && !empty($request->consultation_id)){
+        if ($request->has('consultation_id') && ! empty($request->consultation_id)) {
             $consultation = Consultations::where('id', $request->consultation_id)
                 ->where('advice_admition', 1)
                 ->firstOrFail();
         }
 
-        if(isset($request->patient_id)){
+        if (isset($request->patient_id)) {
             // Verify patient exists
             $patient = Patient::findOrFail($request->patient_id);
-        }else{
-            $patient=Patient::create([
-                'gender' => $request->patient_gender,
-                'phone_no' => $request->patient_attendant_phone,
-                'last_name' => $request->patient_last_name,
-                'first_name' => $request->patient_first_name,
-                'attendant_with_patient_name' => $request->patient_attendant_name,
+        } else {
+            $patient = Patient::create([
+                'gender'                          => $request->patient_gender,
+                'phone_no'                        => $request->patient_attendant_phone,
+                'last_name'                       => $request->patient_last_name,
+                'first_name'                      => $request->patient_first_name,
+                'attendant_with_patient_name'     => $request->patient_attendant_name,
                 'attendant_with_patient_phone_no' => $request->patient_attendant_phone,
-                'patient_number' => AutoIdGenerate::generateId(ServiceType::Patient)
+                'patient_number'                  => AutoIdGenerate::generateId(ServiceType::Patient),
             ]);
         }
-        $ward = $request->has('ward_id') && !empty($request->ward_id) ? Ward::findorFail($request->ward_id) : null;
-        $room = $request->has('room_id') && !empty($request->room_id) ? Rooms::findorFail($request->room_id) : null;
-        $bed = $request->has('bed_id') && !empty($request->bed_id) ? Bed::findorFail($request->bed_id) : null;
-      
-        $doctor=User::find($request->consultant_doctor_id);
+        $ward = $request->has('ward_id') && $request->filled('ward_id') && ! empty($request->ward_id) ? Ward::findorFail($request->ward_id) : null;
+        $room = $request->has('room_id') && $request->filled('room_id') && ! empty($request->room_id) ? Rooms::findorFail($request->room_id) : null;
+        $bed  = $request->has('bed_id') && $request->filled('bed_id') && ! empty($request->bed_id) ? Bed::findorFail($request->bed_id) : null;
+
+        $doctor = User::find($request->consultant_doctor_id);
 
         // Create IPD record
         $ipdData = [
-            'patient_id' => $patient->id,
-            'consultation_id' => $request->consultation_id ?? null,
-            'admission_date_time' => Carbon::createFromFormat('Y-m-d H:i:s', $request->admission_date_time),
-            'ward_id' => $request->ward_id ?? null,
-            'room_id' => $request->room_id ?? null,
-            'bed_id' => $request->bed_id ?? null,
-            'advance_amount' => $request->advance_amount ?? null,
-            'doctor_id'=>$doctor->id,
-            'doctor_name'=>$doctor->name ?? null,
-            'doctor_email'=>$doctor->email ?? null,
-            'doctor_phone'=>$doctor->phone ?? null,
-            'patient_number'=>$patient->patient_number,
-            'patient_name' => $patient->name,
-            'patient_email' => $patient->email,
-            'patient_phone' => $patient->phone_no,
-            'patient_age' => $patient->age ?? null,
-            'patient_attendant_name' => $patient->attendant_with_patient_name ?? null,
+            'patient_id'              => $patient->id,
+            'consultation_id'         => $request->consultation_id ?? null,
+            'admission_date_time'     => Carbon::createFromFormat('Y-m-d H:i:s', $request->admission_date_time),
+            'ward_id'                 => $request->ward_id ?? null,
+            'room_id'                 => $request->room_id ?? null,
+            'bed_id'                  => $request->bed_id ?? null,
+            'advance_amount'          => $request->advance_amount ?? null,
+            'doctor_id'               => $doctor->id,
+            'doctor_name'             => $doctor->name ?? null,
+            'doctor_email'            => $doctor->email ?? null,
+            'doctor_phone'            => $doctor->phone ?? null,
+            'patient_number'          => $patient->patient_number,
+            'patient_name'            => $patient->name,
+            'patient_email'           => $patient->email,
+            'patient_phone'           => $patient->phone_no,
+            'patient_age'             => $patient->age ?? null,
+            'patient_attendant_name'  => $patient->attendant_with_patient_name ?? null,
             'patient_attendant_phone' => $patient->attendant_with_patient_phone_no ?? null,
-            'patient_address' => $patient->address.' '.$patient->city.' '.$patient->state.' '.$patient->country.' '.$patient->pincode,
-            'ward_number'=>$ward->ward_number ?? null,
-            'ward_type'=>$ward->type ?? null,
-            'room_type'=>$room->room_type ?? null,
-            'room_number'=>$room->room_number ?? null,
-            'bed_number'=>$bed->bed_number ?? null,
-            'ipd_number'=>AutoIdGenerate::generateId(ServiceType::IPD),
-            'ipd_type'=>$request->ipd_type ?? 'surgical',
+            'patient_address'         => $patient->address . ' ' . $patient->city . ' ' . $patient->state . ' ' . $patient->country . ' ' . $patient->pincode,
+            'ward_number'             => $ward->ward_number ?? null,
+            'ward_type'               => $ward->type ?? null,
+            'room_type'               => $room->room_type ?? null,
+            'room_number'             => $room->room_number ?? null,
+            'bed_number'              => $bed->bed_number ?? null,
+            'ipd_number'              => AutoIdGenerate::generateId(ServiceType::IPD),
+            'ipd_type'                => $request->ipd_type ?? 'surgical',
         ];
 
         $ipd = IPD::create($ipdData);
-        if(!is_null($consultation)) {
-        $this->invoiceService->create(
-                    new Request(array_merge(
-                        $consultation->only($this->invoiceColumns),
-                        [
-                            'collected_amount' => $request->advance_amount ?? 0,
-                            'balanced_amount'  => 0,
-                            'ipd_id'  => $ipd->id,
-                            'currency'         => $request->currency ?? '₹',
-                        ]
-                    ))
-                );
-        }else{
-           $this->invoiceService->create(
-                    new Request(
-                        [
-                            'collected_amount' => $request->advance_amount ?? 0,
-                            'balanced_amount'  => 0,
-                            'ipd_id'  => $ipd->id,
-                            'currency'         => $request->currency ?? '₹',
-                            'patient_id' => $ipd->patient_id,
-                            'doctor_id' =>$ipd->doctor_id,
-                            'patient_name'=>$ipd->patient_name,
-                            'patient_email'=>$ipd->patient_email,
-                            'patient_phone'=>$ipd->patient_phone,
-                            "patient_number"=>$ipd->patient_number,
-                            'doctor_name'=>$ipd->doctor_name,
-                            'doctor_email'=>$ipd->doctor_email,
-                            'doctor_phone'=>$ipd->doctor_phone,
-                        ]
-                    ));
+        if (! is_null($consultation)) {
+            $this->invoiceService->create(
+                new Request(array_merge(
+                    $consultation->only($this->invoiceColumns),
+                    [
+                        'collected_amount' => $request->advance_amount ?? 0,
+                        'balanced_amount'  => 0,
+                        'ipd_id'           => $ipd->id,
+                        'currency'         => $request->currency ?? '₹',
+                    ]
+                ))
+            );
+        } else {
+            $this->invoiceService->create(
+                new Request(
+                    [
+                        'collected_amount' => $request->advance_amount ?? 0,
+                        'balanced_amount'  => 0,
+                        'ipd_id'           => $ipd->id,
+                        'currency'         => $request->currency ?? '₹',
+                        'patient_id'       => $ipd->patient_id,
+                        'doctor_id'        => $ipd->doctor_id,
+                        'patient_name'     => $ipd->patient_name,
+                        'patient_email'    => $ipd->patient_email,
+                        'patient_phone'    => $ipd->patient_phone,
+                        "patient_number"   => $ipd->patient_number,
+                        'doctor_name'      => $ipd->doctor_name,
+                        'doctor_email'     => $ipd->doctor_email,
+                        'doctor_phone'     => $ipd->doctor_phone,
+                    ]
+                ));
         }
         $invoice = Invoice::where('ipd_id', $ipd->id)
-                    ->orderBy('created_at', 'desc')
-                    ->first();
+            ->orderBy('created_at', 'desc')
+            ->first();
 
         $receiptData = [
             'invoice_id'     => $invoice->id,
@@ -159,13 +158,13 @@ class IpdService implements FilterContract
         // Assign consultant doctors
         if ($request->has('consultant_doctor') && is_array($request->consultant_doctor)) {
             foreach ($request->consultant_doctor as $doctor) {
-                $doctorData=User::find($doctor);
+                $doctorData = User::find($doctor);
                 IpdStaffs::create([
-                    'ipd_id' => $ipd->id,
-                    'user_id' => $doctor,
-                    'user_name'=>$doctorData->name ?? null,
-                    'user_phone'=>$doctorData->phone ?? null,
-                    'user_role' => 'consultant_doctor',
+                    'ipd_id'        => $ipd->id,
+                    'user_id'       => $doctor,
+                    'user_name'     => $doctorData->name ?? null,
+                    'user_phone'    => $doctorData->phone ?? null,
+                    'user_role'     => 'consultant_doctor',
                     // 'shift' => $doctor['shift'],
                     'assigned_date' => now(),
                 ]);
@@ -175,13 +174,13 @@ class IpdService implements FilterContract
         // Assign duty doctors
         if ($request->has('duty_doctor') && is_array($request->duty_doctor)) {
             foreach ($request->duty_doctor as $doctor) {
-                $doctorData=User::find($doctor);
+                $doctorData = User::find($doctor);
                 IpdStaffs::create([
-                    'ipd_id' => $ipd->id,
-                    'user_id' => $doctor,
-                    'user_name'=>$doctorData->name ?? null,
-                    'user_phone'=>$doctorData->phone ?? null,
-                    'user_role' => 'duty_doctor',
+                    'ipd_id'        => $ipd->id,
+                    'user_id'       => $doctor,
+                    'user_name'     => $doctorData->name ?? null,
+                    'user_phone'    => $doctorData->phone ?? null,
+                    'user_role'     => 'duty_doctor',
                     // 'shift' => $doctor['shift'],
                     'assigned_date' => now(),
                 ]);
@@ -191,20 +190,20 @@ class IpdService implements FilterContract
         // Assign nurses
         if ($request->has('nurse') && is_array($request->nurse)) {
             foreach ($request->nurse as $nurse) {
-                $nurseData=User::find($nurse);
+                $nurseData = User::find($nurse);
                 IpdStaffs::create([
-                    'ipd_id' => $ipd->id,
-                    'user_id' => $nurse,
-                    'user_name'=>$nurseData->name ?? null,
-                    'user_phone'=>$nurseData->phone ?? null,
-                    'user_role' => 'nurse',
+                    'ipd_id'        => $ipd->id,
+                    'user_id'       => $nurse,
+                    'user_name'     => $nurseData->name ?? null,
+                    'user_phone'    => $nurseData->phone ?? null,
+                    'user_role'     => 'nurse',
                     // 'shift' => $nurse['shift'],
                     'assigned_date' => now(),
                 ]);
             }
         }
 
-        return $ipd->load(['patient', 'consultation', 'staffs','preliminaryNotes']);
+        return $ipd->load(['patient', 'consultation', 'staffs', 'preliminaryNotes']);
     }
 
     /**
@@ -216,7 +215,7 @@ class IpdService implements FilterContract
             ->orderByRaw("CASE WHEN discharge_date_time IS NULL THEN 0 ELSE 1 END")
             ->orderBy('created_at', 'desc');
 
-        if ($request->has('search') && !empty($request->search)) {
+        if ($request->has('search') && ! empty($request->search)) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('ipd_number', 'like', "%{$search}%")
@@ -249,37 +248,37 @@ class IpdService implements FilterContract
             $query = $this->filterMultipleFields($request->multiple_filter, $query);
         }
 
-        if ($request->has('sort_by') && !empty($request->sort_by)) {
+        if ($request->has('sort_by') && ! empty($request->sort_by)) {
             $sortOrder = $request->has('sort_order') && $request->sort_order === 'asc' ? 'asc' : 'desc';
-            if($request->sort_by === 'admission_date'){
+            if ($request->sort_by === 'admission_date') {
                 $query->orderBy('admission_date_time', $sortOrder);
-            }else{
+            } else {
                 $query->orderBy($request->sort_by, $sortOrder);
             }
         } else {
             // Default: Show Admitted → Under Treatment → Discharged → Expired
             $query->orderByRaw("CASE WHEN status = 'Admitted' THEN 0 WHEN status = 'Under Treatment' THEN 1 WHEN status = 'Discharged' THEN 2 WHEN status = 'Expired' THEN 3 ELSE 4 END")
-                  ->orderBy('created_at', 'desc');
+                ->orderBy('created_at', 'desc');
         }
 
-        $perPage = $request->has('per_page') ? (int)$request->per_page : 10;
-        $page = $request->has('page') ? (int)$request->page : 1;
+        $perPage = $request->has('per_page') ? (int) $request->per_page : 10;
+        $page    = $request->has('page') ? (int) $request->page : 1;
 
         Paginator::useBootstrap();
         $ipds = $query->paginate($perPage, ['*'], 'page', $page);
 
         return [
-            'data' => $ipds->items(),
+            'data'       => $ipds->items(),
             'pagination' => [
-                'total' => $ipds->total(),
-                'count' => $ipds->count(),
-                'per_page' => $ipds->perPage(),
+                'total'        => $ipds->total(),
+                'count'        => $ipds->count(),
+                'per_page'     => $ipds->perPage(),
                 'current_page' => $ipds->currentPage(),
-                'total_pages' => $ipds->lastPage(),
-                'links' => [
+                'total_pages'  => $ipds->lastPage(),
+                'links'        => [
                     'next' => $ipds->nextPageUrl(),
-                ]
-            ]
+                ],
+            ],
         ];
     }
 
@@ -304,41 +303,41 @@ class IpdService implements FilterContract
 
         // Update IPD record
         $updateData = [];
-        if ($request->has('ward_id')) {
-            $ward = Ward::findorFail($request->ward_id);
-            $updateData['ward_id'] = $request->ward_id;
+        if ($request->has('ward_id') && $request->filled('ward_id')) {
+            $ward                    = Ward::findorFail($request->ward_id);
+            $updateData['ward_id']   = $request->ward_id;
             $updateData['ward_name'] = $ward->ward_name;
         }
-        if ($request->has('room_id')) {
-            $room = Rooms::findorFail($request->room_id);
-            $updateData['room_id'] = $request->room_id;
+        if ($request->has('room_id') && $request->filled('room_id')) {
+            $room                      = Rooms::findorFail($request->room_id);
+            $updateData['room_id']     = $request->room_id;
             $updateData['room_number'] = $room->room_number;
         }
-        if ($request->has('bed_id')) {
-            $bed = Bed::findorFail($request->bed_id);
-            $updateData['bed_id'] = $request->bed_id;
+        if ($request->has('bed_id') && $request->filled('bed_id')) {
+            $bed                      = Bed::findorFail($request->bed_id);
+            $updateData['bed_id']     = $request->bed_id;
             $updateData['bed_number'] = $bed->bed_number;
         }
-        if ($request->has('advance_amount')) {
+        if ($request->has('advance_amount') && $request->filled('advance_amount')) {
             $updateData['advance_amount'] = $request->advance_amount;
         }
-        if ($request->has('admission_date_time')) {
+        if ($request->has('admission_date_time') && $request->filled('admission_date_time')) {
             $updateData['admission_date_time'] = $request->admission_date_time;
         }
-        if ($request->has('discharge_date_time')) {
+        if ($request->has('discharge_date_time') && $request->filled('discharge_date_time')) {
             $updateData['discharge_date_time'] = $request->discharge_date_time;
         }
-        if ($request->has('status')) {
+        if ($request->has('status') && $request->filled('status')) {
             $updateData['status'] = $request->status;
         }
 
         // Update patient information in IPD record if provided
         $ipdPatientUpdateData = [];
-        
+
         if ($request->has('patient_first_name') || $request->has('patient_last_name')) {
-            $patient = $ipd->patient;
-            $firstName = $request->has('patient_first_name') ? $request->patient_first_name : $patient->first_name;
-            $lastName = $request->has('patient_last_name') ? $request->patient_last_name : $patient->last_name;
+            $patient                              = $ipd->patient;
+            $firstName                            = $request->has('patient_first_name') ? $request->patient_first_name : $patient->first_name;
+            $lastName                             = $request->has('patient_last_name') ? $request->patient_last_name : $patient->last_name;
             $ipdPatientUpdateData['patient_name'] = $firstName . ' ' . $lastName;
         }
         if ($request->has('patient_email')) {
@@ -360,14 +359,13 @@ class IpdService implements FilterContract
             $ipdPatientUpdateData['patient_age'] = $request->patient_age;
         }
 
-        if (!empty($ipdPatientUpdateData)) {
+        if (! empty($ipdPatientUpdateData)) {
             $updateData = array_merge($updateData, $ipdPatientUpdateData);
         }
 
-        if (!empty($updateData)) {
+        if (! empty($updateData)) {
             $ipd->update($updateData);
         }
-
 
         // Update staff assignments if provided
         $staffRoles = ['consultant_doctor', 'duty_doctor', 'nurse'];
@@ -381,24 +379,24 @@ class IpdService implements FilterContract
                 // Add new staff
                 foreach ($request->$role as $staff) {
                     $staffData = [
-                        'ipd_id' => $id,
-                        'user_role' => $role,
+                        'ipd_id'        => $id,
+                        'user_role'     => $role,
                         'assigned_date' => now(),
                     ];
 
                     if (is_array($staff)) {
-                        $staffData['user_id'] = $staff['user_id'] ?? $staff;
-                        $staffData['user_name'] =$staff['user_name'] ?? null;
-                        $staffData['user_phone'] =$staff['user_phone'] ?? null;
+                        $staffData['user_id']    = $staff['user_id'] ?? $staff;
+                        $staffData['user_name']  = $staff['user_name'] ?? null;
+                        $staffData['user_phone'] = $staff['user_phone'] ?? null;
                         if (isset($staff['shift'])) {
                             $staffData['shift'] = $staff['shift'];
                         }
                     } else {
 
-                        $staffdetails=User::find($staff);
-                        $staffData['user_id'] = $staff;
-                        $staffData['user_name'] =$staffdetails->name ?? null;
-                        $staffData['user_phone'] =$staffdetails->phone ?? null;
+                        $staffdetails            = User::find($staff);
+                        $staffData['user_id']    = $staff;
+                        $staffData['user_name']  = $staffdetails->name ?? null;
+                        $staffData['user_phone'] = $staffdetails->phone ?? null;
                     }
 
                     IpdStaffs::create($staffData);
@@ -415,10 +413,10 @@ class IpdService implements FilterContract
     public function delete(string $id)
     {
         $ipd = IPD::findOrFail($id);
-        
+
         // Delete associated staff assignments
         IpdStaffs::where('ipd_id', $id)->delete();
-        
+
         // Delete IPD record
         $ipd->delete();
     }
@@ -428,7 +426,7 @@ class IpdService implements FilterContract
      */
     public function search(string $searchText, $data)
     {
-        if (!empty($searchText)) {
+        if (! empty($searchText)) {
             $data->where(function ($query) use ($searchText) {
                 $query->where('ipd_number', 'like', "%{$searchText}%")
                     ->orWhere('consultation_id', 'like', "%{$searchText}%");

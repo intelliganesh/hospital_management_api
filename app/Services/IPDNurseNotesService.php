@@ -168,6 +168,11 @@ class IPDNurseNotesService implements CRUDContract, FilterContract
             $nurseNotes = $nurseNotes->orderBy($sortBy, $sortOrder);
         }
 
+         if ($request?->has('datetime')) {
+            $searchValue = $request->datetime;
+            $nurseNotes = $nurseNotes->whereDate('datetime', $searchValue);
+        }
+
         if ($request?->has('multiple_filter')) {
             $nurseNotes = $this->filterMultipleFields($request->multiple_filter, $nurseNotes);
         }

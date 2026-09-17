@@ -162,6 +162,11 @@ class IPDDoctorNotesService implements CRUDContract, FilterContract
             $doctorNotes = $this->search($searchValue, $doctorNotes);
         }
 
+        if ($request?->has('datetime')) {
+            $searchValue = $request->datetime;
+            $doctorNotes = $doctorNotes->whereDate('datetime', $searchValue);
+        }
+
         if ($request?->has('sort_by')) {
             $sortBy      = $request->sort_by ?? '';
             $sortOrder   = $request->sort_order ?? 'desc';
