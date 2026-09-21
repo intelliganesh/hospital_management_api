@@ -93,6 +93,14 @@ class IPDReportService
     {
         $filters = $request->input('multiple_filter', []);
 
+        if ($request->filled('status') && empty($filters['status'])) {
+            $filters['status'] = $request->status;
+        }
+
+        if ($request->filled('summary_type') && empty($filters['summary_type'])) {
+            $filters['summary_type'] = $request->summary_type;
+        }
+
         $equalsFilters = [
             'doctor_id'  => 'ipd.doctor_id',
             'patient_id' => 'ipd.patient_id',
@@ -104,24 +112,36 @@ class IPDReportService
 
         foreach ($equalsFilters as $filter => $column) {
             if (! empty($filters[$filter])) {
-                $query->where($column, $filters[$filter]);
+                $value = $filters[$filter];
+
+                if ($filter === 'status') {
+                    $query->whereRaw('LOWER(' . $column . ') = ?', [strtolower((string) $value)]);
+                    continue;
+                }
+
+                $query->where($column, $value);
             }
         }
 
         if (! empty($filters['summary_type'])) {
-            $summaryType = $filters['summary_type'];
+            $summaryType = strtolower((string) $filters['summary_type']);
 
             if ($summaryType === 'surgical') {
                 $query->where(function ($q) {
                     $q->whereHas('surgery')
-                        ->orWhere('ipd_discharge_summary.summary_type', 'surgical');
+                        ->orWhereRaw('LOWER(ipd_discharge_summary.summary_type) = ?', ['surgical']);
                 });
             }
 
             if ($summaryType === 'non_surgical') {
                 $query->where(function ($q) {
-                    $q->whereDoesntHave('surgery')
-                        ->orWhere('ipd_discharge_summary.summary_type', 'non_surgical');
+                    $q->where(function ($subQuery) {
+                        $subQuery->whereDoesntHave('surgery')
+                            ->where(function ($innerQuery) {
+                                $innerQuery->whereNull('ipd_discharge_summary.summary_type')
+                                    ->orWhereRaw('LOWER(ipd_discharge_summary.summary_type) = ?', ['non_surgical']);
+                            });
+                    })->orWhereRaw('LOWER(ipd_discharge_summary.summary_type) = ?', ['non_surgical']);
                 });
             }
         }
@@ -137,18 +157,20 @@ class IPDReportService
         }
 
         if ($request->has('search') && ! empty($request->search)) {
-            $search = $request->search;
+            $search = trim((string) $request->search);
+            $searchLower = strtolower($search);
 
-            $query->where(function ($q) use ($search) {
-                $q->where('ipd.patient_name', 'like', '%' . $search . '%')
-                    ->orWhere('ipd.patient_number', 'like', '%' . $search . '%')
-                    ->orWhere('ipd.patient_phone', 'like', '%' . $search . '%')
-                    ->orWhere('ipd.ipd_number', 'like', '%' . $search . '%')
-                    ->orWhere('ipd.doctor_name', 'like', '%' . $search . '%')
-                    ->orWhere('ipd.ward_number', 'like', '%' . $search . '%')
-                    ->orWhere('ipd.room_number', 'like', '%' . $search . '%')
-                    ->orWhere('ipd.bed_number', 'like', '%' . $search . '%')
-                    ->orWhere('ipd.status', 'like', '%' . $search . '%');
+            $query->where(function ($q) use ($searchLower) {
+                $q->whereRaw('LOWER(ipd.patient_name) LIKE ?', ['%' . $searchLower . '%'])
+                    ->orWhereRaw('LOWER(ipd.patient_number) LIKE ?', ['%' . $searchLower . '%'])
+                    ->orWhereRaw('LOWER(ipd.patient_phone) LIKE ?', ['%' . $searchLower . '%'])
+                    ->orWhereRaw('LOWER(ipd.ipd_number) LIKE ?', ['%' . $searchLower . '%'])
+                    ->orWhereRaw('LOWER(ipd.doctor_name) LIKE ?', ['%' . $searchLower . '%'])
+                    ->orWhereRaw('LOWER(ipd.ward_number) LIKE ?', ['%' . $searchLower . '%'])
+                    ->orWhereRaw('LOWER(ipd.room_number) LIKE ?', ['%' . $searchLower . '%'])
+                    ->orWhereRaw('LOWER(ipd.bed_number) LIKE ?', ['%' . $searchLower . '%'])
+                    ->orWhereRaw('LOWER(ipd.status) LIKE ?', ['%' . $searchLower . '%'])
+                    ->orWhereRaw('LOWER(ipd_discharge_summary.summary_type) LIKE ?', ['%' . $searchLower . '%']);
             });
         }
     }

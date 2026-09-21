@@ -72,7 +72,20 @@ class IPDBillingService
             return $this->syncAndAppendBillingSummary($invoice);
         });
 
-        return $invoices;
+        $analytics = [
+            'total_bills'       => $invoices->total(),
+            'running_bills'     => $invoices->getCollection()->filter(function (Invoice $invoice) {
+                return (strtolower((string) ($invoice->billing_status ?? $invoice->ipd_billing_status ?? '')) === 'running');
+            })->count(),
+            'total_billed'      => (float) $invoices->getCollection()->sum(function (Invoice $invoice) {
+                return (float) ($invoice->collected_amount ?? 0);
+            }),
+            'pending_collection' => (float) $invoices->getCollection()->sum(function (Invoice $invoice) {
+                return (float) ($invoice->balanced_amount ?? 0);
+            }),
+        ];
+
+        return array_merge($invoices->toArray(), ['analytics' => $analytics]);
     }
 
     public function get(string $ipdId)
