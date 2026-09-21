@@ -144,7 +144,7 @@ class IpdService implements FilterContract
 
         $receiptData = [
             'invoice_id'     => $invoice->id,
-            'currency'       => $request->currency ?? '₹',
+            'currency'       => $request->currency ?? 'INR',
             'amount'         => $request->advance_amount ?? 0,
             'date'           => $request->payment_date ?? \Carbon\Carbon::now(),
             'payment_type'   => $request->payment_type ?? 'Cash',
@@ -264,12 +264,20 @@ class IpdService implements FilterContract
         $perPage = $request->has('per_page') ? (int) $request->per_page : 10;
         $page    = $request->has('page') ? (int) $request->page : 1;
 
+        $summaryQuery = clone $query;
+        $totalIpd      = (clone $summaryQuery)->count();
+        $activeIpd     = (clone $summaryQuery)->whereIn('status', ['Admitted', 'Under Treatment'])->count();
+        $discharged    = (clone $summaryQuery)->where('status', 'Discharged')->count();
+
         Paginator::useBootstrap();
         $ipds = $query->paginate($perPage, ['*'], 'page', $page);
 
         return [
-            'data'       => $ipds->items(),
-            'pagination' => [
+            'total_ipd'      => $totalIpd,
+            'active_ipd'     => $activeIpd,
+            'discharged'    => $discharged,
+            'data'           => $ipds->items(),
+            'pagination'     => [
                 'total'        => $ipds->total(),
                 'count'        => $ipds->count(),
                 'per_page'     => $ipds->perPage(),

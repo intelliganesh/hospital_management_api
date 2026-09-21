@@ -101,16 +101,20 @@ class IPDBillingService
         $ipd = IPD::findOrFail($ipdId);
         $invoice = Invoice::where('ipd_id', $ipdId)->first();
         if ($invoice) {
-            if(is_null($ipd->discharge_date_time)) {
-                $ipd->discharge_date_time = now();
+            $requestedStatus = $request->ipd_billing_status ?? $invoice->ipd_billing_status;
+            $isCompletedBilling = strtolower((string) $requestedStatus) === 'completed';
+
+            if ($isCompletedBilling || is_null($ipd->discharge_date_time)) {
+                $ipd->discharge_date_time = $ipd->discharge_date_time ?? now();
                 $ipd->status = 'Discharged';
                 $ipd->save();
-            } 
-             $this->syncAndAppendBillingSummary($invoice); 
+            }
+
             $invoice->update([
-                'ipd_billing_status' => $request->ipd_billing_status ?? $invoice->ipd_billing_status,
+                'ipd_billing_status' => $requestedStatus,
             ]);
-           
+
+            $this->syncAndAppendBillingSummary($invoice->fresh('receipt'));
         }
 
     }
@@ -277,6 +281,9 @@ class IPDBillingService
     private function appendBillingSummary(Invoice $invoice): Invoice
     {
         $totals = $this->billingTotals($invoice->ipd_id, $invoice->id);
+        $effectiveBillingStatus = ! empty($invoice->ipd_billing_status)
+            ? $invoice->ipd_billing_status
+            : $totals['billing_status'];
 
         $invoice->setAttribute('invoice_items', $this->itemsByCategory($invoice->ipd_id));
         $invoice->setAttribute('receipt_total', $totals['paid_amount']);
@@ -285,7 +292,7 @@ class IPDBillingService
         $invoice->setAttribute('total_amount', $totals['total_amount']);
         $invoice->setAttribute('collected_amount', $totals['paid_amount']);
         $invoice->setAttribute('balanced_amount', $totals['balance_amount']);
-        $invoice->setAttribute('billing_status', $totals['billing_status']);
+        $invoice->setAttribute('billing_status', $effectiveBillingStatus);
         $invoice->setAttribute('ipd', IPD::find($invoice->ipd_id));
 
         return $invoice;
