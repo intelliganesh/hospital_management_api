@@ -128,35 +128,57 @@ class ConsultationService implements FilterContract
      * @param mixed $request
      */
     public function all(?Request $request)
-    {
-        // Prefix all columns with the table name to avoid ambiguity
-        $columns = array_map(function ($col) {
-                return "consultations.$col";
-            }, $this->column);
+{
+    $columns = array_map(function ($col) {
+        return "consultations.$col";
+    }, $this->column);
 
-            $columns[] = 'external_appointments.appointment_reference_number as external_appointment_reference_number';
-            $columns[] = 'external_appointments.appointment_type as external_appointment_type';
+    $columns[] = 'external_appointments.appointment_reference_number as external_appointment_reference_number';
+    $columns[] = 'external_appointments.appointment_type as external_appointment_type';
 
-            $columns[] = DB::raw(
-                'CASE WHEN patients.id IS NULL THEN 1 ELSE 0 END as orphan_patient'
-            );
+    $columns[] = DB::raw(
+        'CASE WHEN patients.id IS NULL THEN 1 ELSE 0 END as orphan_patient'
+    );
 
-            return $this->allConsultation($request, false)
-                ->leftJoin(
-                    'external_appointments',
-                    'consultations.external_appointment_id',
-                    '=',
-                    'external_appointments.id'
-                )
-                ->leftJoin(
-                    'patients',
-                    'consultations.patient_id',
-                    '=',
-                    'patients.id'
-                )
-                ->select($columns)
-                ->paginate(env('PAGINATION', 25));
+    // Get orphan_patient filter separately
+    $multipleFilter = $request->input('multiple_filter', []);
+    $orphanPatient = $multipleFilter['orphan_patient'] ?? null;
+
+    // Remove orphan_patient so filterMultipleFields() doesn't process it
+    if (array_key_exists('orphan_patient', $multipleFilter)) {
+        unset($multipleFilter['orphan_patient']);
+        $request->merge([
+            'multiple_filter' => $multipleFilter
+        ]);
     }
+
+    $query = $this->allConsultation($request, false)
+        ->leftJoin(
+            'external_appointments',
+            'consultations.external_appointment_id',
+            '=',
+            'external_appointments.id'
+        )
+        ->leftJoin(
+            'patients',
+            'consultations.patient_id',
+            '=',
+            'patients.id'
+        );
+
+    // Apply orphan_patient filter
+    if ($orphanPatient !== null && $orphanPatient !== '') {
+        if ((int) $orphanPatient === 1) {
+            $query->whereNull('patients.id');
+        } elseif ((int) $orphanPatient === 0) {
+            $query->whereNotNull('patients.id');
+        }
+    }
+
+    return $query
+        ->select($columns)
+        ->paginate(env('PAGINATION', 25));
+}
 
     public function allConsultation(?Request $request, $upComing = false)
     {

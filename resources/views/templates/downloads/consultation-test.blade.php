@@ -379,11 +379,11 @@ return $items[$index] ?? $default;
         <table class="info-table">
             <tr>
                 <td class="label">Chief Complaints</td>
-                <td>
+                <td colspan="3">
                     <?php $printList($field($clinical, 'chief_complaints')); ?>
                 </td>
-                <td class="label">Preliminary Diagnostic</td>
-                <td colspan="3">{!! $printText($field($clinical, 'preliminary_diagnostic')) !!}</td>
+                {{-- <td class="label">Preliminary Diagnostic</td>
+                <td colspan="3" --}}>{!! $printText($field($clinical, 'preliminary_diagnostic')) !!}</td>
             </tr>
             <tr>
                 <td class="label">Local Examination</td>
@@ -587,6 +587,22 @@ return $items[$index] ?? $default;
             <tr>
                 <td class="label">Avastha</td>
                 <td colspan="5">{!! $printText($field($clinical, 'avastha')) !!}</td>
+            </tr>
+            <tr>
+                <td class="label">Previous Scar</td>
+                <td>{!! $printText($field($clinical, 'previous_scar')) !!}</td>
+                <td class="label">Previous Scar Position</td>
+                <td colspan="3">{{ $clockText($field($clinical, 'previous_scar_position')) }}</td>
+            </tr>
+            <tr>
+                <td class="label">Abscess</td>
+                <td>{!! $printText($field($clinical, 'abscess')) !!}</td>
+                <td class="label">Abscess Position</td>
+                <td colspan="3">{{ $clockText($field($clinical, 'abscess_position')) }}</td>
+            </tr>
+            <tr>
+                <td class="label">Diagnosis Summary</td>
+                <td colspan="5">{!! $printText($diagnosisValue) !!}</td>
             </tr>
         </table>
     </div>

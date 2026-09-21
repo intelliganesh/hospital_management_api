@@ -106,10 +106,11 @@ class IPDBillingService
                 $ipd->status = 'Discharged';
                 $ipd->save();
             } 
+             $this->syncAndAppendBillingSummary($invoice); 
             $invoice->update([
                 'ipd_billing_status' => $request->ipd_billing_status ?? $invoice->ipd_billing_status,
             ]);
-            $this->syncAndAppendBillingSummary($invoice); 
+           
         }
 
     }
