@@ -89,6 +89,10 @@ class BedService implements CRUDContract, FilterContract
             'room.ward:id,name,ward_number,type,floor,status',
         ])->findOrFail($id);
 
+        if ($bed->relationLoaded('room') && $bed->room && $bed->room->relationLoaded('ward')) {
+            $bed->ward = $bed->room->ward;
+        }
+
         return $bed;
     }
 
