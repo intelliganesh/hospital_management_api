@@ -84,7 +84,11 @@ class BedService implements CRUDContract, FilterContract
      */
     public function get(string $id): mixed
     {
-        $bed = Bed::with(['room:id,name,room_number'])->findOrFail($id);
+        $bed = Bed::with([
+            'room:id,name,room_number,ward_id',
+            'room.ward:id,name,ward_number,type,floor,status',
+        ])->findOrFail($id);
+
         return $bed;
     }
 

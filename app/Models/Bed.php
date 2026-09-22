@@ -39,4 +39,5 @@ class Bed extends Model
     {
         return $this->belongsTo(Rooms::class);
     }
+    
 }
