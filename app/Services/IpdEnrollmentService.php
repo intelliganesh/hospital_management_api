@@ -89,9 +89,9 @@ class IpdEnrollmentService implements FilterContract
         
         $consultations = Consultations::query();
         // Join with appointments table to enable sorting by appointment fields
-        $consultations=$consultations->where('advice_admition', 1)
-            ->whereNotIn('id', $enrolledConsultationIds)
-            ->where('removed', RemovedEnums::Active->value)->onlyDoctorRelatedIfDoctorLogedIn();
+        $consultations=$consultations->where('consultations.advice_admition', 1)
+            ->whereNotIn('consultations.id', $enrolledConsultationIds)
+            ->where('consultations.removed', RemovedEnums::Active->value)->onlyDoctorRelatedIfDoctorLogedIn();
 
         // $consultations = $consultations->orderBy('created_at', 'desc');
         if ($request->has('search')) {
