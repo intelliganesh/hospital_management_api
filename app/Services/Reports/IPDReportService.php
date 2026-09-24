@@ -12,21 +12,25 @@ class IPDReportService
      * Get basic IPD report with filters.
      *
      * @param Request $request
-     * @return \Illuminate\Pagination\LengthAwarePaginator
+     * @return array<string, mixed>
      */
     public function all(Request $request)
     {
         $query = $this->baseQuery();
 
         $this->applyFilters($query, $request);
+        $analytics = $this->buildAnalytics($query);
         $this->applySorting($query, $request);
 
-        $result = $query->paginate(env('PAGINATION', 25));
-        $result->getCollection()->transform(function ($row) {
+        $data = $query->paginate(env('PAGINATION', 25));
+        $data->getCollection()->transform(function ($row) {
             return $this->appendReportFields($row);
         });
 
-        return $result;
+        $response = $data->toArray();
+        $response['analytics'] = $analytics;
+
+        return $response;
     }
 
     /**
@@ -208,6 +212,26 @@ class IPDReportService
                 $query->orderBy('ipd.admission_date_time', $sortOrder);
                 break;
         }
+    }
+
+    private function buildAnalytics($query): array
+    {
+        $countByStatus = function (string $status) use ($query): int {
+            return (clone $query)
+                ->whereRaw('LOWER(ipd.status) = ?', [strtolower($status)])
+                ->distinct()
+                ->count('ipd.id');
+        };
+
+        $admitted = $countByStatus('Admitted');
+        $underTreatment = $countByStatus('Under Treatment');
+
+        return [
+            'total_ipd'       => (clone $query)->distinct()->count('ipd.id'),
+            'active_ipd'      => $admitted + $underTreatment,
+            'admitted'        => $admitted,
+            'discharged'      => $countByStatus('Discharged'),
+        ];
     }
 
     private function appendReportFields($row)

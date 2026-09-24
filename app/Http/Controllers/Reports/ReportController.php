@@ -620,7 +620,19 @@ class ReportController extends Controller
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="message", type="string", example="Basic IPD report retrieved successfully"),
-     *             @OA\Property(property="data", type="object")
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="analytics", type="object",
+     *                     @OA\Property(property="total_ipd", type="integer", example=120),
+     *                     @OA\Property(property="active_ipd", type="integer", example=45),
+     *                     @OA\Property(property="admitted", type="integer", example=20),
+     *                     @OA\Property(property="discharged", type="integer", example=70)
+     *                 ),
+     *                 @OA\Property(property="data", type="array", @OA\Items(type="object")),
+     *                 @OA\Property(property="current_page", type="integer", example=1),
+     *                 @OA\Property(property="per_page", type="integer", example=25),
+     *                 @OA\Property(property="total", type="integer", example=120),
+     *                 @OA\Property(property="last_page", type="integer", example=5)
+     *             )
      *         )
      *     ),
      *     @OA\Response(response=401, description="Unauthenticated"),

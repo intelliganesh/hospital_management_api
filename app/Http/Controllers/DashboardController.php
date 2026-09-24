@@ -18,6 +18,9 @@ use App\Enums\Appointment\StatusEnum;
 use App\Enums\Payment\PaymentStatusEnum;
 use App\Enums\RemovedEnums;
 use App\Models\Consultations;
+use App\Enums\BedStatusEnum;
+use App\Models\Bed;
+use App\Models\IPD;
 
 /**
  * @OA\Tag(
@@ -95,8 +98,8 @@ class DashboardController extends Controller
         try {
             $dashboardData = [];
             $patient = $this->totalPatientNumberInfo->getTotalPatientNumberInfo();
-            $dashboardData['totalIPD'] = 0;
-            $dashboardData['noOfBedsOccupied'] = 0;
+            $dashboardData['totalIPD'] = IPD::count();
+            $dashboardData['noOfBedsOccupied'] = Bed::where('status', BedStatusEnum::Occupied->value)->count();
             $dashboardData['totalUsers'] = User::count();
             // $dashboardData['totalOPD'] = $patient['totalOPD'];
             $dashboardData['totalOPD']=Consultations::where('removed', RemovedEnums::Active->value)->onlyDoctorRelatedIfDoctorLogedIn()->where('status', StatusEnum::Completed->value)->where('payment_status', PaymentStatusEnum::Completed->value)->count();
@@ -114,4 +117,3 @@ class DashboardController extends Controller
         }
     }
 }
-

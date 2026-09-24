@@ -41794,6 +41794,51 @@
                                             "example": "Basic IPD report retrieved successfully"
                                         },
                                         "data": {
+                                            "properties": {
+                                                "analytics": {
+                                                    "properties": {
+                                                        "total_ipd": {
+                                                            "type": "integer",
+                                                            "example": 120
+                                                        },
+                                                        "active_ipd": {
+                                                            "type": "integer",
+                                                            "example": 45
+                                                        },
+                                                        "admitted": {
+                                                            "type": "integer",
+                                                            "example": 20
+                                                        },
+                                                        "discharged": {
+                                                            "type": "integer",
+                                                            "example": 70
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "per_page": {
+                                                    "type": "integer",
+                                                    "example": 25
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 120
+                                                },
+                                                "last_page": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                }
+                                            },
                                             "type": "object"
                                         }
                                     },
