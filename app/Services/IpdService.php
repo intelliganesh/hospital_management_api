@@ -142,18 +142,20 @@ class IpdService implements FilterContract
             ->orderBy('created_at', 'desc')
             ->first();
 
-        $receiptData = [
-            'invoice_id'     => $invoice->id,
-            'currency'       => $request->currency ?? 'INR',
-            'amount'         => $request->advance_amount ?? 0,
-            'date'           => $request->payment_date ?? \Carbon\Carbon::now(),
-            'payment_type'   => $request->payment_type ?? 'Cash',
-            'transaction_id' => $request->transaction_id ?? '',
-            'status'         => 'Completed',
-            'notes'          => $request->notes ?? 'Advance payment received during IPD enrollment',
-        ];
+        if((float)$request->advance_amount>0){
+            $receiptData = [
+                'invoice_id'     => $invoice->id,
+                'currency'       => $request->currency ?? 'INR',
+                'amount'         => $request->advance_amount ?? 0,
+                'date'           => $request->payment_date ?? \Carbon\Carbon::now(),
+                'payment_type'   => $request->payment_type ?? 'Cash',
+                'transaction_id' => $request->transaction_id ?? '',
+                'status'         => 'Completed',
+                'notes'          => $request->notes ?? 'Advance payment received during IPD enrollment',
+            ];
 
-        $receipt = Receipt::create($receiptData);
+            $receipt = Receipt::create($receiptData);
+        }
 
         // Assign consultant doctors
         if ($request->has('consultant_doctor') && is_array($request->consultant_doctor)) {
@@ -244,8 +246,12 @@ class IpdService implements FilterContract
             });
         }
 
-        if ($request->has('multiple_filter')) {
-            $query = $this->filterMultipleFields($request->multiple_filter, $query);
+        if ($request?->has('multiple_filter')) {
+            $query = $this->filterMultipleFields($request->input('multiple_filter', []), $query);
+        }
+
+        if ($request?->filled('from_date') && $request->filled('to_date')) {
+            $query = $this->filterByDateRange($request->from_date . '|' . $request->to_date, $query);
         }
 
         if ($request->has('sort_by') && ! empty($request->sort_by)) {
@@ -448,6 +454,10 @@ class IpdService implements FilterContract
      */
     public function filterMultipleFields($request, $data)
     {
+        if (! is_array($request)) {
+            return $data;
+        }
+
         if (isset($request['ipd_number']) && $request['ipd_number'] != null && $request['ipd_number'] != '') {
             $data->where('ipd_number', $request['ipd_number']);
         }
@@ -543,7 +553,8 @@ class IpdService implements FilterContract
     {
         $dates = explode("|", $searchText);
         if (count($dates) === 2) {
-            $data->whereBetween('admission_date_time', [$dates[0], $dates[1]]);
+            $data->whereDate('admission_date_time', '>=', $dates[0])
+                ->whereDate('admission_date_time', '<=', $dates[1]);
         }
         return $data;
     }

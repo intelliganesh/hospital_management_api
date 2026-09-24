@@ -43,6 +43,41 @@ class IpdEnrollmentController extends Controller
      *         @OA\Schema(type="string", example="John Doe")
      *     ),
      *     @OA\Parameter(
+     *         name="multiple_filter[patient_name]",
+     *         in="query",
+     *         required=false,
+     *         description="Filter by patient name",
+     *         @OA\Schema(type="string", example="Sean Jones")
+     *     ),
+     *     @OA\Parameter(
+     *         name="multiple_filter[doctor_name]",
+     *         in="query",
+     *         required=false,
+     *         description="Filter by doctor name",
+     *         @OA\Schema(type="string", example="Bhagyashree K")
+     *     ),
+     *     @OA\Parameter(
+     *         name="multiple_filter[status]",
+     *         in="query",
+     *         required=false,
+     *         description="Filter by consultation status",
+     *         @OA\Schema(type="string", example="Pending")
+     *     ),
+     *     @OA\Parameter(
+     *         name="from_date",
+     *         in="query",
+     *         required=false,
+     *         description="Appointment date range start",
+     *         @OA\Schema(type="string", format="date", example="2026-09-01")
+     *     ),
+     *     @OA\Parameter(
+     *         name="to_date",
+     *         in="query",
+     *         required=false,
+     *         description="Appointment date range end",
+     *         @OA\Schema(type="string", format="date", example="2026-09-24")
+     *     ),
+     *     @OA\Parameter(
      *         name="sort_by",
      *         in="query",
      *         required=false,

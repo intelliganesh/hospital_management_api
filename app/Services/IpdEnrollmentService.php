@@ -57,6 +57,7 @@ class IpdEnrollmentService implements FilterContract
         MedicinesService $medicineService
     ) {
         $this->columns = Consultations::$column;
+        $this->filters = ['patient_name', 'doctor_name', 'status'];
         $this->vitalHelperService = $vitalHelperService;
         $this->appointmentHelperService = $appointmentHelperService;
         $this->examinationHelperService = $examinationHelperService;
@@ -124,10 +125,10 @@ class IpdEnrollmentService implements FilterContract
         } else {
             $consultations = $consultations->orderBy('consultations.created_at', 'desc');
         }
-        if ($request->has('multiple_filter')) {
-            $consultations = $this->filterMultipleFields($request->multiple_filter, $consultations);
+        if ($request?->has('multiple_filter')) {
+            $consultations = $this->filterMultipleFields($request->input('multiple_filter', []), $consultations);
         }
-        if ($request->has("from_date") && $request->has("to_date")) {
+        if ($request?->filled('from_date') && $request->filled('to_date')) {
             $consultations = $this->filterByDateRange($request->from_date . "|" . $request->to_date, $consultations);
         }
 
@@ -147,10 +148,14 @@ class IpdEnrollmentService implements FilterContract
      */
     public function filterMultipleFields($request, $data)
     {
+        if (! is_array($request)) {
+            return $data;
+        }
+
         foreach ($this->filters as $column) {
             if (! empty($request[$column])) {
-                if ($column == "patient_name") {
-                    $data->where($column, 'like', '%' . $request[$column] . '%');
+                if (in_array($column, ['patient_name', 'doctor_name'], true)) {
+                    $data->where("consultations.$column", 'like', '%' . $request[$column] . '%');
                 } else {
                     $data->where("consultations.$column", $request[$column]);
                 }

@@ -58,7 +58,11 @@ class IPDBillingService
         }
 
         if ($request?->has('multiple_filter')) {
-            $query = $this->filterMultipleFields($request->multiple_filter, $query);
+            $query = $this->filterMultipleFields($request->input('multiple_filter', []), $query);
+        }
+
+        if ($request?->filled('from_date') && $request->filled('to_date')) {
+            $query = $this->filterByDateRange($request->from_date . '|' . $request->to_date, $query);
         }
 
         if ($request?->filled('sort_by')) {
@@ -237,12 +241,32 @@ class IPDBillingService
 
     private function filterMultipleFields($request, $query)
     {
+        if (! is_array($request)) {
+            return $query;
+        }
+
         foreach (['ipd_id', 'invoice_number', 'patient_number', 'patient_name', 'patient_phone', 'doctor_name'] as $field) {
             if (! empty($request[$field])) {
                 $operator = in_array($field, ['patient_name', 'doctor_name']) ? 'like' : '=';
                 $value    = $operator === 'like' ? '%' . $request[$field] . '%' : $request[$field];
                 $query->where($field, $operator, $value);
             }
+        }
+
+        if (! empty($request['status'])) {
+            $query->where('invoice.ipd_billing_status', $request['status']);
+        }
+
+        return $query;
+    }
+
+    private function filterByDateRange(string $searchText, $query)
+    {
+        $dates = explode('|', $searchText);
+
+        if (count($dates) === 2) {
+            $query->whereDate('invoice.created_at', '>=', $dates[0])
+                ->whereDate('invoice.created_at', '<=', $dates[1]);
         }
 
         return $query;

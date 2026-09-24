@@ -3798,6 +3798,95 @@
                 ]
             }
         },
+        "/api/consultations_update_patient/{id}": {
+            "put": {
+                "tags": [
+                    "Consultations"
+                ],
+                "summary": "Relink consultation patient",
+                "operationId": "8a24f0c213d2936311c5ba72a56fcc82",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Consultation ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "patient_id"
+                                ],
+                                "properties": {
+                                    "patient_id": {
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "example": "d290f1ee-6c54-4b01-90e6-d701748f0851"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Consultation patient updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "consultation_id": {
+                                                    "type": "string",
+                                                    "format": "uuid"
+                                                },
+                                                "patient_id": {
+                                                    "type": "string",
+                                                    "format": "uuid"
+                                                },
+                                                "patient_name": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ServerErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/consultations_delete/{id}": {
             "delete": {
                 "tags": [
@@ -11851,6 +11940,48 @@
                         }
                     },
                     {
+                        "name": "multiple_filter[patient_name]",
+                        "in": "query",
+                        "description": "Filter by patient name",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Sean Jones"
+                        }
+                    },
+                    {
+                        "name": "multiple_filter[status]",
+                        "in": "query",
+                        "description": "Filter by IPD billing status",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Completed"
+                        }
+                    },
+                    {
+                        "name": "from_date",
+                        "in": "query",
+                        "description": "Invoice date range start",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2026-09-01"
+                        }
+                    },
+                    {
+                        "name": "to_date",
+                        "in": "query",
+                        "description": "Invoice date range end",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2026-09-09"
+                        }
+                    },
+                    {
                         "name": "sort_by",
                         "in": "query",
                         "description": "Field to sort by",
@@ -18952,6 +19083,11 @@
                                         "format": "uuid",
                                         "example": "550e8400-e29b-41d4-a716-446655440000"
                                     },
+                                    "ipd_type": {
+                                        "description": "IPD Type (required)",
+                                        "type": "string",
+                                        "example": "Inpatient"
+                                    },
                                     "consultant_doctor_id": {
                                         "description": "Consultant Doctor ID",
                                         "type": "string",
@@ -19195,6 +19331,74 @@
                         }
                     },
                     {
+                        "name": "multiple_filter[patient_name]",
+                        "in": "query",
+                        "description": "Filter by patient name",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Sean Jones"
+                        }
+                    },
+                    {
+                        "name": "multiple_filter[ward_id]",
+                        "in": "query",
+                        "description": "Filter by ward ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "multiple_filter[room_id]",
+                        "in": "query",
+                        "description": "Filter by room ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 3
+                        }
+                    },
+                    {
+                        "name": "multiple_filter[status]",
+                        "in": "query",
+                        "description": "Filter by IPD status",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "Admitted",
+                                "Under Treatment",
+                                "Discharged",
+                                "Expired"
+                            ],
+                            "example": "Admitted"
+                        }
+                    },
+                    {
+                        "name": "from_date",
+                        "in": "query",
+                        "description": "Admission date range start",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2026-09-01"
+                        }
+                    },
+                    {
+                        "name": "to_date",
+                        "in": "query",
+                        "description": "Admission date range end",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2026-09-17"
+                        }
+                    },
+                    {
                         "name": "sort_by",
                         "in": "query",
                         "description": "Field to sort by",
@@ -19377,6 +19581,9 @@
                                                     "format": "uuid"
                                                 },
                                                 "ipd_number": {
+                                                    "type": "string"
+                                                },
+                                                "ipd_type": {
                                                     "type": "string"
                                                 },
                                                 "patient_id": {
@@ -20015,6 +20222,58 @@
                         "schema": {
                             "type": "string",
                             "example": "John Doe"
+                        }
+                    },
+                    {
+                        "name": "multiple_filter[patient_name]",
+                        "in": "query",
+                        "description": "Filter by patient name",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Sean Jones"
+                        }
+                    },
+                    {
+                        "name": "multiple_filter[doctor_name]",
+                        "in": "query",
+                        "description": "Filter by doctor name",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Bhagyashree K"
+                        }
+                    },
+                    {
+                        "name": "multiple_filter[status]",
+                        "in": "query",
+                        "description": "Filter by consultation status",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Pending"
+                        }
+                    },
+                    {
+                        "name": "from_date",
+                        "in": "query",
+                        "description": "Appointment date range start",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2026-09-01"
+                        }
+                    },
+                    {
+                        "name": "to_date",
+                        "in": "query",
+                        "description": "Appointment date range end",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2026-09-24"
                         }
                     },
                     {

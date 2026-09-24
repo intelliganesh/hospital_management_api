@@ -93,6 +93,10 @@ class IPDReportService
     {
         $filters = $request->input('multiple_filter', []);
 
+        if (! is_array($filters)) {
+            $filters = [];
+        }
+
         if ($request->filled('status') && empty($filters['status'])) {
             $filters['status'] = $request->status;
         }
@@ -149,11 +153,12 @@ class IPDReportService
         $fromDate = $request->input('from_date', $filters['from_date'] ?? null);
         $toDate = $request->input('to_date', $filters['to_date'] ?? null);
 
-        if (! empty($fromDate) && ! empty($toDate)) {
-            $query->whereBetween('ipd.admission_date_time', [
-                Carbon::parse($fromDate)->startOfDay(),
-                Carbon::parse($toDate)->endOfDay(),
-            ]);
+        if (! empty($fromDate)) {
+            $query->whereDate('ipd.admission_date_time', '>=', $fromDate);
+        }
+
+        if (! empty($toDate)) {
+            $query->whereDate('ipd.admission_date_time', '<=', $toDate);
         }
 
         if ($request->has('search') && ! empty($request->search)) {
@@ -181,6 +186,7 @@ class IPDReportService
 
         switch ($request->input('sort_by', 'admission_date_time')) {
             case 'discharge_date_time':
+                $query->orderByRaw('CASE WHEN ipd.discharge_date_time IS NULL THEN 1 ELSE 0 END');
                 $query->orderBy('ipd.discharge_date_time', $sortOrder);
                 break;
             case 'ipd_number':
