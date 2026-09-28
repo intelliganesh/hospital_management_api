@@ -232,7 +232,9 @@ ol {
     margin: 0;
     padding-left: 18px;
 }
-
+p{
+    margin: 0px;
+}
 .attachment-link {
     color: #0d6efd;
 }
@@ -359,6 +361,10 @@ ol {
             <tr>
                 <td class="label">Advice</td>
                 <td colspan="5">{!! $printText($field($clinical, 'advice_field', $advice ?? null)) !!}</td>
+            </tr>
+            <tr>
+                <td class="label">Treatment Given</td>
+                <td colspan="5" >{!! $text($advice ?? null) !!}</td>
             </tr>
         </table>
     </div>
