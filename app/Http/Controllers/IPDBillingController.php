@@ -77,7 +77,7 @@ class IPDBillingController extends Controller
      *          description="Field to sort by",
      *          @OA\Schema(
      *              type="string",
-     *              enum={"invoice_number", "patient_name", "admission_date_time", "discharge_date_time", "total_amount", "collected_amount", "balanced_amount", "ipd_billing_status", "created_at"},
+     *              enum={"invoice_number", "patient_name", "admission_date_time", "discharge_date_time", "total_amount", "receipt_total", "collected_amount", "balanced_amount", "billing_status", "ipd_billing_status", "created_at"},
      *              example="admission_date_time"
      *          )
      *     ),

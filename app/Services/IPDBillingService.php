@@ -38,6 +38,21 @@ class IPDBillingService
     public function all(?Request $request)
     {
         $query = Invoice::query()
+            ->select('invoice.*')
+            ->selectSub(
+                IPD::query()
+                    ->select('ipd.admission_date_time')
+                    ->whereColumn('ipd.id', 'invoice.ipd_id')
+                    ->limit(1),
+                'admission_date_time'
+            )
+            ->selectSub(
+                IPD::query()
+                    ->select('ipd.discharge_date_time')
+                    ->whereColumn('ipd.id', 'invoice.ipd_id')
+                    ->limit(1),
+                'discharge_date_time'
+            )
             ->whereNotNull('ipd_id')
             ->with('receipt');
 
@@ -119,7 +134,7 @@ class IPDBillingService
             $requestedStatus = $request->ipd_billing_status ?? $invoice->ipd_billing_status;
             $isCompletedBilling = strtolower((string) $requestedStatus) === 'completed';
 
-            if ($isCompletedBilling || is_null($ipd->discharge_date_time)) {
+            if ($isCompletedBilling) {
                 $ipd->discharge_date_time = $ipd->discharge_date_time ?? now();
                 $ipd->status = 'Discharged';
                 $ipd->save();
@@ -280,13 +295,17 @@ class IPDBillingService
             'bill_no'          => 'invoice_number',
             'patient_details'  => 'patient_name',
             'admission'        => 'admission_date_time',
+            'admission_date'   => 'admission_date_time',
             'discharge'        => 'discharge_date_time',
+            'discharge_date'   => 'discharge_date_time',
             'total'            => 'total_amount',
             'paid'             => 'paid_amount',
+            'receipt_total'    => 'paid_amount',
             'collected_amount' => 'paid_amount',
             'balance'          => 'balance_amount',
             'balanced_amount'  => 'balance_amount',
-            'status'           => 'ipd_billing_status',
+            'status'             => 'billing_status',
+            'ipd_billing_status' => 'billing_status',
         ];
         $requestedSort = $request->input('sort_by');
         $sortBy = $sortAliases[$requestedSort] ?? $requestedSort;
@@ -296,35 +315,49 @@ class IPDBillingService
             'invoice_number',
             'patient_name',
             'doctor_name',
-            'ipd_billing_status',
         ];
-        $ipdColumns = [
-            'admission_date_time',
-            'discharge_date_time',
-            'ipd_number',
-        ];
-
         if (in_array($sortBy, $invoiceColumns, true)) {
             $query->orderBy("invoice.{$sortBy}", $sortOrder);
             return;
         }
 
-        if (in_array($sortBy, $ipdColumns, true)) {
-            $ipdSortQuery = fn ($column) => IPD::query()
-                ->select("ipd.{$column}")
-                ->whereColumn('ipd.id', 'invoice.ipd_id')
-                ->limit(1);
+        if ($sortBy === 'billing_status') {
+            $totalAmountSql = 'COALESCE((SELECT SUM(ipd_invoice_items.total_amount) '
+                . 'FROM ipd_invoice_items WHERE ipd_invoice_items.ipd_id = invoice.ipd_id), 0)';
+            $paidAmountSql = 'COALESCE((SELECT SUM(receipts.amount) '
+                . 'FROM receipts WHERE receipts.invoice_id = invoice.id), 0)';
 
+            $query->orderByRaw(
+                "CASE
+                    WHEN invoice.ipd_billing_status IS NOT NULL AND invoice.ipd_billing_status <> ''
+                        THEN invoice.ipd_billing_status
+                    WHEN {$totalAmountSql} <= 0 OR {$paidAmountSql} <= 0
+                        THEN 'Running'
+                    WHEN {$paidAmountSql} >= {$totalAmountSql}
+                        THEN 'Paid'
+                    ELSE 'Partial'
+                END {$sortOrder}"
+            );
+            return;
+        }
+
+        if (in_array($sortBy, ['admission_date_time', 'discharge_date_time'], true)) {
             if ($sortBy === 'discharge_date_time') {
-                $query->orderBy(
-                    IPD::query()
-                        ->selectRaw('CASE WHEN ipd.discharge_date_time IS NULL THEN 1 ELSE 0 END')
-                        ->whereColumn('ipd.id', 'invoice.ipd_id')
-                        ->limit(1)
-                );
+                $query->orderByRaw('discharge_date_time IS NULL');
             }
 
-            $query->orderBy($ipdSortQuery($sortBy), $sortOrder);
+            $query->orderBy($sortBy, $sortOrder);
+            return;
+        }
+
+        if ($sortBy === 'ipd_number') {
+            $query->orderBy(
+                IPD::query()
+                    ->select('ipd.ipd_number')
+                    ->whereColumn('ipd.id', 'invoice.ipd_id')
+                    ->limit(1),
+                $sortOrder
+            );
             return;
         }
 
@@ -418,8 +451,11 @@ class IPDBillingService
         $invoice->setAttribute('total_amount', $totals['total_amount']);
         $invoice->setAttribute('collected_amount', $totals['paid_amount']);
         $invoice->setAttribute('balanced_amount', $totals['balance_amount']);
+        $ipd = IPD::find($invoice->ipd_id);
         $invoice->setAttribute('billing_status', $effectiveBillingStatus);
-        $invoice->setAttribute('ipd', IPD::find($invoice->ipd_id));
+        $invoice->setAttribute('admission_date_time', $ipd?->admission_date_time);
+        $invoice->setAttribute('discharge_date_time', $ipd?->discharge_date_time);
+        $invoice->setAttribute('ipd', $ipd);
 
         return $invoice;
     }

@@ -11994,8 +11994,10 @@
                                 "admission_date_time",
                                 "discharge_date_time",
                                 "total_amount",
+                                "receipt_total",
                                 "collected_amount",
                                 "balanced_amount",
+                                "billing_status",
                                 "ipd_billing_status",
                                 "created_at"
                             ],
