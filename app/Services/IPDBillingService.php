@@ -65,9 +65,7 @@ class IPDBillingService
             $query = $this->filterByDateRange($request->from_date . '|' . $request->to_date, $query);
         }
 
-        if ($request?->filled('sort_by')) {
-            $query->orderBy($request->sort_by, $request->sort_order === 'asc' ? 'asc' : 'desc');
-        }
+        $this->applySorting($query, $request);
 
         $perPage  = $request?->input('per_page', env('PAGINATION', 15)) ?? env('PAGINATION', 15);
         $invoices = $query->paginate((int) $perPage);
@@ -270,6 +268,97 @@ class IPDBillingService
         }
 
         return $query;
+    }
+
+    private function applySorting($query, ?Request $request): void
+    {
+        if (! $request?->filled('sort_by')) {
+            return;
+        }
+
+        $sortAliases = [
+            'bill_no'          => 'invoice_number',
+            'patient_details'  => 'patient_name',
+            'admission'        => 'admission_date_time',
+            'discharge'        => 'discharge_date_time',
+            'total'            => 'total_amount',
+            'paid'             => 'paid_amount',
+            'collected_amount' => 'paid_amount',
+            'balance'          => 'balance_amount',
+            'balanced_amount'  => 'balance_amount',
+            'status'           => 'ipd_billing_status',
+        ];
+        $requestedSort = $request->input('sort_by');
+        $sortBy = $sortAliases[$requestedSort] ?? $requestedSort;
+        $sortOrder = $request->input('sort_order') === 'asc' ? 'asc' : 'desc';
+        $invoiceColumns = [
+            'created_at',
+            'invoice_number',
+            'patient_name',
+            'doctor_name',
+            'ipd_billing_status',
+        ];
+        $ipdColumns = [
+            'admission_date_time',
+            'discharge_date_time',
+            'ipd_number',
+        ];
+
+        if (in_array($sortBy, $invoiceColumns, true)) {
+            $query->orderBy("invoice.{$sortBy}", $sortOrder);
+            return;
+        }
+
+        if (in_array($sortBy, $ipdColumns, true)) {
+            $ipdSortQuery = fn ($column) => IPD::query()
+                ->select("ipd.{$column}")
+                ->whereColumn('ipd.id', 'invoice.ipd_id')
+                ->limit(1);
+
+            if ($sortBy === 'discharge_date_time') {
+                $query->orderBy(
+                    IPD::query()
+                        ->selectRaw('CASE WHEN ipd.discharge_date_time IS NULL THEN 1 ELSE 0 END')
+                        ->whereColumn('ipd.id', 'invoice.ipd_id')
+                        ->limit(1)
+                );
+            }
+
+            $query->orderBy($ipdSortQuery($sortBy), $sortOrder);
+            return;
+        }
+
+        if ($sortBy === 'total_amount') {
+            $query->orderBy(
+                IPDInvoiceItem::query()
+                    ->selectRaw('COALESCE(SUM(ipd_invoice_items.total_amount), 0)')
+                    ->whereColumn('ipd_invoice_items.ipd_id', 'invoice.ipd_id'),
+                $sortOrder
+            );
+            return;
+        }
+
+        if ($sortBy === 'paid_amount') {
+            $query->orderBy(
+                Receipt::withoutGlobalScopes()
+                    ->selectRaw('COALESCE(SUM(receipts.amount), 0)')
+                    ->whereColumn('receipts.invoice_id', 'invoice.id'),
+                $sortOrder
+            );
+            return;
+        }
+
+        if ($sortBy === 'balance_amount') {
+            $query->orderBy(
+                IPDInvoiceItem::query()
+                    ->selectRaw(
+                        'GREATEST(COALESCE(SUM(ipd_invoice_items.total_amount), 0) - '
+                        . 'COALESCE((SELECT SUM(receipts.amount) FROM receipts WHERE receipts.invoice_id = invoice.id), 0), 0)'
+                    )
+                    ->whereColumn('ipd_invoice_items.ipd_id', 'invoice.ipd_id'),
+                $sortOrder
+            );
+        }
     }
 
     private function syncAndAppendBillingSummary(Invoice $invoice): Invoice

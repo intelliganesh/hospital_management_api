@@ -207,6 +207,7 @@ class IpdController extends Controller
      *         description="Field to sort by",
      *         @OA\Schema(
      *             type="string",
+     *             enum={"ipd_number", "admission_date_time", "patient_name", "patient_phone", "ward_number", "room_number", "bed_number", "status"},
      *             example="admission_date_time"
      *         )
      *     ),

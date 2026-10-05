@@ -213,9 +213,7 @@ class IpdService implements FilterContract
      */
     public function all(?Request $request)
     {
-        $query = IPD::with(['patient', 'consultation', 'staffs'])
-            ->orderByRaw("CASE WHEN discharge_date_time IS NULL THEN 0 ELSE 1 END")
-            ->orderBy('created_at', 'desc');
+        $query = IPD::with(['patient', 'consultation', 'staffs']);
 
         if ($request->has('search') && ! empty($request->search)) {
             $search = $request->search;
@@ -254,23 +252,47 @@ class IpdService implements FilterContract
             $query = $this->filterByDateRange($request->from_date . '|' . $request->to_date, $query);
         }
 
-        if ($request->has('sort_by') && ! empty($request->sort_by)) {
-            $sortOrder = $request->has('sort_order') && $request->sort_order === 'asc' ? 'asc' : 'desc';
-            if ($request->sort_by === 'admission_date') {
-                $query->orderBy('admission_date_time', $sortOrder);
-            } else {
-                $query->orderBy($request->sort_by, $sortOrder);
+        if ($request?->filled('sort_by')) {
+            $sortAliases = [
+                'admission_date' => 'admission_date_time',
+                'phone'          => 'patient_phone',
+                'ward'           => 'ward_number',
+                'room_bed'       => 'room_bed',
+            ];
+            $sortBy = $sortAliases[$request->sort_by] ?? $request->sort_by;
+            $sortOrder = $request->sort_order === 'asc' ? 'asc' : 'desc';
+            $sortableColumns = [
+                'ipd_number',
+                'admission_date_time',
+                'patient_name',
+                'patient_phone',
+                'ward_number',
+                'ward_id',
+                'room_number',
+                'room_id',
+                'bed_number',
+                'bed_id',
+                'status',
+            ];
+
+            if ($sortBy === 'room_bed') {
+                $query->orderBy('ipd.room_number', $sortOrder)
+                    ->orderBy('ipd.bed_number', $sortOrder);
+            } elseif (in_array($sortBy, $sortableColumns, true)) {
+                $query->orderBy("ipd.{$sortBy}", $sortOrder);
             }
+
+            $query->orderBy('ipd.created_at', 'desc');
         } else {
             // Default: Show Admitted → Under Treatment → Discharged → Expired
-            $query->orderByRaw("CASE WHEN status = 'Admitted' THEN 0 WHEN status = 'Under Treatment' THEN 1 WHEN status = 'Discharged' THEN 2 WHEN status = 'Expired' THEN 3 ELSE 4 END")
-                ->orderBy('created_at', 'desc');
+            $query->orderByRaw("CASE WHEN ipd.status = 'Admitted' THEN 0 WHEN ipd.status = 'Under Treatment' THEN 1 WHEN ipd.status = 'Discharged' THEN 2 WHEN ipd.status = 'Expired' THEN 3 ELSE 4 END")
+                ->orderBy('ipd.created_at', 'desc');
         }
 
         $perPage = $request->has('per_page') ? (int) $request->per_page : 10;
         $page    = $request->has('page') ? (int) $request->page : 1;
 
-        $summaryQuery = clone $query;
+        $summaryQuery = (clone $query)->reorder();
         $totalIpd      = (clone $summaryQuery)->count();
         $activeIpd     = (clone $summaryQuery)->whereIn('status', ['Admitted', 'Under Treatment'])->count();
         $discharged    = (clone $summaryQuery)->where('status', 'Discharged')->count();

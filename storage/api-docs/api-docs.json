@@ -11988,7 +11988,18 @@
                         "required": false,
                         "schema": {
                             "type": "string",
-                            "example": "created_at"
+                            "enum": [
+                                "invoice_number",
+                                "patient_name",
+                                "admission_date_time",
+                                "discharge_date_time",
+                                "total_amount",
+                                "collected_amount",
+                                "balanced_amount",
+                                "ipd_billing_status",
+                                "created_at"
+                            ],
+                            "example": "admission_date_time"
                         }
                     },
                     {
@@ -19405,6 +19416,16 @@
                         "required": false,
                         "schema": {
                             "type": "string",
+                            "enum": [
+                                "ipd_number",
+                                "admission_date_time",
+                                "patient_name",
+                                "patient_phone",
+                                "ward_number",
+                                "room_number",
+                                "bed_number",
+                                "status"
+                            ],
                             "example": "admission_date_time"
                         }
                     },
