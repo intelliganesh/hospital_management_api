@@ -115,6 +115,7 @@ class ProctologyService implements CRUDContract, FilterContract
             'no_of_secondary_opening_position'=>$request->no_of_secondary_opening_position,
             'type_of_crypt'=>$request->type_of_crypt,
             'crypt_cause'=>$request->crypt_cause,
+            'high_low_riding_type'=>$request->high_low_riding_type,
             'basis_of_high_low_riding'=>$request->basis_of_high_low_riding,
             'distant_visceral_communication'=>$request->distant_visceral_communication,
             'sono_fistula_gram'=>$request->sono_fistula_gram,

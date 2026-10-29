@@ -59,6 +59,7 @@ return new class extends Migration {
             $table->text('no_of_secondary_opening_position')->nullable();
             $table->text('type_of_crypt')->nullable();
             $table->text('crypt_cause')->nullable();
+            $table->string('high_low_riding_type',20)->nullable();
             $table->text('basis_of_high_low_riding')->nullable();
             $table->text('distant_visceral_communication')->nullable();
             $table->string('sono_fistula_gram')->nullable();

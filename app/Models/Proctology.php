@@ -76,6 +76,7 @@ class Proctology extends Model
 
         "type_of_fistula_position",//multiple -----  On the basis of position
         "type_of_fistula_sphincter",//multiple -----  On the basis of sphincter
+        "high_low_riding_type",//single ----- High Low Riding Type
         "basis_of_high_low_riding",//multiple ----- On the basis of high low riding
         "distant_visceral_communication",//multiple ----- Any Other Distant or Visceral Communication 
         
@@ -168,6 +169,7 @@ class Proctology extends Model
 
         "type_of_fistula_position",//multiple -----  On the basis of position
         "type_of_fistula_sphincter",//multiple -----  On the basis of sphincter
+        "high_low_riding_type",//single ----- High Low Riding Type
         "basis_of_high_low_riding",//multiple ----- On the basis of high low riding
         "distant_visceral_communication",//multiple ----- Any Other Distant or Visceral Communication 
         

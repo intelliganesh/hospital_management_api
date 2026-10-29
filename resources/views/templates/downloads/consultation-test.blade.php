@@ -479,6 +479,7 @@ return $items[$index] ?? $default;
     $secondaryCauses = $splitValues($field($clinical, 'crypt_cause'));
     $fistulaSphincters = $splitValues($field($clinical, 'type_of_fistula_sphincter'));
     $fistulaPositions = $splitValues($field($clinical, 'type_of_fistula_position'));
+    $fistulaRidingType= $splitValues($field($clinical, 'high_low_riding_type'));
     $fistulaRiding = $splitValues($field($clinical, 'basis_of_high_low_riding'));
     $distantVisceral = $splitValues($field($clinical, 'distant_visceral_communication'));
     $classificationRows = max(1, count($fistulaCrypts), count($secondaryCauses), count($fistulaSphincters), count($fistulaPositions), count($fistulaRiding), count($distantVisceral));
@@ -535,7 +536,7 @@ return $items[$index] ?? $default;
                             <td>{!! $printText($valueAt($secondaryCauses, $index, null)) !!}</td>
                             <td>{!! $printText($valueAt($fistulaSphincters, $index, null)) !!}</td>
                             <td>{!! $printText($valueAt($fistulaPositions, $index, null)) !!}</td>
-                            <td>{!! $printText($valueAt($fistulaRiding, $index, null)) !!}</td>
+                            <td>{{$fistulaRidingType}} @if(count($fistulaRiding) > 0)({!! $printText($valueAt($fistulaRiding, $index, null)) !!})@endif</td>
                             <td>{!! $printText($valueAt($distantVisceral, $index, null)) !!}</td>
                             </tr>
                             @endfor
