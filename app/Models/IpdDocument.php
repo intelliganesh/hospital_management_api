@@ -9,10 +9,6 @@ class IpdDocument extends Model
 {
     use HasUuids;
 
-    public const SOURCE_GENERATED = 'generated';
-
-    public const SOURCE_UPLOADED = 'uploaded';
-
     protected $table = 'ipd_documents';
 
     protected $fillable = [
@@ -21,7 +17,6 @@ class IpdDocument extends Model
         'ipd_surgery_id',
         'document_type',
         'document_path',
-        'document_source',
     ];
 
     protected $hidden = [

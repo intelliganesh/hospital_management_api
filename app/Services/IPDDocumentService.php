@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\IPD;
 use App\Models\IpdDocument;
-use DomainException;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -39,7 +38,6 @@ class IPDDocumentService
                         'ipd_surgery_id' => null,
                         'document_type' => $request->input('document_type'),
                         'document_path' => $path,
-                        'document_source' => IpdDocument::SOURCE_UPLOADED,
                     ]);
                 }
 
@@ -79,7 +77,6 @@ class IPDDocumentService
     public function update(string $id, Request $request): array
     {
         $document = IpdDocument::findOrFail($id);
-        $this->assertUploaded($document);
         $this->validateUpdate($request);
 
         $ipd = IPD::findOrFail($document->ipd_id);
@@ -119,7 +116,6 @@ class IPDDocumentService
     public function delete(string $id): void
     {
         $document = IpdDocument::findOrFail($id);
-        $this->assertUploaded($document);
         $path = $document->document_path;
 
         DB::transaction(fn () => $document->delete());
@@ -174,13 +170,6 @@ class IPDDocumentService
         }
     }
 
-    private function assertUploaded(IpdDocument $document): void
-    {
-        if ($document->document_source !== IpdDocument::SOURCE_UPLOADED) {
-            throw new DomainException('Generated IPD documents cannot be updated or deleted.');
-        }
-    }
-
     private function storeFile(IPD $ipd, UploadedFile $file): string
     {
         $baseName = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME), '_');
@@ -204,7 +193,6 @@ class IPDDocumentService
             'ipd_id' => $document->ipd_id,
             'ipd_surgery_id' => $document->ipd_surgery_id,
             'document_type' => $document->document_type,
-            'document_source' => $document->document_source ?? IpdDocument::SOURCE_GENERATED,
             'file_name' => basename($document->document_path),
             'document_path' => $document->document_path,
             'document_url' => asset('storage/'.ltrim($document->document_path, '/')),

@@ -8,17 +8,25 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (! Schema::hasColumn('ipd_documents', 'document_source')) {
+            return;
+        }
+
         Schema::table('ipd_documents', function (Blueprint $table) {
-            $table->string('document_source', 20)
-                ->default('generated')
-                ->after('document_path');
+            $table->dropColumn('document_source');
         });
     }
 
     public function down(): void
     {
+        if (Schema::hasColumn('ipd_documents', 'document_source')) {
+            return;
+        }
+
         Schema::table('ipd_documents', function (Blueprint $table) {
-            $table->dropColumn('document_source');
+            $table->string('document_source', 20)
+                ->default('generated')
+                ->after('document_path');
         });
     }
 };

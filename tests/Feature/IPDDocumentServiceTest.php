@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\IpdDocument;
 use App\Services\IPDDocumentService;
-use DomainException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -47,7 +46,6 @@ class IPDDocumentServiceTest extends TestCase
             $table->uuid('ipd_surgery_id')->nullable();
             $table->string('document_type');
             $table->string('document_path');
-            $table->string('document_source', 20)->default('generated');
             $table->timestamps();
             $table->foreign('ipd_id')->references('id')->on('ipd')->cascadeOnDelete();
         });
@@ -76,7 +74,6 @@ class IPDDocumentServiceTest extends TestCase
         $this->assertCount(2, $documents);
         foreach ($documents as $document) {
             $this->assertSame('supportive_document', $document['document_type']);
-            $this->assertSame(IpdDocument::SOURCE_UPLOADED, $document['document_source']);
             $this->assertStringStartsWith('pdfs/ipd/IPD0001/others/', $document['document_path']);
             Storage::disk('public')->assertExists($document['document_path']);
         }
@@ -85,7 +82,6 @@ class IPDDocumentServiceTest extends TestCase
             'ipd_id' => $this->ipdId,
             'document_type' => 'doctor_notes',
             'document_path' => 'pdfs/ipd/IPD0001/doctor_notes.pdf',
-            'document_source' => IpdDocument::SOURCE_GENERATED,
         ]);
 
         $filterRequest = Request::create('/api/ipd_document_list/'.$this->ipdId, 'GET', [
@@ -124,24 +120,23 @@ class IPDDocumentServiceTest extends TestCase
         Storage::disk('public')->assertMissing($updated['document_path']);
     }
 
-    public function test_it_rejects_updates_and_deletes_for_generated_documents(): void
+    public function test_it_updates_and_deletes_existing_generated_documents(): void
     {
         $generated = IpdDocument::create([
             'ipd_id' => $this->ipdId,
             'document_type' => 'discharge_summary',
             'document_path' => 'pdfs/ipd/IPD0001/discharge_summary.pdf',
-            'document_source' => IpdDocument::SOURCE_GENERATED,
         ]);
 
-        try {
-            $this->service->update($generated->id, new Request(['document_type' => 'other_document']));
-            $this->fail('Generated documents must not be updateable.');
-        } catch (DomainException) {
-            $this->assertDatabaseHas('ipd_documents', ['id' => $generated->id]);
-        }
+        $updated = $this->service->update($generated->id, new Request([
+            'document_type' => 'other_document',
+        ]));
 
-        $this->expectException(DomainException::class);
+        $this->assertSame('other_document', $updated['document_type']);
+
         $this->service->delete($generated->id);
+
+        $this->assertDatabaseMissing('ipd_documents', ['id' => $generated->id]);
     }
 
     public function test_it_rejects_invalid_document_types(): void

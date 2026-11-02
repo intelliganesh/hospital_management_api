@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Services\IPDDocumentService;
 use App\Traits\ResponseTrait;
-use DomainException;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -149,7 +148,6 @@ class IPDDocumentController extends Controller
      * @OA\Post(
      *     path="/api/ipd_document_update/{id}",
      *     summary="Update an uploaded IPD document",
-     *     description="Generated IPD documents are read-only",
      *     tags={"IPD Documents"},
      *     security={{"bearerAuth": {}}},
      *
@@ -170,7 +168,6 @@ class IPDDocumentController extends Controller
      *     ),
      *
      *     @OA\Response(response=200, description="IPD document updated successfully"),
-     *     @OA\Response(response=403, description="Generated documents cannot be updated"),
      *     @OA\Response(response=401, description="Unauthenticated"),
      *     @OA\Response(response=404, description="IPD document not found"),
      *     @OA\Response(response=422, description="Validation error"),
@@ -188,8 +185,6 @@ class IPDDocumentController extends Controller
             return $this->validationResponse($exception);
         } catch (ModelNotFoundException $exception) {
             return $this->notFoundResponse(new NotFoundHttpException('IPD document not found.'));
-        } catch (DomainException $exception) {
-            return $this->errorResponse([], $exception->getMessage(), 403);
         } catch (Exception $exception) {
             return $this->exceptionResponse($exception);
         }
@@ -199,14 +194,12 @@ class IPDDocumentController extends Controller
      * @OA\Delete(
      *     path="/api/ipd_document_delete/{id}",
      *     summary="Delete an uploaded IPD document",
-     *     description="Generated IPD documents are read-only",
      *     tags={"IPD Documents"},
      *     security={{"bearerAuth": {}}},
      *
      *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="string", format="uuid")),
      *
      *     @OA\Response(response=200, description="IPD document deleted successfully"),
-     *     @OA\Response(response=403, description="Generated documents cannot be deleted"),
      *     @OA\Response(response=401, description="Unauthenticated"),
      *     @OA\Response(response=404, description="IPD document not found"),
      *     @OA\Response(response=500, ref="#/components/responses/ServerErrorResponse")
@@ -220,8 +213,6 @@ class IPDDocumentController extends Controller
             return $this->successResponse(null, 'IPD document deleted successfully');
         } catch (ModelNotFoundException $exception) {
             return $this->notFoundResponse(new NotFoundHttpException('IPD document not found.'));
-        } catch (DomainException $exception) {
-            return $this->errorResponse([], $exception->getMessage(), 403);
         } catch (Exception $exception) {
             return $this->exceptionResponse($exception);
         }

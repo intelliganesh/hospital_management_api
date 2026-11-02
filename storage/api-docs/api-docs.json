@@ -14029,7 +14029,6 @@
                     "IPD Documents"
                 ],
                 "summary": "Update an uploaded IPD document",
-                "description": "Generated IPD documents are read-only",
                 "operationId": "5a346a8456962d844503984ab080f25b",
                 "parameters": [
                     {
@@ -14066,9 +14065,6 @@
                     "200": {
                         "description": "IPD document updated successfully"
                     },
-                    "403": {
-                        "description": "Generated documents cannot be updated"
-                    },
                     "401": {
                         "description": "Unauthenticated"
                     },
@@ -14095,7 +14091,6 @@
                     "IPD Documents"
                 ],
                 "summary": "Delete an uploaded IPD document",
-                "description": "Generated IPD documents are read-only",
                 "operationId": "b1e006b368d7d86658e4edf0b2ba2dcf",
                 "parameters": [
                     {
@@ -14111,9 +14106,6 @@
                 "responses": {
                     "200": {
                         "description": "IPD document deleted successfully"
-                    },
-                    "403": {
-                        "description": "Generated documents cannot be deleted"
                     },
                     "401": {
                         "description": "Unauthenticated"
