@@ -185,10 +185,11 @@ class IPDDownloadService
             $relativePath = "pdfs/ipd/{$ipd->ipd_number}/{$fileName}";
 
             IpdDocument::updateOrCreate([
-                'ipd_id'         => $ipd->id,
-                'ipd_surgery_id' => $ipd_surgery_id,
-                'document_type'  => $type,
-                'document_path'  => $relativePath,
+                'ipd_id'          => $ipd->id,
+                'ipd_surgery_id'  => $ipd_surgery_id,
+                'document_type'   => $type,
+                'document_path'   => $relativePath,
+                'document_source' => IpdDocument::SOURCE_GENERATED,
             ]);
 
             // Return the public URL

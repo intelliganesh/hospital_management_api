@@ -26,6 +26,7 @@ use App\Http\Controllers\IPDAnaesthesiaRecoverObservationController;
 use App\Http\Controllers\IPDBillingController;
 use App\Http\Controllers\IpdController;
 use App\Http\Controllers\IPDDischargeSummaryController;
+use App\Http\Controllers\IPDDocumentController;
 use App\Http\Controllers\IPDDoctorNotesController;
 use App\Http\Controllers\IpdEnrollmentController;
 use App\Http\Controllers\IPDNurseNotesController;
@@ -494,6 +495,14 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/ipd_generate_pdf/{id}', [IpdController::class, 'generatePdf']);
     Route::get('/ipd_download_empty_pdf/{id}', [IpdController::class, 'downloadEmptyPdf'])->name('ipd_download_empty_pdf');
     Route::get('/ipd_prefilled_uploaded_pdf/{id}', [IpdController::class, 'downloadPrefilledUploadPdf'])->name('ipd_prefilled_upload_pdf');
+
+    // IPD documents
+    Route::post('/ipd_document_add', [IPDDocumentController::class, 'create']);
+    Route::get('/ipd_document_list/{ipd_id}', [IPDDocumentController::class, 'all']);
+    Route::get('/ipd_document_details/{id}', [IPDDocumentController::class, 'get']);
+    Route::post('/ipd_document_update/{id}', [IPDDocumentController::class, 'update']);
+    Route::delete('/ipd_document_delete/{id}', [IPDDocumentController::class, 'delete']);
+
     //Preliminary Notes
     Route::post('/preliminary_notes/{ipd_id}', [IPDPreliminaryNotesController::class, 'create']);
     Route::get('/preliminary_notes', [IPDPreliminaryNotesController::class, 'all']);

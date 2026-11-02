@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
 
 class IpdDocument extends Model
 {
     use HasUuids;
+
+    public const SOURCE_GENERATED = 'generated';
+
+    public const SOURCE_UPLOADED = 'uploaded';
 
     protected $table = 'ipd_documents';
 
@@ -17,6 +21,7 @@ class IpdDocument extends Model
         'ipd_surgery_id',
         'document_type',
         'document_path',
+        'document_source',
     ];
 
     protected $hidden = [

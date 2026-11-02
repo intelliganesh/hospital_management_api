@@ -741,7 +741,7 @@ class ConsultationService implements FilterContract
             $updateData['updated_by'] = auth()->user()->id;
             PatientFistula::create($updateData);
         }
-        if (isset($request->post_surgery_details) && $request->post_surgery_details == "yes") {
+        if (isset($request->post_surgery_details) && $request->post_surgery_details == "yes" && !empty($request->post_surgery_followup)) {
             $postSurgeryDetails = $this->postSurgeryFollowUpService->updateOrCreatePostSurgeryDetails($consultations->id, json_decode($request->post_surgery_followup), true);
         }
 

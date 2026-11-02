@@ -13868,6 +13868,270 @@
                 ]
             }
         },
+        "/api/ipd_document_add": {
+            "post": {
+                "tags": [
+                    "IPD Documents"
+                ],
+                "summary": "Upload documents for an IPD patient",
+                "operationId": "d1367a16823a3d44b065a8048930ae49",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "ipd_id",
+                                    "document_type",
+                                    "documents"
+                                ],
+                                "properties": {
+                                    "ipd_id": {
+                                        "type": "string",
+                                        "format": "uuid"
+                                    },
+                                    "document_type": {
+                                        "type": "string",
+                                        "pattern": "^[a-z0-9]+(?:_[a-z0-9]+)*$",
+                                        "example": "supportive_document"
+                                    },
+                                    "documents": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Documents uploaded successfully"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "IPD record not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ServerErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ipd_document_list/{ipd_id}": {
+            "get": {
+                "tags": [
+                    "IPD Documents"
+                ],
+                "summary": "List documents for an IPD patient",
+                "operationId": "8cdc198b283123b57a68c88bc6cb02d3",
+                "parameters": [
+                    {
+                        "name": "ipd_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "document_type",
+                        "in": "query",
+                        "description": "Optional snake_case document type filter",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "supportive_document"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "IPD documents retrieved successfully"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "IPD record not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ServerErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ipd_document_details/{id}": {
+            "get": {
+                "tags": [
+                    "IPD Documents"
+                ],
+                "summary": "Get an IPD document",
+                "operationId": "0a117be1ce5bbffe3cb209b0490bb301",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "IPD document retrieved successfully"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "IPD document not found"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ServerErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ipd_document_update/{id}": {
+            "post": {
+                "tags": [
+                    "IPD Documents"
+                ],
+                "summary": "Update an uploaded IPD document",
+                "description": "Generated IPD documents are read-only",
+                "operationId": "5a346a8456962d844503984ab080f25b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "document_type": {
+                                        "type": "string",
+                                        "example": "supportive_document"
+                                    },
+                                    "document": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "IPD document updated successfully"
+                    },
+                    "403": {
+                        "description": "Generated documents cannot be updated"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "IPD document not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ServerErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ipd_document_delete/{id}": {
+            "delete": {
+                "tags": [
+                    "IPD Documents"
+                ],
+                "summary": "Delete an uploaded IPD document",
+                "description": "Generated IPD documents are read-only",
+                "operationId": "b1e006b368d7d86658e4edf0b2ba2dcf",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "IPD document deleted successfully"
+                    },
+                    "403": {
+                        "description": "Generated documents cannot be deleted"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "IPD document not found"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ServerErrorResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/ipd_nurse_notes_list": {
             "get": {
                 "tags": [
@@ -44929,6 +45193,10 @@
         {
             "name": "IPD Doctor Notes",
             "description": "API endpoints for managing doctor notes records"
+        },
+        {
+            "name": "IPD Documents",
+            "description": "API endpoints for managing generated and uploaded IPD documents"
         },
         {
             "name": "IPD Nurse Notes",
