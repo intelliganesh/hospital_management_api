@@ -149,30 +149,42 @@ class IPDBillingService
 
     }
 
-    #[Transactional(secure: true, requiredRole: null, description: 'Create IPD billing receipt within a secure transaction')]
+    #[Transactional(secure: true, requiredRole: null, description: 'Create or update an IPD billing receipt within a secure transaction')]
     public function addPayment(Request $request, string $ipdId)
     {
         $this->validatePayment($request);
 
-        $invoice = Invoice::where('ipd_id', $ipdId)->first();
+        $isEditing = $request->filled('receipt_id');
+        $invoiceQuery = Invoice::where('ipd_id', $ipdId);
+        $invoice = $isEditing ? $invoiceQuery->firstOrFail() : $invoiceQuery->first();
+
         if (! $invoice) {
             $invoice = $this->addOrUpdate(new Request([
                 'currency' => $request->currency ?? '₹',
             ]), $ipdId);
         }
 
-        $receipt = Receipt::create([
-            'invoice_id'     => $invoice->id,
-            'amount'         => $request->amount,
-            'currency'       => $request->currency ?? ($invoice->currency ?? '₹'),
-            'date'           => $request->date ?? now(),
-            'payment_type'   => $request->payment_type,
-            'transaction_id' => $request->transaction_id ?? '',
-            'status'         => $request->status ?? 'Completed',
-            'notes'          => $request->notes ?? '',
-        ]);
+        if ($isEditing) {
+            $receipt = Receipt::where('invoice_id', $invoice->id)
+                ->where('id', $request->receipt_id)
+                ->firstOrFail();
+            $receipt->update($this->paymentUpdateData($request));
+        } else {
+            $receipt = Receipt::create([
+                'invoice_id'     => $invoice->id,
+                'amount'         => $request->amount,
+                'currency'       => $request->currency ?? ($invoice->currency ?? '₹'),
+                'date'           => $request->date ?? now(),
+                'payment_type'   => $request->payment_type,
+                'transaction_id' => $request->transaction_id ?? '',
+                'status'         => $request->status ?? 'Completed',
+                'notes'          => $request->notes ?? '',
+            ]);
+        }
 
         $this->syncAndAppendBillingSummary($invoice->fresh('receipt'));
+
+        return $receipt->fresh();
     }
 
     #[Transactional(secure: true, requiredRole: null, description: 'Create IPD billing Invoice Item within a secure transaction')]
@@ -230,19 +242,43 @@ class IPDBillingService
 
     private function validatePayment(Request $request): void
     {
+        $isEditing = $request->filled('receipt_id');
         $validator = Validator::make($request->all(), [
-            'amount'         => 'required|numeric|min:0',
+            'receipt_id'     => 'nullable|uuid|exists:receipts,id',
+            'amount'         => $isEditing ? 'sometimes|required|numeric|min:0' : 'required|numeric|min:0',
             'currency'       => 'nullable|string|max:10',
-            'date'           => 'nullable|date',
+            'date'           => $isEditing ? 'sometimes|required|date' : 'nullable|date',
             'payment_type'   => 'nullable|string|max:100',
             'transaction_id' => 'nullable|string|max:255',
-            'status'         => 'nullable|string|max:100',
+            'status'         => $isEditing ? 'sometimes|required|string|max:100' : 'nullable|string|max:100',
             'notes'          => 'nullable|string',
         ]);
+
+        $validator->after(function ($validator) use ($request, $isEditing) {
+            $editableFields = ['amount', 'currency', 'date', 'payment_type', 'transaction_id', 'status', 'notes'];
+            $hasChanges = collect($editableFields)->contains(fn ($field) => $request->exists($field));
+
+            if ($isEditing && ! $hasChanges) {
+                $validator->errors()->add('receipt_id', 'At least one payment field is required when editing a payment.');
+            }
+        });
 
         if ($validator->fails()) {
             throw new ValidationException($validator);
         }
+    }
+
+    private function paymentUpdateData(Request $request): array
+    {
+        $data = [];
+
+        foreach (['amount', 'currency', 'date', 'payment_type', 'transaction_id', 'status', 'notes'] as $field) {
+            if ($request->exists($field)) {
+                $data[$field] = $request->input($field);
+            }
+        }
+
+        return $data;
     }
 
     public function paymentDetails(string $ipdId)

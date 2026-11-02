@@ -12225,8 +12225,8 @@
                 "tags": [
                     "IPD Billing"
                 ],
-                "summary": "Add IPD billing payment",
-                "description": "Record a payment receipt against an IPD billing invoice",
+                "summary": "Add or edit an IPD billing payment",
+                "description": "Create a payment receipt, or edit an existing receipt by sending receipt_id",
                 "operationId": "9c2815af80a46c5617c31efaff8372ef",
                 "parameters": [
                     {
@@ -12247,11 +12247,14 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "amount"
-                                ],
                                 "properties": {
+                                    "receipt_id": {
+                                        "description": "Existing receipt ID to edit; omit when creating a payment",
+                                        "type": "string",
+                                        "format": "uuid"
+                                    },
                                     "amount": {
+                                        "description": "Required when creating; optional when editing",
                                         "type": "number",
                                         "format": "float",
                                         "example": 5000
@@ -12289,7 +12292,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "IPD billing payment saved successfully",
+                        "description": "IPD billing payment created or updated successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -12301,6 +12304,10 @@
                                         "message": {
                                             "type": "string",
                                             "example": "IPD billing payment saved successfully"
+                                        },
+                                        "data": {
+                                            "description": "Saved receipt record",
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -12308,7 +12315,7 @@
                             }
                         }
                     },
-                    "400": {
+                    "422": {
                         "description": "Validation error",
                         "content": {
                             "application/json": {

@@ -217,8 +217,8 @@ class IPDBillingController extends Controller
     /**
      * @OA\Post(
      *     path="/api/ipd_billing_add_payment/{ipd_id}",
-     *     summary="Add IPD billing payment",
-     *     description="Record a payment receipt against an IPD billing invoice",
+     *     summary="Add or edit an IPD billing payment",
+     *     description="Create a payment receipt, or edit an existing receipt by sending receipt_id",
      *     tags={"IPD Billing"},
      *     security={{"bearerAuth": {}}},
      *     @OA\Parameter(
@@ -233,8 +233,8 @@ class IPDBillingController extends Controller
      *         description="Payment data",
      *         @OA\JsonContent(
      *             type="object",
-     *             required={"amount"},
-     *             @OA\Property(property="amount", type="number", format="float", example=5000),
+     *             @OA\Property(property="receipt_id", type="string", format="uuid", description="Existing receipt ID to edit; omit when creating a payment"),
+     *             @OA\Property(property="amount", type="number", format="float", description="Required when creating; optional when editing", example=5000),
      *             @OA\Property(property="currency", type="string", example="INR"),
      *             @OA\Property(property="date", type="string", format="date", example="2026-06-22"),
      *             @OA\Property(property="payment_type", type="string", example="Cash"),
@@ -245,14 +245,15 @@ class IPDBillingController extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="IPD billing payment saved successfully",
+     *         description="IPD billing payment created or updated successfully",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="IPD billing payment saved successfully")
+     *             @OA\Property(property="message", type="string", example="IPD billing payment saved successfully"),
+     *             @OA\Property(property="data", type="object", description="Saved receipt record")
      *         )
      *     ),
      *     @OA\Response(
-     *         response=400,
+     *         response=422,
      *         description="Validation error",
      *         @OA\JsonContent(
      *             type="object",
