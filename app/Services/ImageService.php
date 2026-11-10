@@ -16,9 +16,9 @@ class ImageService
      */
     private function image($file, string $path = "images")
     {
-        $extension = $file->getClientOriginalExtension();
+        $extension = strtolower(preg_replace('/[^A-Za-z0-9]/', '', $file->getClientOriginalExtension()));
         $namewithextension = $file->getClientOriginalName();
-        $name = explode('.', $namewithextension)[0];
+        $name = preg_replace('/[^A-Za-z0-9_-]/', '_', explode('.', $namewithextension)[0]);
         $fileName = time() . '_' . $name . '.' . $extension;
         $file->move(public_path("images/" . $path), $fileName);
         $this->image = $path . "/" . $fileName;

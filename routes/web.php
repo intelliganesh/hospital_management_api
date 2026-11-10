@@ -29,5 +29,5 @@ Route::get('/test-logo', function () {
 Route::get("consultation-prescription/{id}", [InvoiceController::class, 'downloadPrescriptionweb']);
 // Route::get("consultation-prescription/{id}", [InvoiceController::class, 'downloadPrescription']);
 Route::get("invoice-bill/details/{id}", [InvoiceController::class, 'test']);
-Route::get('/documentation/logs', [AuthController::class, 'index'])->name('/documentation/logs');
+Route::get('/documentation/logs', [AuthController::class, 'index'])->name('/documentation/logs')->middleware('rbac'); // Admin/Super Admin bearer token required
 Route::get('/document/download', [DocumentDownloadController::class, 'index'])->name('/document/download');

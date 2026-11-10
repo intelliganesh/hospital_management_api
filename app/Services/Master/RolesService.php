@@ -104,6 +104,9 @@ class RolesService implements CRUDContract, FilterContract
     {
         $this->checkValidationService->checkValidation($this->validate($request, true, $id));
         $roles = Roles::findOrFail($id);
+        if (in_array($roles->name, config('rbac.builtin_roles', []), true) && $roles->name !== $request->name) {
+            throw new \Exception('Built-in roles cannot be renamed.');
+        }
         $roles->update([
             'guard_name' => 'api',
             'name' => $request->name,
@@ -133,6 +136,9 @@ class RolesService implements CRUDContract, FilterContract
     public function delete(string $id): void
     {
         $roles = Roles::find($id);
+        if ($roles && in_array($roles->name, config('rbac.builtin_roles', []), true)) {
+            throw new \Exception('Built-in roles cannot be deleted.');
+        }
         // if (!$roles) {
         //     throw new NotFoundHttpException('Data not found.');
         // }

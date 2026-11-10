@@ -361,5 +361,15 @@ class RolesController extends Controller
         }
     }
 
-
+    /** GET /api/roles_details/{id} */
+    public function get(string $id)
+    {
+        try {
+            return $this->successResponse($this->rolesService->get($id));
+        } catch (ModelNotFoundException $e) {
+            return $this->notFoundResponse(new NotFoundHttpException('Role data not found.'));
+        } catch (Exception $e) {
+            return $this->exceptionResponse($e);
+        }
+    }
 }

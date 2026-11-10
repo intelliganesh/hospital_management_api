@@ -81,11 +81,16 @@ trait ResponseTrait
         }
 
         LogActivity::addToLog($message, $errors, $statusCode);
-        return response()->json([
+        $body = [
             'status'  => 'error',
             'message' => $message,
             'errors'  => $errors,
-        ], $statusCode);
+        ];
+        if ($statusCode === 403) {
+            // every 403 must be machine-readable so the SPA does not treat it as a logout
+            $body['code'] = 'PERMISSION_DENIED';
+        }
+        return response()->json($body, $statusCode);
     }
 
     /**

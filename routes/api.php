@@ -78,7 +78,6 @@ use Illuminate\Support\Facades\Route;
 // Public routes (non-authenticated)
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/logout', [AuthController::class, 'logout']);
-Route::post('/registration', [AuthController::class, 'registration']);
 Route::post('/reset_password', [AuthController::class, 'resetPassword']);
 Route::post('/forgot_password', [AuthController::class, 'forgotPassword']);
 Route::post('/verify_password', [AuthController::class, 'verifyPassword']);
@@ -99,7 +98,15 @@ Route::get("/bank_information_dropdown_list", [BankInformationController::class,
 Route::post('/external-appointments/{id}/generate_link', [ExternalAppointmentController::class, 'generateLinkForConsultation']);
 Route::post('/external-appointments/{id}/send_link', [ExternalAppointmentController::class, 'sendLinkForConsultation']);
 
-Route::group(['middleware' => 'auth:api'], function () {
+Route::group(['middleware' => ['auth:api', 'rbac']], function () {
+
+    // RBAC admin APIs
+    Route::get('/permissions_list', [\App\Http\Controllers\RbacController::class, 'permissions']);
+    Route::get('/role_permissions/{role_id}', [\App\Http\Controllers\RbacController::class, 'rolePermissions']);
+    Route::put('/role_permissions/{role_id}', [\App\Http\Controllers\RbacController::class, 'syncRolePermissions']);
+
+    // user registration (was public): now authenticated + user_create permission
+    Route::post('/registration', [AuthController::class, 'registration']);
 
     Route::put('/external-appointments/{id}', [ExternalAppointmentController::class, 'update']);
 

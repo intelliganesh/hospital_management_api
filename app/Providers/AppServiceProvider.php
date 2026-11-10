@@ -36,6 +36,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Super Admin passes every Gate / Spatie check
+        \Illuminate\Support\Facades\Gate::before(function ($user, $ability) {
+            return method_exists($user, 'hasRole') && $user->hasRole(config('rbac.super_roles', ['Super Admin']), config('rbac.guard', 'api')) ? true : null;
+        });
     }
 }

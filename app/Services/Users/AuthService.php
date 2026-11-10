@@ -97,7 +97,9 @@ class AuthService extends GetImageService
                 "role"  => $user->role,
                 'email' => $user->email,
                 'phone' => $user->phone,
+                'permissions' => app(\App\Services\Rbac\RbacService::class)->permissionsFor($user),
             ],
+            'permissions' => app(\App\Services\Rbac\RbacService::class)->permissionsFor($user),
             'api_key' => [
                 'original' => [
                     'token'      => $token,
@@ -127,8 +129,10 @@ class AuthService extends GetImageService
         $token = $request->input('token');
         // $newToken = JWTAuth::refresh($request->token);
         $newToken = JWTAuth::setToken($token)->refresh();
+        $payloadUser = JWTAuth::setToken($newToken)->authenticate();
         return [
             'result'  => [],
+            'permissions' => $payloadUser ? app(\App\Services\Rbac\RbacService::class)->permissionsFor($payloadUser) : [],
             'api_key' => [
                 'original' => [
                     'token'      => $newToken,
@@ -217,6 +221,8 @@ class AuthService extends GetImageService
 
     public function userProfile()
     {
-        return Auth::user()->makeHidden(['password', 'email_verified_at']);
+        $user = Auth::user()->makeHidden(['password', 'email_verified_at']);
+        $user->setAttribute('permissions', app(\App\Services\Rbac\RbacService::class)->permissionsFor($user));
+        return $user;
     }
 }
