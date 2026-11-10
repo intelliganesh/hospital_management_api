@@ -398,6 +398,7 @@ return [
             'online_appointments_view',
         ],
         'Front Desk User' => [
+            'ipd_view', // front office opens IPD hub / billing to edit discharge date-time and take payments
             'dashboard_view',
             'patients_view',
             'appointments_view',
