@@ -369,8 +369,6 @@ return $items[$index] ?? $default;
                 <td>{{ $text($doctor_name ?? null) }}</td>
                 <td class="label">Qualification</td>
                 <td>{{ $text($qualification ?? null) }}</td>
-                <td class="label">Contact</td>
-                <td>{{ $text($doctor_email ?? null) }} / {{ $text($doctor_phone ?? null) }}</td>
             </tr>
         </table>
     </div>
@@ -479,8 +477,17 @@ return $items[$index] ?? $default;
     $secondaryCauses = $splitValues($field($clinical, 'crypt_cause'));
     $fistulaSphincters = $splitValues($field($clinical, 'type_of_fistula_sphincter'));
     $fistulaPositions = $splitValues($field($clinical, 'type_of_fistula_position'));
-    $fistulaRidingType= $splitValues($field($clinical, 'high_low_riding_type'));
-    $fistulaRiding = $splitValues($field($clinical, 'basis_of_high_low_riding'));
+    // High/Low riding per fistula: raw '#' split (keeps blanks aligned); legacy rows with only a basis count as High.
+    $ridingTypeRaw = $field($clinical, 'high_low_riding_type');
+    $ridingBasisRaw = $field($clinical, 'basis_of_high_low_riding');
+    $ridingTypes = is_scalar($ridingTypeRaw) && $ridingTypeRaw !== '' ? explode('#', (string) $ridingTypeRaw) : [];
+    $ridingBases = is_scalar($ridingBasisRaw) && $ridingBasisRaw !== '' ? explode('#', (string) $ridingBasisRaw) : [];
+    $fistulaRiding = [];
+    for ($ri = 0, $rn = max(count($ridingTypes), count($ridingBases)); $ri < $rn; $ri++) {
+        $rb = trim($ridingBases[$ri] ?? '');
+        $rt = trim($ridingTypes[$ri] ?? '') !== '' ? trim($ridingTypes[$ri]) : ($rb !== '' ? 'High' : '');
+        $fistulaRiding[] = ($rt !== '' && $rb !== '') ? $rt . ' - ' . $rb : $rt;
+    }
     $distantVisceral = $splitValues($field($clinical, 'distant_visceral_communication'));
     $classificationRows = max(1, count($fistulaCrypts), count($secondaryCauses), count($fistulaSphincters), count($fistulaPositions), count($fistulaRiding), count($distantVisceral));
     @endphp
@@ -536,7 +543,7 @@ return $items[$index] ?? $default;
                             <td>{!! $printText($valueAt($secondaryCauses, $index, null)) !!}</td>
                             <td>{!! $printText($valueAt($fistulaSphincters, $index, null)) !!}</td>
                             <td>{!! $printText($valueAt($fistulaPositions, $index, null)) !!}</td>
-                            <td>{{$fistulaRidingType}} @if(count($fistulaRiding) > 0)({!! $printText($valueAt($fistulaRiding, $index, null)) !!})@endif</td>
+                            <td>{!! $printText($valueAt($fistulaRiding, $index, null)) !!}</td>
                             <td>{!! $printText($valueAt($distantVisceral, $index, null)) !!}</td>
                             </tr>
                             @endfor

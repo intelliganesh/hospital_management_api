@@ -30,6 +30,7 @@ class PatientFistula extends Model
         'crypt_cause',
         'type_of_fistula_position',
         'type_of_fistula_sphincter',
+        'high_low_riding_type',
         'basis_of_high_low_riding',
         'distant_visceral_communication',
         'sono_fistula_gram',

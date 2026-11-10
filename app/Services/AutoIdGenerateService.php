@@ -6,6 +6,7 @@ use App\Models\SystemSettings;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 
 class AutoIdGenerateService
 {
@@ -152,6 +153,49 @@ class AutoIdGenerateService
             // ]);
             
             return $generatedId;
+        });
+    }
+
+    /**
+     * Next admission number for a NEW IPD: "<prefix>-ayu-NN" (Ayurveda) or "<prefix>-all-NN" (Allopathy),
+     * lowercase, NN zero-padded to 2 digits and growing naturally (99 -> 100).
+     * Legacy numbers (IPD0001...) are never touched.
+     *
+     * Race safety: one row per series in ipd_number_counters is locked (FOR UPDATE) until the caller's
+     * transaction ends, so IpdService::create() wraps the whole admission in DB::transaction -> a failed
+     * admission rolls the counter back too (no gaps) and concurrent admissions are serialised per series.
+     * The counter never decreases, so deleted numbers are not reused. Final guard: UNIQUE(ipd.ipd_number).
+     * If the counter table is missing (migration not run) it falls back to max(existing suffix)+1.
+     */
+    public function generateIpdNumber(string $treatmentType = 'ayurveda'): string
+    {
+        $series = strtolower($treatmentType) === 'allopathy' ? 'all' : 'ayu';
+        $base   = strtolower(trim((string) config('services.hospital_app.ipd_code_prefix', 'ash')));
+        $prefix = ($base !== '' ? $base : 'ash') . '-' . $series . '-';
+
+        return DB::transaction(function () use ($prefix) {
+            $existingMax = (int) DB::table('ipd')
+                ->whereRaw('ipd_number REGEXP ?', ['^' . preg_quote($prefix, '/') . '[0-9]+$'])
+                ->selectRaw('MAX(CAST(SUBSTRING(ipd_number, ?) AS UNSIGNED)) AS max_no', [strlen($prefix) + 1])
+                ->value('max_no');
+
+            if (Schema::hasTable('ipd_number_counters')) {
+                $row = DB::table('ipd_number_counters')->where('prefix', $prefix)->lockForUpdate()->first();
+                if (! $row) {
+                    DB::table('ipd_number_counters')->insertOrIgnore([
+                        'prefix' => $prefix, 'last_number' => 0, 'created_at' => now(), 'updated_at' => now(),
+                    ]);
+                    $row = DB::table('ipd_number_counters')->where('prefix', $prefix)->lockForUpdate()->first();
+                }
+                $next = max((int) $row->last_number, $existingMax) + 1;
+                DB::table('ipd_number_counters')->where('prefix', $prefix)
+                    ->update(['last_number' => $next, 'updated_at' => now()]);
+            } else {
+                DB::table('ipd')->where('ipd_number', 'like', $prefix . '%')->lockForUpdate()->pluck('id');
+                $next = $existingMax + 1;
+            }
+
+            return $prefix . str_pad((string) $next, 2, '0', STR_PAD_LEFT);
         });
     }
 

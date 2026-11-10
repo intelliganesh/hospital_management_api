@@ -171,18 +171,18 @@
         <tr>
             <td colspan="2">
                 <b>Name of the Consultant:</b>
-                <span class="label-line">{{ $ipd->doctor_name ?? '' }}</span>
+                <span class="label-line">@include('templates.downloads.IPD.doctors_list')</span>
             </td>
         </tr>
     </table>
 
     <!-- Notes Table -->
-    <table>
+    <table style="table-layout:fixed; word-wrap:break-word;">
         <tr>
-            <th width="15%">Date & Time</th>
-            <th width="45%">Nurses Notes</th>
-            <th width="15%">Remarks</th>
-            <th width="25%">Name & Signature</th>
+            <th width="11%">Date & Time</th>
+            <th width="18%">Nurses Notes</th>
+            <th width="50%">Remarks</th>
+            <th width="21%">Name & Signature</th>
         </tr>
         @if($ipd->nurse_notes->isEmpty())
             <tr>
@@ -209,22 +209,25 @@
                 </td>
                 <td>
                     @if($hasValue($note->bp))
-                        <b>BP:</b> {{ $note->bp }}<br>
+                        <b>BP:</b> {{ \App\Support\MeasurementUnits::format('bp', $note->bp) }}<br>
                     @endif
                     @if($hasValue($note->pr))
-                        <b>PR:</b> {{ $note->pr }}<br>
+                        <b>PR:</b> {{ \App\Support\MeasurementUnits::format('pulse', $note->pr) }}<br>
                     @endif
                     @if($hasValue($note->temperature))
-                        <b>Temperature:</b> {{ $note->temperature }}<br>
+                        <b>Temperature:</b> {{ \App\Support\MeasurementUnits::format('temperature', $note->temperature) }}<br>
                     @endif
                     @if($hasValue($note->spo2))
-                        <b>Spo2:</b> {{ $note->spo2 }}<br>
-                    @endif
-                    @if($hasValue($note->remark1))
-                        {{ $note->remark1 }}
+                        <b>Spo2:</b> {{ \App\Support\MeasurementUnits::format('spo2', $note->spo2) }}<br>
                     @endif
                 </td>
                 <td>
+                    @if($hasValue($note->remark1))
+                        {{ $note->remark1 }}
+                    @endif
+                    @if($hasValue($note->remark1) && $hasValue($note->remark2))
+                        <br>
+                    @endif
                     @if($hasValue($note->remark2))
                         {{ $note->remark2 }}
                     @endif

@@ -29,7 +29,7 @@
 
         .value {
             display: inline-block;
-            border-bottom: 1px dotted #000;
+            border-bottom: 1px solid #000;
             width: 150px;
             height: 14px;
             vertical-align: bottom;

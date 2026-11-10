@@ -328,8 +328,12 @@
                 <td></td>
             </tr>
         </table>
+        <div style="margin-top:12px; page-break-inside: avoid;">
+            <b>REMARKS / DETAILS:</b>
+            @include('templates.downloads.IPD.write_lines', ['n' => 4])
+        </div>
         <!-- Signatures -->
-        <table class="no-border" style="margin-top:50px;">
+        <table class="no-border" style="margin-top:30px; page-break-inside: avoid;">
             <tr>
                 <td width="50%">
                     <b>Signature of Patient</b><br><br><br>

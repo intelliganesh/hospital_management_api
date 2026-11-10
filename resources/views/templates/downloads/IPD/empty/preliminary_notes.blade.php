@@ -237,7 +237,7 @@
         <div>
             <p>
                 <span class="label">PASSPORT / AADHAR NUMBER: </span>
-                {{$ipd->patient->proofData ?? ''}}
+                {{ ($__pd = $ipd->patient ? $ipd->patient->proofData() : '') && trim($__pd) !== '()' ? $__pd : '' }}
             </p>
         </div>
         <!-- Attendant Name -->
@@ -259,18 +259,22 @@
             CONSULTANTS NAME AND SIGNATURE
         </div>
 
+        @php
+        $allDoctors = $ipd->all_doctors ?? [];
+        if (empty($allDoctors) && !empty($ipd->doctor_name)) {
+            $allDoctors = [['name' => $ipd->doctor_name, 'designation' => '']];
+        }
+        $doctorRows = max(3, count($allDoctors));
+        @endphp
         <table>
-
+            @for($i = 0; $i < $doctorRows; $i++)
             <tr>
-                <td style="padding-bottom:5px;">1.</td>
+                <td style="padding-bottom:5px;">
+                    {{ $i + 1 }}.
+                    @if(isset($allDoctors[$i])){{ $allDoctors[$i]['name'] }}@if(!empty($allDoctors[$i]['designation'])) ({{ $allDoctors[$i]['designation'] }})@endif @endif
+                </td>
             </tr>
-            <tr>
-                <td style="padding-bottom:5px;">2.</td>
-            </tr>
-            <tr>
-                <td style="padding-bottom:5px;">3.</td>
-            </tr>
-
+            @endfor
         </table>
 
         <div class="line"></div>
@@ -283,6 +287,7 @@
                 </span>
 
             </p>
+            @include('templates.downloads.IPD.write_lines', ['n' => 4])
         </div>
 
         <!-- Associated Complaints -->
@@ -294,6 +299,7 @@
                 </span>
 
             </p>
+            @include('templates.downloads.IPD.write_lines', ['n' => 4])
         </div>
 
         <!-- Previous Treatment History -->
@@ -305,6 +311,7 @@
                 </span>
 
             </p>
+            @include('templates.downloads.IPD.write_lines', ['n' => 4])
         </div>
 
         <div style="min-height:40px">
@@ -314,6 +321,7 @@
                 </span>
 
             </p>
+            @include('templates.downloads.IPD.write_lines', ['n' => 4])
         </div>
 
         <div style="min-height:40px">
@@ -323,6 +331,7 @@
                 </span>
 
             </p>
+            @include('templates.downloads.IPD.write_lines', ['n' => 2])
         </div>
 
         <div style="min-height:40px">
@@ -332,6 +341,7 @@
                 </span>
 
             </p>
+            @include('templates.downloads.IPD.write_lines', ['n' => 2])
         </div>
 
         <div style="min-height:40px">
@@ -341,6 +351,7 @@
                 </span>
 
             </p>
+            @include('templates.downloads.IPD.write_lines', ['n' => 2])
         </div>
 
         <!-- Examination -->
@@ -490,6 +501,7 @@
                 </span>
 
             </p>
+            @include('templates.downloads.IPD.write_lines', ['n' => 4])
         </div>
 
         <div style="margin-left:40px;min-height:100px">
@@ -604,6 +616,7 @@
                 </span>
 
             </p>
+            @include('templates.downloads.IPD.write_lines', ['n' => 2])
         </div>
 
         <div style="margin-left:40px;min-height:30px">
@@ -613,6 +626,7 @@
                 </span>
 
             </p>
+            @include('templates.downloads.IPD.write_lines', ['n' => 2])
         </div>
 200px
         <div style="margin-left:40px;min-height:30px">
@@ -622,6 +636,7 @@
                 </span>
 
             </p>
+            @include('templates.downloads.IPD.write_lines', ['n' => 2])
         </div>
 
         <div style="margin-left:40px;min-height:40px">
@@ -631,6 +646,7 @@
                 </span>
 
             </p>
+            @include('templates.downloads.IPD.write_lines', ['n' => 4])
         </div>
 
         <div style="margin-left:40px;min-height:200px">

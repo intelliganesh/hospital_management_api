@@ -168,18 +168,18 @@
         <tr>
             <td colspan="2">
                 <b>Name of the Consultant:</b>
-                <span class="label-line">{{ $ipd->doctor_name ?? '' }}</span>
+                <span class="label-line">@include('templates.downloads.IPD.doctors_list')</span>
             </td>
         </tr>
     </table>
 
     <!-- Notes Table -->
-    <table>
+    <table style="table-layout:fixed; word-wrap:break-word;">
         <tr>
-            <th width="15%">Date & Time</th>
-            <th width="45%">Nurses Notes</th>
-            <th width="15%">Remarks</th>
-            <th width="25%">Name & Signature</th>
+            <th width="11%">Date & Time</th>
+            <th width="18%">Nurses Notes</th>
+            <th width="50%">Remarks</th>
+            <th width="21%">Name & Signature</th>
         </tr>
        
         <tr style="height:800px;">

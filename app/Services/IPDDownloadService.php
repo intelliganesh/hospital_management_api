@@ -21,6 +21,7 @@ class IPDDownloadService
     {
         try {
             $ipd = IPD::with('patient', 'consultation', 'staffs', 'preliminaryNotes')->findOrFail($ipdId);
+            $ipd->all_doctors = $this->assignedDoctors($ipd);
             $ipd->patient->proofData = $ipd->patient->proofData();
             $htmlContent = '';
             $fileName    = '';
@@ -198,6 +199,40 @@ class IPDDownloadService
         }
     }
 
+    /**
+     * All doctors assigned to an IPD (primary doctor + consultant/duty doctors in ipd_staffs),
+     * de-duplicated, for printing on PDFs. Name/designation only - no phone/email.
+     *
+     * @return array<int, array{name: string, designation: string}>
+     */
+    private function assignedDoctors(IPD $ipd): array
+    {
+        $list = [];
+        $seen = [];
+        $add  = function ($userId, $name, $designation) use (&$list, &$seen) {
+            $name = trim((string) $name);
+            if ($name === '') {
+                return;
+            }
+            $key = $userId ? 'id:' . $userId : 'n:' . strtolower($name);
+            if (isset($seen[$key]) || isset($seen['n:' . strtolower($name)])) {
+                return;
+            }
+            $seen[$key]                         = true;
+            $seen['n:' . strtolower($name)]     = true;
+            $list[] = ['name' => $name, 'designation' => trim((string) $designation)];
+        };
+
+        $primary = $ipd->doctor_id ? \App\Models\User::find($ipd->doctor_id) : null;
+        $add($ipd->doctor_id, $primary?->name ?? $ipd->doctor_name, $primary?->designation);
+
+        foreach ($ipd->staffs()->whereIn('user_role', ['consultant_doctor', 'duty_doctor'])->with('user')->get() as $staff) {
+            $add($staff->user_id, $staff->user?->name ?? $staff->user_name, $staff->user?->designation);
+        }
+
+        return $list;
+    }
+
     public function downloadPdf(string $ipdId, string $type, string $ipd_surgery_id = null)
     {
         if ($ipd_surgery_id) {
@@ -317,6 +352,7 @@ class IPDDownloadService
     {
         try {
             $ipd = IPD::with('patient', 'surgery')->findOrFail($ipdId);
+            $ipd->all_doctors = $this->assignedDoctors($ipd);
 
             $htmlContent = '';
             $fileName    = '';

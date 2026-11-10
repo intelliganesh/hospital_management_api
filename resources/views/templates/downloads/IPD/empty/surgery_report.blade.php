@@ -144,17 +144,20 @@
                             <b>Scrub Nurse</b> :<br>
                            <br><br>
                        <b>Specimen For HPE:</b><br>
-                           <br><br>
+                            @include('templates.downloads.IPD.write_lines', ['n' => 2])
+
                        
                             <b>Operative Notes:</b><br>
-                            <br><br>
+                            @include('templates.downloads.IPD.write_lines', ['n' => 4])
+
                         
                             <b>Operative Findings:</b><br>
-                            <br><br>
+                            @include('templates.downloads.IPD.write_lines', ['n' => 4])
+
                        
                             <b>Post Operative Instructions:</b><br>
-                            
-                            <br><br>
+                            @include('templates.downloads.IPD.write_lines', ['n' => 4])
+
                         
                     </td>
                 </tr>

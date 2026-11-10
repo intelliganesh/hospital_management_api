@@ -29,8 +29,34 @@ trait IPDSurgeryValidation
             'operative_findings' => 'nullable|string',
             'post_operative_instructions' => 'nullable|string',
             'summary' => 'nullable|string',
+            'shloka_ids' => 'nullable|array',
+            'shloka_ids.*' => 'integer',
         ];
 
-        return $this->validator($request, $rules, $edit);
+        $data = is_array($request) ? $request : $request->all();
+
+        // Saving the surgery report (flag sent by the report form, or any report-only field present)
+        // requires at least one Shloka. Other edits of the surgery (name/date/etc.) do not.
+        if ($edit && $this->isSurgeryReportSave($data)) {
+            $rules['shloka_ids'] = 'required|array|min:1';
+            if (! array_key_exists('shloka_ids', $data)) {
+                $data['shloka_ids'] = null;
+            }
+        }
+
+        return $this->validator($data, $rules, $edit);
+    }
+
+    protected function isSurgeryReportSave(array $data): bool
+    {
+        if (! empty($data['surgery_report'])) {
+            return true;
+        }
+        foreach (['operative_notes', 'operative_findings', 'post_operative_instructions', 'specimen_for_hpe'] as $key) {
+            if (array_key_exists($key, $data)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

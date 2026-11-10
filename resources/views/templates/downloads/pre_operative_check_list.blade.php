@@ -29,7 +29,7 @@
         }
 
         /* .dotted {
-            border-bottom: 1px dotted #000;
+            border-bottom: 1px solid #000;
             width: 100%;
         } */
 

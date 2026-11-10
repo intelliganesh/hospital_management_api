@@ -563,7 +563,7 @@
             </tr>
             <tr style="font-weight:bold;">
                 <td colspan="5">
-                    <b>Temperature</b> {{$ipd->anaesthesiaDepartment?->temperature ?? '' }}
+                    <b>Temperature</b> {{ \App\Support\MeasurementUnits::format('temperature', $ipd->anaesthesiaDepartment?->temperature) }}
                 </td>
             </tr>
         </table>

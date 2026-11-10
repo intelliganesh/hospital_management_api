@@ -109,8 +109,6 @@
                 <td>{{ $doctor_name }}</td>
                 <td class="label">Qualification</td>
                 <td>{{ $qualification }}</td>
-                <td class="label">Contact</td>
-                <td>{{ $doctor_email }} / {{ $doctor_phone }}</td>
             </tr>
         </table>
     </div>

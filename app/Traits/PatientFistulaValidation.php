@@ -30,6 +30,7 @@ trait PatientFistulaValidation
             'crypt_cause' => 'nullable|string',
             'type_of_fistula_position' => 'nullable|string',
             'type_of_fistula_sphincter' => 'nullable|string',
+            'high_low_riding_type' => 'nullable|string',
             'basis_of_high_low_riding' => 'nullable|string',
             'distant_visceral_communication' => 'nullable|string',
             'sono_fistula_gram' => 'nullable|string',

@@ -105,57 +105,58 @@
             <tr>
                 <td>
                     <b>Consultants:</b><br>
-                    
+                    @include('templates.downloads.IPD.doctors_list')
                     <br><br>
                   
                     <b>Diagnosis:</b><br>
-                   
-                    <br><br>
+                    @include('templates.downloads.IPD.write_lines', ['n' => 2])
+                    
                   
                     <b>Case History & Complaints:</b><br>
-                    
+                    @include('templates.downloads.IPD.write_lines', ['n' => 4])
                     <b>General Examination:</b><br>
-                   
-                    <br><br>
+                    @include('templates.downloads.IPD.write_lines', ['n' => 2])
+                    
                    
                     <b>Systemic Examination:</b><br>
+                    @include('templates.downloads.IPD.write_lines', ['n' => 2])
                     
-                    <br><br>
 
                     @if(! $isSurgical)
                     <b>Menstrual/Obstetric History:</b><br>
-
-                    <br><br>
+                    @include('templates.downloads.IPD.write_lines', ['n' => 2])
+                    
 
                     <b>Summary of Treatment:</b><br>
-
-                    <br><br>
+                    @include('templates.downloads.IPD.write_lines', ['n' => 4])
+                    
                     @endif
                     
                     <b>Investigations:</b><br>
+                    @include('templates.downloads.IPD.write_lines', ['n' => 4])
                     
-                    <br><br>
 
                     @if($isSurgical)
                     <b>Operation Done:</b><br>
+                    @include('templates.downloads.IPD.write_lines', ['n' => 2])
                     
-                    <br><br>
                    
                     <b>Findings And Procedure:</b><br>
+                    @include('templates.downloads.IPD.write_lines', ['n' => 4])
                     
-                    <br><br>
                     @endif
                     
                     <b>Course In Hospital:</b><br>
-                   
-                    <br><br>
+                    @include('templates.downloads.IPD.write_lines', ['n' => 4])
+                    
                    
                     <b>Patient's health condition at discharge:</b><br>
+                    @include('templates.downloads.IPD.write_lines', ['n' => 2])
                     
-                    <br><br>
                    
                     <b>Advice On Discharge:</b><br>
-                </td>
+                    @include('templates.downloads.IPD.write_lines', ['n' => 4])
+                    </td>
             </tr>
         </table>
 

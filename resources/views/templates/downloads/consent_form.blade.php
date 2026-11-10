@@ -28,7 +28,7 @@
 
         /* .dotted {
             display: inline-block;
-            border-bottom: 1px dotted #000;
+            border-bottom: 1px solid #000;
             height: 12px;
             vertical-align: middle;
             margin: 0 5px;
@@ -84,7 +84,7 @@
         }
 
         .dotted {
-            border-bottom: 1px dotted #000;
+            border-bottom: 1px solid #000;
             padding-bottom: 2px;
         }
 
@@ -130,14 +130,14 @@
 
             <div class="row">
                 <div class="label">Diagnosis:</div>
-                <div class="value dotted wide">{{ $patient->diagnosis ?? '..........................................' }}
+                <div class="value dotted wide">{{ $patient->diagnosis ?? '' }}
                 </div>
             </div>
 
             <div class="row">
                 <div class="label">Operative Procedure/Operation:</div>
                 <div class="value dotted wide">
-                    {{ $patient->procedure_name ?? '..........................................' }}</div>
+                    {{ $patient->procedure_name ?? '' }}</div>
             </div>
         </div>
 

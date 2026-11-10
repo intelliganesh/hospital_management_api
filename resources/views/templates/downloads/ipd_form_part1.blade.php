@@ -219,17 +219,17 @@
             <div>
                 <span class="examination-label">A. GENERAL</span><br />
                 @if ($patient->bp)
-                    <span class="examination-field">BP: {!! $patient->bp !!}</span><br />
+                    <span class="examination-field">BP: {{ \App\Support\MeasurementUnits::format('bp', $patient->bp) }}</span><br />
                 @else
                     <span class="examination-field">BP: -</span><br />
                 @endif
                 @if ($patient->pulse)
-                    <span class="examination-field">PULSE: {!! $patient->pulse !!}</span><br />
+                    <span class="examination-field">PULSE: {{ \App\Support\MeasurementUnits::format('pulse', $patient->pulse) }}</span><br />
                 @else
                     <span class="examination-field">PULSE: -</span><br />
                 @endif
                 @if ($patient->temperature)
-                    <span class="examination-field">TEMP: {!! $patient->temperature !!}</span>
+                    <span class="examination-field">TEMP: {{ \App\Support\MeasurementUnits::format('temperature', $patient->temperature) }}</span>
                 @else
                     <span class="examination-field">TEMP: -</span>
                 @endif

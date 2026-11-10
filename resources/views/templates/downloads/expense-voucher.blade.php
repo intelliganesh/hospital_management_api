@@ -67,6 +67,7 @@
 
 <body>
     @php
+        if (!function_exists('numberToWords')) {
         function numberToWords($num) {
             $ones = array(
                 0 => "Zero",
@@ -156,6 +157,7 @@
             }
 
             return $rettxt;
+        }
         }
     @endphp
     <!-- Header -->

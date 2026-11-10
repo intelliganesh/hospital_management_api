@@ -372,15 +372,14 @@
                 </td>
             </tr>
         </table>
+        <div style="page-break-inside: avoid;">
         <table>
-            <tr style="height:80px;">
+            <tr style="height:80px; page-break-inside: avoid;">
                 <td width="50%"><b>SPECIFIC ANTICIPATED PROBLEMS OF ANESTHESIA</b>
-                    
-                        <br><br><br><br><br>
+                    @include('templates.downloads.IPD.write_lines', ['n' => 4])
                 </td>
                 <td width="50%"><b>PRE-OPERATIVE ANESTHETIC INSTRUCTIONS AND MEDICATIONS</b>
-                   
-                        <br><br><br><br><br>
+                    @include('templates.downloads.IPD.write_lines', ['n' => 4])
                 </td>
             </tr>
         </table>
@@ -391,6 +390,7 @@
                 </td>
             </tr>
         </table>
+        </div>
     </div>
 </body>
 

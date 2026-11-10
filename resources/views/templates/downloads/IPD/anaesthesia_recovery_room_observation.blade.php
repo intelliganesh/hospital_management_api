@@ -249,9 +249,9 @@
             <tr class="text-center">
                 <td width="10%"><b>Time</b></td>
                 <td width="20%"><b>Consciousness</b></td>
-                <td width="10%"><b>Respiration</b></td>
-                <td width="10%"><b>Pulse Rate</b></td>
-                <td width="10%"><b>BP</b></td>
+                <td width="10%"><b>Respiration (/min)</b></td>
+                <td width="10%"><b>Pulse Rate (bpm)</b></td>
+                <td width="10%"><b>BP (mmHg)</b></td>
                 <td width="10%"><b>SpO₂</b></td>
                 <td width="30%"><b>Remarks</b></td>
             </tr>
@@ -299,10 +299,10 @@
         <table class="no-border">
             <tr>
                 <td>Vitals at Shifting:</td>
-                <td>Pulse: {{ $ipd->recoveryObservation?->pulse_at_shifting ?? '' }}</td>
-                <td>SBP: {{ $ipd->recoveryObservation?->sbp_at_shifting ?? '' }}</td>
-                <td>DBP: {{ $ipd->recoveryObservation?->dbp_at_shifting ?? '' }}</td>
-                <td>RR: {{ $ipd->recoveryObservation?->rr_at_shifting ?? '' }}</td>
+                <td>Pulse: {{ \App\Support\MeasurementUnits::format('pulse', $ipd->recoveryObservation?->pulse_at_shifting) }}</td>
+                <td>SBP: {{ \App\Support\MeasurementUnits::format('bp', $ipd->recoveryObservation?->sbp_at_shifting) }}</td>
+                <td>DBP: {{ \App\Support\MeasurementUnits::format('bp', $ipd->recoveryObservation?->dbp_at_shifting) }}</td>
+                <td>RR: {{ \App\Support\MeasurementUnits::format('rr', $ipd->recoveryObservation?->rr_at_shifting) }}</td>
             </tr>
             <tr>
                 <td colspan="5">Post-Operative Instruction: {{ $ipd->recoveryObservation?->post_operative_instructions ?? '' }}</td>

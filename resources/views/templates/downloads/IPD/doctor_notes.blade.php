@@ -167,21 +167,21 @@
         <tr>
             <td colspan="2">
                 <b>Name of the Consultant:</b>
-                <span class="label-line">{{ $ipd->doctor_name ?? '' }}</span>
+                <span class="label-line">@include('templates.downloads.IPD.doctors_list')</span>
             </td>
         </tr>
     </table>
 
     <!-- Doctor Notes Table -->
-    <table>
+    <table style="table-layout:fixed; word-wrap:break-word;">
         <tr>
-            <th width="12%">Date & Time</th>
-            <th width="35%">Clinical Notes</th>
-            <th width="18%">Attending Doctor</th>
+            <th width="11%">Date & Time</th>
+            <th width="67%">Clinical Notes</th>
+            <th width="22%">Attending Doctor</th>
         </tr>
         @if($ipd->doctor_notes->isEmpty())
             <tr>
-                <td colspan="5" class="center">No doctor notes available.</td>
+                <td colspan="3" class="center">No doctor notes available.</td>
             </tr>
         @endif
         @foreach ($ipd->doctor_notes as $note)
@@ -189,8 +189,7 @@
                 $noteDate = $note->datetime ? \Carbon\Carbon::parse($note->datetime)->format('d-m-Y') : '';
                 $noteTime = $note->datetime ? \Carbon\Carbon::parse($note->datetime)->format('h:i A') : '';
                 $doctorName = $note->doctor_name ?? $note->doctor?->name ?? '';
-                $doctorPhone = $note->doctor_phone ?? $note->doctor?->phone ?? '';
-                $doctorEmail = $note->doctor_email ?? $note->doctor?->email ?? '';
+                $doctorDesignation = $note->doctor?->designation ?? '';
             @endphp
 
             <tr>
@@ -207,10 +206,10 @@
                         <b>GC:</b> {{ $note->gc }}<br>
                     @endif
                     @if($hasValue($note->bp))
-                        <b>BP:</b> {{ $note->bp }}<br>
+                        <b>BP:</b> {{ \App\Support\MeasurementUnits::format('bp', $note->bp) }}<br>
                     @endif
                     @if($hasValue($note->pr))
-                        <b>PR:</b> {{ $note->pr }}<br>
+                        <b>PR:</b> {{ \App\Support\MeasurementUnits::format('pulse', $note->pr) }}<br>
                     @endif
                     @if($hasValue($note->diagnosis))
                         {{ $note->diagnosis }}<br>
@@ -221,12 +220,10 @@
                 </td>
 
                 <td>
-                    @if($hasValue($doctorName) || $hasValue($doctorPhone) || $hasValue($doctorEmail))
-                        @if($hasValue($doctorName))
-                            <b>{{ $doctorName }}</b><br>
-                        @endif
-                        @if($hasValue($doctorPhone) || $hasValue($doctorEmail))
-                            <small>( {{ $doctorPhone }}@if($hasValue($doctorEmail) && $hasValue($doctorPhone)), @endif{{ $doctorEmail }} )</small>
+                    @if($hasValue($doctorName))
+                        <b>{{ $doctorName }}</b>
+                        @if($hasValue($doctorDesignation))
+                            <br><small>{{ $doctorDesignation }}</small>
                         @endif
                     @endif
                     <br><br>

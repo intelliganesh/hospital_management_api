@@ -131,7 +131,7 @@
                                 <b>Doctor</b>
                             </td>
                             <td width="50%">
-                                <b>: Dr. {{ $ipd->doctor_name ?? '' }}</b>
+                                <b>: @include('templates.downloads.IPD.doctors_list', ['prefix' => 'Dr. '])</b>
                             </td>
                         </tr>
                         <tr>

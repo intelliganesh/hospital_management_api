@@ -767,6 +767,31 @@ class InvoiceService implements CRUDContract, FilterContract
     }
 
     /**
+     * Net payable total of an OPD consultation (same math as invoiceData(): included charges + tests - discount).
+     * Used by the receipt PDF to show the balance after a payment. Read-only.
+     */
+    public function payableTotal(string $consultationId): float
+    {
+        $consultation = Consultations::where('id', $consultationId)->first();
+        if (! $consultation) {
+            return 0.0;
+        }
+        $test = Test::whereIn('id', explode(',', (string) $consultation->test_id))->get();
+        $row  = null;
+        if ($consultation->type === TypeEnum::NonProctology->value) {
+            $row = NonProctology::where('consultation_id', $consultation->id)->first();
+        } else if ($consultation->type === TypeEnum::Proctology->value) {
+            $row = Proctology::where('consultation_id', $consultation->id)->first();
+        } else if ($consultation->type === TypeEnum::Allopathy->value) {
+            $row = Allopathy::where('consultation_id', $consultation->id)->first();
+        }
+        $paymentData = Payment::where('include_in_invoice', 1)->where('consultation_id', $consultation->id)->get();
+        $total       = $this->totalAmount($paymentData, $test);
+        $discount    = $row ? $this->discountAmount($total, $row->consultation_discount) : 0;
+        return (float) ($total - $discount);
+    }
+
+    /**
      * Summary of discountTotalAmount
      * @param mixed $consultation
      * @param mixed $paymentData

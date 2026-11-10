@@ -34,6 +34,11 @@ class IPDSurgery extends Model
         'uploaded_report_path',
         'uploaded_consent_path',
         'consent_summary',
+        'shloka_data',
+    ];
+
+    protected $casts = [
+        'shloka_data' => 'array',
     ];
 
     public static $columns = [
@@ -91,5 +96,6 @@ class IPDSurgery extends Model
         'uploaded_report_path',
         'uploaded_consent_path',
         'consent_summary',
+        'shloka_data',
     ];
 }

@@ -159,8 +159,8 @@
                 <td><b>Name: </b> {{ $ipd->patient_name }} </td>
                 <td><b>Age: </b> {{ $ipd->patient_age }} </td>
                 <td><b>Sex: </b> {{ $ipd->patient->gender ?? '' }} </td>
-                <td><b>Height: </b> {{$ipd->anaesthesia?->patient_height ?? ''}} </td>
-                <td><b>Weight: </b> {{$ipd->anaesthesia?->patient_weight ?? ''}} </td>
+                <td><b>Height: </b> {{ \App\Support\MeasurementUnits::format('height', $ipd->anaesthesia?->patient_height) }} </td>
+                <td><b>Weight: </b> {{ \App\Support\MeasurementUnits::format('weight', $ipd->anaesthesia?->patient_weight) }} </td>
                 <td><b>Date: </b> {{ date('d/m/Y') }} </td>
             </tr>
         </table>
@@ -275,7 +275,7 @@
                 <td style="padding:0px">
                     <p style="padding:5px;border-bottom:1px solid"> <b>INR</b>  {{ $ipd->anaesthesia_pre_operative_evaluation_chart?->inr ?? '' }}</p>
                     <p style="padding:5px;border-bottom:1px solid"> <b>Blood Group</b> {{ $ipd->anaesthesia_pre_operative_evaluation_chart?->blood_group ?? '' }}</p>
-                    <p style="padding:5px;border-bottom:1px solid"> <b>FBS/RBS</b> {{ $ipd->anaesthesia_pre_operative_evaluation_chart?->fbs_rbs ?? '' }}</p>
+                    <p style="padding:5px;border-bottom:1px solid"> <b>FBS/RBS</b> {{ \App\Support\MeasurementUnits::format('fbs', $ipd->anaesthesia_pre_operative_evaluation_chart?->fbs_rbs) }}</p>
                     <p style="padding:5px;border-bottom:1px solid"> <b>BUN/S. Greet</b> {{ $ipd->anaesthesia_pre_operative_evaluation_chart?->bun ?? '' }}</p>
                     <p style="padding:5px;"> <b>Na 'K'</b> {{ $ipd->anaesthesia_pre_operative_evaluation_chart?->na_k ?? '' }}</p>
                 </td>

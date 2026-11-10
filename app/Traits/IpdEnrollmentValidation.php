@@ -30,6 +30,9 @@ trait IpdEnrollmentValidation
 
             'advance_amount' => 'nullable|numeric|min:0',
 
+            // Optional: used for the IPD number series only when no consultation type is available (default ayurveda)
+            'treatment_type' => 'nullable|in:ayurveda,allopathy',
+
             // Doctors
             'consultant_doctor' => 'nullable|array',
             'consultant_doctor.*' => 'integer|exists:users,id',

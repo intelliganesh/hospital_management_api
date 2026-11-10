@@ -92,6 +92,19 @@ class IPD extends Model
     ];
 
     /**
+     * ORDER BY expression that sorts mixed IPD number formats sensibly:
+     * legacy "IPD0049" first, then new "ash-ayu-05" / "ash-all-05"; inside a group by the numeric suffix
+     * (so ...-99 < ...-100, which plain string order gets wrong), then by the full string.
+     */
+    public static function numberOrderSql(string $column = 'ipd.ipd_number', string $direction = 'asc'): string
+    {
+        $dir = strtolower($direction) === 'desc' ? 'DESC' : 'ASC';
+
+        return "(CASE WHEN {$column} REGEXP '^[A-Za-z]+[0-9]+\$' THEN 0 ELSE 1 END) {$dir}, "
+            . "CAST(REGEXP_REPLACE({$column}, '[^0-9]', '') AS UNSIGNED) {$dir}, {$column} {$dir}";
+    }
+
+    /**
      * Get the patient associated with this IPD record.
      */
     public function patient()

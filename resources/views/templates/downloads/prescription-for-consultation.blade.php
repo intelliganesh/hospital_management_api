@@ -103,16 +103,6 @@
                     <td class="label">Name:</td>
                     <td>{{ $doctor_name }}</td>
                 </tr>
-                <tr>
-                    <td class="label">Email:</td>
-                    <td>{{ $doctor_email }}</td>
-                </tr>
-            </table>
-            <table class="info-table">
-                <tr>
-                    <td class="label">Phone:</td>
-                    <td>{{ $doctor_phone }}</td>
-                </tr>
             </table>
         </div>
     </div>

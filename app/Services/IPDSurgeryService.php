@@ -13,6 +13,8 @@ use App\Models\IPDDischargeSummary;
 use App\Models\IPDPreOperativeAnaesthesiaEvaluation;
 use App\Models\IPDPreOperativeChecklist;
 use App\Models\IPDSurgery;
+use App\Models\Master\Shloka;
+use Illuminate\Validation\ValidationException;
 use App\Services\CheckValidation;
 use App\Traits\IPDSurgeryValidation;
 use Illuminate\Http\Request;
@@ -129,6 +131,11 @@ class IPDSurgeryService implements CRUDContract, FilterContract
             $data['uploaded_report_path'] = $filePath;
         }
 
+        unset($data['shloka_data']);
+        if (! empty($request->shloka_ids)) {
+            $data['shloka_data'] = $this->buildShlokaSnapshot($request->shloka_ids, null);
+        }
+
         $surgery = IPDSurgery::create($data);
         $preliminaryNotes = IPDPreliminaryNotes::where('ipd_id', $request->ipd_id)->first();
 
@@ -190,7 +197,36 @@ class IPDSurgeryService implements CRUDContract, FilterContract
             $data['uploaded_report_path'] = $filePath;
         }
 
+        // shloka_data is only ever written from the selected ids (never trusted from the client body)
+        unset($data['shloka_data']);
+        if ($request->has('shloka_ids') && is_array($request->shloka_ids) && count($request->shloka_ids) > 0) {
+            $data['shloka_data'] = $this->buildShlokaSnapshot($request->shloka_ids, $surgery->shloka_data);
+        }
+
         $surgery->update($data);
+    }
+
+    /**
+     * Build the stored snapshot [{id,title,text}] for the selected Shloka ids.
+     * Ids already stored on the surgery keep working even if the master was later deleted.
+     */
+    private function buildShlokaSnapshot(array $ids, ?array $existing): array
+    {
+        $ids      = array_values(array_unique(array_map('intval', $ids)));
+        $masters  = Shloka::whereIn('id', $ids)->get()->keyBy('id');
+        $previous = collect($existing ?? [])->keyBy('id');
+        $snapshot = [];
+        foreach ($ids as $shlokaId) {
+            if ($masters->has($shlokaId)) {
+                $m          = $masters->get($shlokaId);
+                $snapshot[] = ['id' => $m->id, 'title' => $m->title, 'text' => $m->verse_text];
+            } elseif ($previous->has($shlokaId)) {
+                $snapshot[] = $previous->get($shlokaId);
+            } else {
+                throw ValidationException::withMessages(['shloka_ids' => ['Selected shloka does not exist.']]);
+            }
+        }
+        return $snapshot;
     }
 
     /**

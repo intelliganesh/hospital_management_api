@@ -387,12 +387,8 @@ class IPDBillingService
         }
 
         if ($sortBy === 'ipd_number') {
-            $query->orderBy(
-                IPD::query()
-                    ->select('ipd.ipd_number')
-                    ->whereColumn('ipd.id', 'invoice.ipd_id')
-                    ->limit(1),
-                $sortOrder
+            $query->orderByRaw(
+                IPD::numberOrderSql('(SELECT ipd.ipd_number FROM ipd WHERE ipd.id = invoice.ipd_id LIMIT 1)', $sortOrder)
             );
             return;
         }

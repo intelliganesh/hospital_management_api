@@ -29,14 +29,14 @@
     }
 
     .dotted-line {
-        border-bottom: 1px dotted #000;
+        border-bottom: 1px solid #000;
         display: inline-block;
         min-width: 600px;
         font-weight: normal;
     }
 
     .full-line {
-        border-bottom: 1px dotted #000;
+        border-bottom: 1px solid #000;
         display: inline-block;
         width: 100%;
         height: 14px;

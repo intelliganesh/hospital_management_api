@@ -17,6 +17,15 @@ class IpdDocument extends Model
         'ipd_surgery_id',
         'document_type',
         'document_path',
+        // General uploads / scanned records (nullable; NULL for generated PDFs)
+        'category',
+        'title',
+        'description',
+        'original_name',
+        'mime_type',
+        'file_size',
+        'uploaded_by',
+        'uploaded_by_name',
     ];
 
     protected $hidden = [

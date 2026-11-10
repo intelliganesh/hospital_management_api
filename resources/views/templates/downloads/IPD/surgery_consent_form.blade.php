@@ -29,14 +29,14 @@
     }
 
     .dotted-line {
-        border-bottom: 1px dotted #000;
+        border-bottom: 1px solid #000;
         display: inline-block;
         min-width: 600px;
         font-weight: normal;
     }
 
     .full-line {
-        border-bottom: 1px dotted #000;
+        border-bottom: 1px solid #000;
         display: inline-block;
         width: 100%;
         height: 14px;
@@ -66,7 +66,7 @@
         </p>
         <p>
             I further Authorize
-            <span class="dotted-line" style="min-width:200px;">Dr. {{ $ipd->doctor_name ?? '' }}</span>
+            <span class="dotted-line" style="min-width:200px; display:inline;">@include('templates.downloads.IPD.doctors_list', ['prefix' => 'Dr. ', 'sep' => ', '])</span>
             and the staffs of Acharya Sushrutha Healthcare Pvt Ltd to perform such additional
             diagnostic or surgical procedures as maybe required or deemed advisable to
             safeguard life or health during the course of diagnostic or surgical procedure.

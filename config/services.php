@@ -38,6 +38,8 @@ return [
     'hospital_app' => [
         'reset_password_url' => env('RESET_PASSWORD_URL'),
         'encrypt_key'        => env('ENCRYPT_KEY'),
+        // Prefix for NEW IPD admission numbers: <prefix>-ayu-NN / <prefix>-all-NN (see AutoIdGenerateService::generateIpdNumber)
+        'ipd_code_prefix'    => env('IPD_CODE_PREFIX', 'ash'),
     ],
 
     'daily'=>[

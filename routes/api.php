@@ -57,6 +57,7 @@ use App\Http\Controllers\Master\SurgicalHistoryController;
 use App\Http\Controllers\Master\TestsController;
 use App\Http\Controllers\Master\VikrutiController;
 use App\Http\Controllers\Master\YogaAsanaController;
+use App\Http\Controllers\Master\ShlokaController;
 use App\Http\Controllers\MedicineCategoryMappingController;
 use App\Http\Controllers\OnExaminationsController;
 use App\Http\Controllers\OPDController;
@@ -322,11 +323,22 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::put('/yoga_asana_update/{id}', [YogaAsanaController::class, 'update']);
     Route::delete('/yoga_asana_delete/{id}', [YogaAsanaController::class, 'delete']);
     Route::get('/yoga_asana_options_list', [YogaAsanaController::class, 'optionsList']);
+
+    //shloka (master used on the IPD surgery report)
+    Route::get('/shloka_list', [ShlokaController::class, 'all']);
+    Route::post('/shloka_add', [ShlokaController::class, 'create']);
+    Route::get('/shloka_details/{id}', [ShlokaController::class, 'get']);
+    Route::put('/shloka_update/{id}', [ShlokaController::class, 'update']);
+    Route::delete('/shloka_delete/{id}', [ShlokaController::class, 'delete']);
+    Route::get('/shloka_options_list', [ShlokaController::class, 'optionsList']);
     //invoice
     Route::get('/invoice_list', [InvoiceController::class, 'all']);
     Route::get('/invoice_details/{id}', [InvoiceController::class, 'get']);
     Route::post('/invoice_payment', [InvoiceController::class, 'addPayment']);
     Route::get('/invoice_download/{id}', [InvoiceController::class, 'download']);
+    Route::get('/receipt_download/{receipt_id}', [\App\Http\Controllers\ReceiptController::class, 'download']);
+    Route::get('/receipt_download_by_invoice/{invoice_id}', [\App\Http\Controllers\ReceiptController::class, 'downloadByInvoice']);
+    Route::get('/receipt_download_by_external_appointment/{id}', [\App\Http\Controllers\ReceiptController::class, 'downloadByExternalAppointment']);
     Route::post('/invoice_add_or_update/{id}', [InvoiceController::class, 'addOrUpdate']);
     Route::post('/amount_include_in_invoice', [InvoiceController::class, 'amountIncludeInInvoice']);
     Route::get('/payment_details/{id}', [InvoiceController::class, 'paymentDetails']);
@@ -491,6 +503,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/ipd_details/{id}', [IpdController::class, 'get']);
     Route::put('/ipd_update/{id}', [IpdController::class, 'update']);
     Route::delete('/ipd_delete/{id}', [IpdController::class, 'delete']);
+    Route::put('/ipd_update_discharge_datetime/{id}', [IpdController::class, 'updateDischargeDateTime']);
     Route::get('/ipd_download_pdf/{id}', [IpdController::class, 'downloadPdf']);
     Route::get('/ipd_generate_pdf/{id}', [IpdController::class, 'generatePdf']);
     Route::get('/ipd_download_empty_pdf/{id}', [IpdController::class, 'downloadEmptyPdf'])->name('ipd_download_empty_pdf');
@@ -502,6 +515,10 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/ipd_document_details/{id}', [IPDDocumentController::class, 'get']);
     Route::post('/ipd_document_update/{id}', [IPDDocumentController::class, 'update']);
     Route::delete('/ipd_document_delete/{id}', [IPDDocumentController::class, 'delete']);
+    Route::post('/ipd_general_upload_add', [IPDDocumentController::class, 'createGeneral']);
+    Route::get('/ipd_general_upload_list/{ipd_id}', [IPDDocumentController::class, 'listGeneral']);
+    Route::get('/ipd_general_upload_file/{id}', [IPDDocumentController::class, 'fileGeneral']);
+    Route::delete('/ipd_general_upload_delete/{id}', [IPDDocumentController::class, 'deleteGeneral']);
 
     //Preliminary Notes
     Route::post('/preliminary_notes/{ipd_id}', [IPDPreliminaryNotesController::class, 'create']);

@@ -95,14 +95,6 @@
                     <th>Name</th>
                     <td>{{ $doctor_name }}</td>
                 </tr>
-                <tr>
-                    <th>Email</th>
-                    <td>{{ $doctor_email }}</td>
-                </tr>
-                <tr>
-                    <th>Phone</th>
-                    <td>{{ $doctor_phone }}</td>
-                </tr>
             </table>
         </div>
 

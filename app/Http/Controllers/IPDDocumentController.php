@@ -217,4 +217,67 @@ class IPDDocumentController extends Controller
             return $this->exceptionResponse($exception);
         }
     }
+
+    // ---- General uploads / scanned records (see IPDDocumentService::createGeneral) ----
+
+    /** POST /api/ipd_general_upload_add  multipart: ipd_id, category, title?, description?, files[] */
+    public function createGeneral(Request $request)
+    {
+        try {
+            return $this->successResponse($this->ipdDocumentService->createGeneral($request), 'Files uploaded successfully', 201);
+        } catch (ValidationException $exception) {
+            return $this->validationResponse($exception);
+        } catch (ModelNotFoundException $exception) {
+            return $this->notFoundResponse(new NotFoundHttpException('IPD record not found.'));
+        } catch (Exception $exception) {
+            return $this->exceptionResponse($exception);
+        }
+    }
+
+    /** GET /api/ipd_general_upload_list/{ipd_id}?category= */
+    public function listGeneral(Request $request, string $ipdId)
+    {
+        try {
+            return $this->successResponse($this->ipdDocumentService->listGeneral($ipdId, $request), 'Uploads retrieved successfully');
+        } catch (ValidationException $exception) {
+            return $this->validationResponse($exception);
+        } catch (ModelNotFoundException $exception) {
+            return $this->notFoundResponse(new NotFoundHttpException('IPD record not found.'));
+        } catch (Exception $exception) {
+            return $this->exceptionResponse($exception);
+        }
+    }
+
+    /** GET /api/ipd_general_upload_file/{id}?download=1  (authenticated inline view / download) */
+    public function fileGeneral(Request $request, string $id)
+    {
+        try {
+            $f = $this->ipdDocumentService->generalFile($id);
+            $headers = ['Content-Type' => $f['mime'], 'X-Content-Type-Options' => 'nosniff'];
+
+            return $request->boolean('download')
+                ? response()->download($f['path'], $f['name'], $headers)
+                : response()->file($f['path'], $headers + ['Content-Disposition' => 'inline; filename="' . $f['name'] . '"']);
+        } catch (ModelNotFoundException $exception) {
+            return $this->notFoundResponse(new NotFoundHttpException('Document not found.'));
+        } catch (Exception $exception) {
+            return $this->exceptionResponse($exception);
+        }
+    }
+
+    /** DELETE /api/ipd_general_upload_delete/{id}  (Admin, Super Admin, Front Desk User, or the uploader) */
+    public function deleteGeneral(Request $request, string $id)
+    {
+        try {
+            $this->ipdDocumentService->deleteGeneral($id, $request);
+
+            return $this->successResponse(null, 'Document deleted successfully');
+        } catch (\Illuminate\Auth\Access\AuthorizationException $exception) {
+            return $this->errorResponse([], $exception->getMessage(), 403);
+        } catch (ModelNotFoundException $exception) {
+            return $this->notFoundResponse(new NotFoundHttpException('Document not found.'));
+        } catch (Exception $exception) {
+            return $this->exceptionResponse($exception);
+        }
+    }
 }

@@ -16,6 +16,26 @@ class FistulaReportService
      * @param string $suffix
      * @return string
      */
+    /**
+     * "High - Pelvic, Low" per fistula. Legacy rows (no type, basis only) are treated as High.
+     */
+    private function formatRiding($type, $basis, $delimiter = ', ')
+    {
+        if (empty($type) && empty($basis)) {
+            return '';
+        }
+        $types  = explode('#', (string) $type);
+        $bases  = explode('#', (string) $basis);
+        $items  = [];
+        for ($i = 0, $n = max(count($types), count($bases)); $i < $n; $i++) {
+            $b = $bases[$i] ?? '';
+            $t = ($types[$i] ?? '') !== '' ? $types[$i] : ($b !== '' ? 'High' : '');
+            $items[] = ($t !== '' && $b !== '') ? "$t - $b" : ($t !== '' ? $t : '-');
+        }
+        $result = implode($delimiter, $items);
+        return $result;
+    }
+
     private function formatArrayValues($value, $delimiter = ', ', $suffix = '')
     {
         if (empty($value)) {
@@ -64,6 +84,7 @@ class FistulaReportService
                 'proctology.no_of_secondary_opening_position',
                 'proctology.type_of_crypt',
                 'proctology.crypt_cause',
+                'proctology.high_low_riding_type',
                 'proctology.basis_of_high_low_riding',
                 'proctology.distant_visceral_communication',
                 'proctology.sono_fistula_gram',
@@ -337,6 +358,7 @@ class FistulaReportService
                 'proctology.no_of_secondary_opening_position',
                 'proctology.type_of_crypt',
                 'proctology.crypt_cause',
+                'proctology.high_low_riding_type',
                 'proctology.basis_of_high_low_riding',
                 'proctology.distant_visceral_communication',
                 'proctology.sono_fistula_gram',
@@ -577,7 +599,7 @@ class FistulaReportService
                 
                 'On the Basis of Crypt'            => $this->formatArrayValues($row->type_of_crypt),
                 'If Any Cause'                     => $this->formatArrayValues($row->crypt_cause),
-                'On the Basis of High/Low Riding'  => $this->formatArrayValues($row->basis_of_high_low_riding),
+                'On the Basis of High/Low Riding'  => $this->formatRiding($row->high_low_riding_type ?? null, $row->basis_of_high_low_riding),
                 'Any Other Distant/Visceral Communication'   => $this->formatArrayValues($row->distant_visceral_communication),
                 'Sonologist/Radiologist'           => $row->sonologist ?? '',
                 'Sonologist/Radiologist Findings'  => $row->sonologist_findings ?? '',

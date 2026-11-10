@@ -20,6 +20,7 @@ use AutoIdGenerate;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\DB;
 
 class IpdService implements FilterContract
 {
@@ -46,6 +47,14 @@ class IpdService implements FilterContract
     {
         // Validate request
         $this->checkValidationService->checkValidation($this->validate($request));
+
+        // One transaction for the whole admission: a failure midway rolls back everything, including the
+        // IPD number counter (no gaps in the ash-ayu-NN / ash-all-NN sequence, no half-created admissions).
+        return DB::transaction(fn () => $this->createAdmission($request));
+    }
+
+    private function createAdmission(Request $request)
+    {
 
         // Verify consultation exists and has advice_admission = 1 (only if provided)
         $consultation = null;
@@ -101,7 +110,7 @@ class IpdService implements FilterContract
             'room_type'               => $room->room_type ?? null,
             'room_number'             => $room->room_number ?? null,
             'bed_number'              => $bed->bed_number ?? null,
-            'ipd_number'              => AutoIdGenerate::generateId(ServiceType::IPD),
+            'ipd_number'              => AutoIdGenerate::generateIpdNumber($this->resolveTreatmentType($consultation, $request)),
             'ipd_type'                => $request->ipd_type ?? 'surgical',
         ];
 
@@ -155,6 +164,8 @@ class IpdService implements FilterContract
             ];
 
             $receipt = Receipt::create($receiptData);
+            // Not persisted: lets the UI offer "Print receipt" for the advance right after admission.
+            $ipd->setAttribute('advance_receipt_id', $receipt->id);
         }
 
         // Assign consultant doctors
@@ -206,6 +217,105 @@ class IpdService implements FilterContract
         }
 
         return $ipd->load(['patient', 'consultation', 'staffs', 'preliminaryNotes']);
+    }
+
+    /** Roles allowed to correct the discharge date/time of an already discharged IPD. */
+    public const DISCHARGE_EDIT_ROLES = ['Front Desk User', 'Admin', 'Super Admin'];
+
+    /**
+     * Correct ipd.discharge_date_time after discharge (single source of truth: discharge summary, billing,
+     * reports and PDFs all read it). Writes an audit row and refreshes the already stored PDFs that print it.
+     * Throws AuthorizationException (-> 403 in the controller) for other roles.
+     */
+    public function updateDischargeDateTime(Request $request, string $id): array
+    {
+        $user = $request->user();
+        if (! $user || ! $user->hasAnyRole(self::DISCHARGE_EDIT_ROLES)) {
+            throw new \Illuminate\Auth\Access\AuthorizationException('You are not allowed to edit the discharge date and time.');
+        }
+
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+            'discharge_date_time' => ['required', 'date_format:Y-m-d H:i:s,Y-m-d H:i,Y-m-d\TH:i,Y-m-d\TH:i:s'],
+        ]);
+        $this->checkValidationService->checkValidation($validator);
+
+        $new = Carbon::parse($request->input('discharge_date_time'));
+
+        $ipd = IPD::findOrFail($id);
+        if ($ipd->status !== 'Discharged') {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'status' => ['Discharge date and time can be edited only for a Discharged patient.'],
+            ]);
+        }
+        if ($ipd->admission_date_time && $new->lt(Carbon::parse($ipd->admission_date_time))) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'discharge_date_time' => ['Discharge date and time cannot be earlier than the admission date and time.'],
+            ]);
+        }
+        if ($new->gt(now()->addDay())) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'discharge_date_time' => ['Discharge date and time cannot be in the future.'],
+            ]);
+        }
+
+        $old = $ipd->discharge_date_time ? Carbon::parse($ipd->discharge_date_time)->format('Y-m-d H:i:s') : null;
+
+        DB::transaction(function () use ($ipd, $new, $old, $user, $request) {
+            $ipd->discharge_date_time = $new;
+            $ipd->save();
+
+            DB::table('ipd_discharge_audit')->insert([
+                'ipd_id'                  => $ipd->id,
+                'old_discharge_date_time' => $old,
+                'new_discharge_date_time' => $new->format('Y-m-d H:i:s'),
+                'changed_by'              => $user->id,
+                'changed_by_name'         => $user->name,
+                'changed_by_role'         => $user->getRoleNames()->implode(', '),
+                'ip_address'              => $request->ip(),
+                'created_at'              => now(),
+            ]);
+        });
+
+        // Stored PDFs that print the discharge date are regenerated (best effort; the DB value is already saved).
+        $refreshed = [];
+        $failed    = [];
+        $types     = \App\Models\IpdDocument::where('ipd_id', $ipd->id)
+            ->whereNull('ipd_surgery_id')
+            ->whereIn('document_type', ['discharge_summary', 'billing_invoice', 'preliminary_notes'])
+            ->pluck('document_type')->unique()->values();
+        foreach ($types as $type) {
+            try {
+                @set_time_limit(120);
+                app(IPDDownloadService::class)->generatePdf($ipd->id, $type);
+                $refreshed[] = $type;
+            } catch (\Throwable $e) {
+                $failed[] = $type;
+                \Illuminate\Support\Facades\Log::warning("Discharge date edit: PDF refresh failed for {$type}: " . $e->getMessage());
+            }
+        }
+
+        return [
+            'id'                  => $ipd->id,
+            'ipd_number'          => $ipd->ipd_number,
+            'old_discharge_date_time' => $old,
+            'discharge_date_time' => $new->format('Y-m-d H:i:s'),
+            'pdfs_refreshed'      => $refreshed,
+            'pdfs_refresh_failed' => $failed,
+        ];
+    }
+
+    /**
+     * 'allopathy' | 'ayurveda' for the IPD number series.
+     * Consultation type wins (Allopathy = allopathy; Proctology / Non Proctology = ayurveda);
+     * otherwise the optional request field `treatment_type`; default ayurveda.
+     */
+    private function resolveTreatmentType(?Consultations $consultation, Request $request): string
+    {
+        if ($consultation && ! empty($consultation->type)) {
+            return strtolower(trim($consultation->type)) === 'allopathy' ? 'allopathy' : 'ayurveda';
+        }
+
+        return strtolower((string) $request->input('treatment_type')) === 'allopathy' ? 'allopathy' : 'ayurveda';
     }
 
     /**
@@ -278,6 +388,8 @@ class IpdService implements FilterContract
             if ($sortBy === 'room_bed') {
                 $query->orderBy('ipd.room_number', $sortOrder)
                     ->orderBy('ipd.bed_number', $sortOrder);
+            } elseif ($sortBy === 'ipd_number') {
+                $query->orderByRaw(IPD::numberOrderSql('ipd.ipd_number', $sortOrder));
             } elseif (in_array($sortBy, $sortableColumns, true)) {
                 $query->orderBy("ipd.{$sortBy}", $sortOrder);
             }

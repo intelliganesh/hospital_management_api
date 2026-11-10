@@ -33,9 +33,31 @@ class Receipt extends Model
 
                 $model->receipt_number = $nextNumber;
             }
+
+            // Record who collected the payment (columns added by migration 2026_11_11_000002; skipped if absent).
+            try {
+                $user = \Illuminate\Support\Facades\Auth::user();
+                if ($user && self::hasCollectedByColumns()) {
+                    $model->collected_by_user_id = $user->id;
+                    $model->collected_by_name    = $user->name;
+                }
+            } catch (\Throwable $e) {
+                // never block a payment because of this
+            }
         });
     }
     
+    private static ?bool $collectedByColumns = null;
+
+    private static function hasCollectedByColumns(): bool
+    {
+        if (self::$collectedByColumns === null) {
+            self::$collectedByColumns = \Illuminate\Support\Facades\Schema::hasColumn('receipts', 'collected_by_name')
+                && \Illuminate\Support\Facades\Schema::hasColumn('receipts', 'collected_by_user_id');
+        }
+        return self::$collectedByColumns;
+    }
+
     protected $table = 'receipts';
     protected $fillable = [
         'invoice_id',

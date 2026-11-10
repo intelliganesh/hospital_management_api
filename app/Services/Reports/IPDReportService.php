@@ -194,7 +194,7 @@ class IPDReportService
                 $query->orderBy('ipd.discharge_date_time', $sortOrder);
                 break;
             case 'ipd_number':
-                $query->orderBy('ipd.ipd_number', $sortOrder);
+                $query->orderByRaw(\App\Models\IPD::numberOrderSql('ipd.ipd_number', $sortOrder));
                 break;
             case 'patient_name':
                 $query->orderBy('ipd.patient_name', $sortOrder);

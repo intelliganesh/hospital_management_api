@@ -489,7 +489,7 @@
             <tr>
                 <th class="text-center sub-title">ANAESTHESIA TECHNIQUE BRIEF</th>
             </tr>
-            <tr style="height:60px;">
+            <tr style="height:150px; page-break-inside: avoid;">
                 <td></td>
             </tr>
         </table>

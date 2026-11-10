@@ -265,27 +265,20 @@
             CONSULTANTS NAME AND SIGNATURE
         </div>
         @php
-        $doctors = $ipd->consultantDoctors;
-        $count = count($doctors);
-        $startCount=$hasValue($ipd->doctor_name) ? 1 : 0;
+        $allDoctors = $ipd->all_doctors ?? [];
+        if (empty($allDoctors) && $hasValue($ipd->doctor_name)) {
+            $allDoctors = [['name' => $ipd->doctor_name, 'designation' => '']];
+        }
         @endphp
         <table>
-            @if($hasValue($ipd->doctor_name))
+            @foreach($allDoctors as $doctorRow)
             <tr>
                 <td style="padding-bottom:5px;">
-                    1.
-                    {{ $ipd->doctor_name ?? '-' }}
+                    {{ $loop->iteration }}.
+                    {{ $doctorRow['name'] }}@if(!empty($doctorRow['designation'])) ({{ $doctorRow['designation'] }})@endif
                 </td>
             </tr>
-            @endif
-            @for($i = 0,$j=$startCount; $i < $count; $i++,$j++)
-            <tr>
-                <td style="padding-bottom:5px;">
-                    {{ $j + 1 }}.
-                    {{ $doctors[$i]->user->name ?? '' }}
-                </td>
-            </tr>
-                @endfor
+            @endforeach
         </table>
         @php
         $preliminaryNotes = $ipd->preliminaryNotes->first();
@@ -403,7 +396,7 @@
                         BP:
                     </div>
                     <div class="value">
-                        {{ $preliminaryNotes->bp }}
+                        {{ \App\Support\MeasurementUnits::format('bp', $preliminaryNotes->bp) }}
                     </div>
                 </div>
                 @endif
@@ -413,7 +406,7 @@
                         PULSE:
                     </div>
                     <div class="value">
-                        {{ $preliminaryNotes->pulse }}
+                        {{ \App\Support\MeasurementUnits::format('pulse', $preliminaryNotes->pulse) }}
                     </div>
                 </div>
                 @endif
@@ -423,7 +416,7 @@
                         TEMP:
                     </div>
                     <div class="value">
-                        {{ $preliminaryNotes->temperature }}
+                        {{ \App\Support\MeasurementUnits::format('temperature', $preliminaryNotes->temperature) }}
                     </div>
                 </div>
                 @endif
@@ -444,7 +437,7 @@
                     HEIGHT:
                 </div>
                 <div class="value">
-                    {{ $preliminaryNotes->height }}
+                    {{ \App\Support\MeasurementUnits::format('height', $preliminaryNotes->height) }}
                 </div>
             </div>
             @endif
@@ -454,7 +447,7 @@
                     WEIGHT:
                 </div>
                 <div class="value">
-                    {{ $preliminaryNotes->weight }}
+                    {{ \App\Support\MeasurementUnits::format('weight', $preliminaryNotes->weight) }}
                 </div>
             </div>
             @endif
@@ -464,7 +457,7 @@
                     SPO2:
                 </div>
                 <div class="value">
-                    {{ $preliminaryNotes->spo2 }}
+                    {{ \App\Support\MeasurementUnits::format('spo2', $preliminaryNotes->spo2) }}
                 </div>
             </div>
             @endif
@@ -529,7 +522,7 @@
                     <span class="label">
                         P/R:
                     </span>
-                    {{ $preliminaryNotes->pr }}
+                    {{ \App\Support\MeasurementUnits::format('pulse', $preliminaryNotes->pr) }}
                 </p>
                 @endif
                 @if($hasValue($preliminaryNotes->dre))
@@ -636,7 +629,7 @@
                         RBS:
                     </div>
                     <div class="value">
-                        {{ $preliminaryNotes->rbs }}
+                        {{ \App\Support\MeasurementUnits::format('rbs', $preliminaryNotes->rbs) }}
                     </div>
                 </div>
                 @endif

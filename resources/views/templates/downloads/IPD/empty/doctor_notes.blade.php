@@ -164,17 +164,17 @@
         <tr>
             <td colspan="2">
                 <b>Name of the Consultant:</b>
-                <span class="label-line">{{ $ipd->doctor_name ?? '' }}</span>
+                <span class="label-line">@include('templates.downloads.IPD.doctors_list')</span>
             </td>
         </tr>
     </table>
 
     <!-- Doctor Notes Table -->
-    <table>
+    <table style="table-layout:fixed; word-wrap:break-word;">
         <tr>
-            <th width="12%">Date & Time</th>
-            <th width="35%">Clinical Notes</th>
-            <th width="18%">Attending Doctor</th>
+            <th width="11%">Date & Time</th>
+            <th width="67%">Clinical Notes</th>
+            <th width="22%">Attending Doctor</th>
         </tr>
         <tr>
             <td style="height: 800px;"></td>

@@ -107,6 +107,17 @@
         </table>
         <!-- Main Content Box -->
         <table style="border-top:1px solid">
+            @php($shlokas = is_array($ipd->surgery_report?->shloka_data ?? null) ? $ipd->surgery_report->shloka_data : [])
+            @if(count($shlokas) > 0)
+                <tr>
+                    <td colspan="2" style="text-align:center;">
+                        @foreach($shlokas as $shloka)
+                            @if(!empty($shloka['title']))<b>{{ $shloka['title'] }}</b><br>@endif
+                            {!! nl2br(e($shloka['text'] ?? '')) !!}<br><br>
+                        @endforeach
+                    </td>
+                </tr>
+            @endif
             @if($hasValue($ipd->surgery_report?->surgeon ?? '') || $hasValue($ipd->surgery_report?->anaesthetist ?? ''))
                 <tr style="padding-bottom:20px;">
                     @if($hasValue($ipd->surgery_report?->surgeon ?? ''))

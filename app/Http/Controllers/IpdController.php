@@ -488,6 +488,25 @@ class IpdController extends Controller
      *     )
      * )
      */
+    /**
+     * PUT /api/ipd_update_discharge_datetime/{id}  body: discharge_date_time (Y-m-d H:i:s or Y-m-d H:i)
+     * Only Front Desk User / Admin / Super Admin; IPD must be Discharged.
+     */
+    public function updateDischargeDateTime(Request $request, string $id)
+    {
+        try {
+            return $this->successResponse($this->ipdService->updateDischargeDateTime($request, $id), 'Discharge date and time updated successfully');
+        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
+            return $this->errorResponse([], $e->getMessage(), 403);
+        } catch (ValidationException $e) {
+            return $this->validationResponse($e);
+        } catch (ModelNotFoundException $e) {
+            return $this->notFoundResponse(new NotFoundHttpException('IPD record not found.'));
+        } catch (Exception $e) {
+            return $this->exceptionResponse($e);
+        }
+    }
+
     public function delete(string $id)
     {
         try {
