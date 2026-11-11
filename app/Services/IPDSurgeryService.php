@@ -137,6 +137,8 @@ class IPDSurgeryService implements CRUDContract, FilterContract
         }
 
         $surgery = IPDSurgery::create($data);
+        // adding a surgery makes the admission surgical (it may have been marked non_surgical when the discharge summary was opened early)
+        \App\Models\IPD::where('id', $request->ipd_id)->where('ipd_type', '!=', 'surgical')->update(['ipd_type' => 'surgical']);
         $preliminaryNotes = IPDPreliminaryNotes::where('ipd_id', $request->ipd_id)->first();
 
         $anaesthesia = IPDAnaesthesia::create([
