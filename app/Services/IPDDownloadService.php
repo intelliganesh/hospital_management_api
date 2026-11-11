@@ -431,6 +431,21 @@ class IPDDownloadService
                     $htmlContent            = view('templates.downloads.IPD.empty.discharge_summary', compact('ipd'))->render();
                     break;
 
+                case 'billing_invoice':
+                    // blank bill: same layout as the filled invoice with no items/amounts (for hand-filling)
+                    $bill = (object) [
+                        'blank'                => true,
+                        'bill_no'              => null,
+                        'bill_date'            => null,
+                        'invoice_items'        => collect(),
+                        'professional_charges' => collect(),
+                        'receipts'             => collect(),
+                        'amount_in_words'      => '',
+                    ];
+                    $fileName    = 'billing_invoice_' . $ipd->ipd_number . '.pdf';
+                    $htmlContent = view('templates.downloads.IPD.billing_invoice', compact('ipd', 'bill'))->render();
+                    break;
+
                 default:
                     throw new Exception('Invalid document type: ' . $type);
             }

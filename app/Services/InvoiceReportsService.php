@@ -312,13 +312,16 @@ class InvoiceReportsService implements CRUDContract, FilterContract
             }
             $inv->paymentBreakdown = $pmtBreakdown;
 
-            $test = Test::whereIn('id', explode(',', $inv->consultation_data()->test_id))->get();
-            if ($inv->consultation_data()->type === TypeEnum::NonProctology->value) {
+            // IPD invoices have no consultation (consultation_id is NULL) - guard against that
+            $consultationData         = $inv->consultation_data();
+            $protologyOrNonProctology = null;
+            $test                     = $consultationData ? Test::whereIn('id', explode(',', (string) $consultationData->test_id))->get() : collect();
+            if ($consultationData && $consultationData->type === TypeEnum::NonProctology->value) {
                 $protologyOrNonProctology = NonProctology::where('consultation_id', $inv->consultation_id)->first();
                 // $protologyOrNonProctology['yoga'] = YogaAsana::where('id', $protologyOrNonProctology->yoga_asana)->first();
-            } else if ($inv->consultation_data()->type === TypeEnum::Proctology->value) {
+            } else if ($consultationData && $consultationData->type === TypeEnum::Proctology->value) {
                 $protologyOrNonProctology = Proctology::where('consultation_id', $inv->consultation_id)->first();
-            } else if ($inv->consultation_data()->type === TypeEnum::Allopathy->value) {
+            } else if ($consultationData && $consultationData->type === TypeEnum::Allopathy->value) {
                 $protologyOrNonProctology = Allopathy::where('consultation_id', $inv->consultation_id)->first();
             }
             $paymentData = Payment::where('include_in_invoice', 1)->where('consultation_id', $inv->consultation_id)->get();

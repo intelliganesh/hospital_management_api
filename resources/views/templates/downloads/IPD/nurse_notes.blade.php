@@ -233,13 +233,8 @@
                     @endif
                 </td>
                 <td>
-                    @if($hasValue($nurseName) || $hasValue($nursePhone) || $hasValue($nurseEmail))
-                        @if($hasValue($nurseName))
-                            <b>Name:</b> {{ $nurseName }}<br>
-                        @endif
-                        @if($hasValue($nursePhone) || $hasValue($nurseEmail))
-                            <small>( {{ $nursePhone }}@if($hasValue($nurseEmail) && $hasValue($nursePhone)), @endif{{ $nurseEmail }} )</small>
-                        @endif
+                    @if($hasValue($nurseName))
+                        <b>Name:</b> {{ $nurseName }}<br>
                     @endif
                     <br><br>
                 </td>

@@ -38,11 +38,11 @@
         }
 
         .gridlines td {
-            border: 1px dotted black
+            border: 1px solid black
         }
 
         .gridlines th {
-            border: 1px dotted black
+            border: 1px solid black
         }
 
         .b {

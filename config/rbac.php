@@ -444,7 +444,7 @@ return [
     'additions' => [
         'Admin' => ['roles_manage', 'ipd_discharge_edit'],
         'Front Desk User' => ['ipd_discharge_edit', 'appointments_list', 'appointment_create', 'appointment_edit', 'appointment_details'],
-        'Doctor' => ['prescription_download', 'consultation_download'],
+        'Doctor' => ['prescription_download', 'consultation_download', 'invoice_download'],
         'Nurse' => ['online_appointments_list'],
     ],
 ];

@@ -166,9 +166,15 @@
                     <td class="text-right">{{ number_format($category->total_amount ?? 0, 2) }}</td>
                 </tr>
                 @empty
+                @if(!empty($bill->blank))
+                @for($i = 0; $i < 6; $i++)
+                <tr><td colspan="5">&nbsp;</td></tr>
+                @endfor
+                @else
                 <tr>
                     <td colspan="5" class="text-center">No billing items found</td>
                 </tr>
+                @endif
                 @endforelse
             </tbody>
         </table>
@@ -201,35 +207,35 @@
                 <td width="62%" class="no-border"></td>
                 <td width="22%" class="bold no-border">Total</td>
                 <td width="16%" class="text-right bold no-border">
-                    {{ number_format($bill->total_amount ?? 0, 2) }}
+                    {{ !empty($bill->blank) ? '' : number_format($bill->total_amount ?? 0, 2) }}
                 </td>
             </tr>
             <tr>
                 <td class="no-border"></td>
                 <td class="bold no-border">Net Bill Amount R/O</td>
                 <td class="text-right bold no-border">
-                    {{ number_format($bill->net_amount ?? 0, 2) }}
+                    {{ !empty($bill->blank) ? '' : number_format($bill->net_amount ?? 0, 2) }}
                 </td>
             </tr>
             <tr>
                 <td class="no-border"></td>
                 <td class="bold no-border">Less Advance</td>
                 <td class="text-right bold no-border">
-                    {{ number_format($bill->advance_amount ?? 0, 2) }}
+                    {{ !empty($bill->blank) ? '' : number_format($bill->advance_amount ?? 0, 2) }}
                 </td>
             </tr>
             <tr>
                 <td class="no-border"></td>
                 <td class="bold no-border">Less Amount Received</td>
                 <td class="text-right bold no-border">
-                    {{ number_format($bill->received_amount ?? 0, 2) }}
+                    {{ !empty($bill->blank) ? '' : number_format($bill->received_amount ?? 0, 2) }}
                 </td>
             </tr>
             <tr>
                 <td class="no-border"></td>
                 <td class="bold no-border">Balance</td>
                 <td class="text-right bold" style="border-top:1px solid #000;">
-                    {{ number_format($bill->balance_amount ?? 0, 2) }}
+                    {{ !empty($bill->blank) ? '' : number_format($bill->balance_amount ?? 0, 2) }}
                 </td>
             </tr>
             <tr>
